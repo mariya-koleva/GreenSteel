@@ -2,7 +2,6 @@
 # California (Humboldt Lease Area) - Floating
 # lengths in m
 turbine: "osw_18MW"
-  feeder: floating_barge
 atb_year: 2025 
 cost_year: 2022 # to match ATB
 installation_availability: 0.7 # 30% downtime during installation to match ORCA
@@ -68,8 +67,7 @@ install_phases:
   ExportCableInstallation: 0 # from ORBIT/examples/configs/example_fixed_project.yaml
   MooredSubInstallation: 0
   MooringSystemInstallation: 0
-  OffshoreSubstationInstallation: 0  
-    feeder: floating_barge
+  OffshoreSubstationInstallation: 0
 
 substructure:
   takt_time: 168

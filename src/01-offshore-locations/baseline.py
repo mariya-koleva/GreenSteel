@@ -68,7 +68,7 @@ set_developer_nrel_gov_key(NREL_API_KEY)  # Set this key manually here if you ar
 def get_inputs(turbine_model="osw_18MW", verbose=False, show_plots=False, save_plots=False, location=""):
     
     if location != "":
-        location = "_"+location
+        location = "_0"+str(location)
     ################ load plant inputs from yaml
     plant_config = load_config("../../input/plant/orbit-config-"+turbine_model+location+".yaml")
     turbine_model = plant_config["turbine"]
@@ -183,7 +183,7 @@ def run_orbit(plant_config, verbose=False, weather=None):
         print(f"Turbine CapEx:       {project.turbine_capex/1e6:.0f} M")
         print(f"Soft CapEx:          {project.soft_capex/1e6:.0f} M")
         print(f"Total CapEx:        {project.total_capex/1e6:.0f} M")
-        print(f"Annual OpEx Rate:        {max(project.monthly_opex.values())*12:.0f} ")
+        # print(f"Annual OpEx Rate:        {max(project.monthly_opex.values())*12:.0f} ")
         print(f"\nInstallation Time: {project.installation_time:.0f} h")
         print("\nN Substations: ", (project.phases["ElectricalDesign"].num_substations))
         print("N cables: ", (project.phases["ElectricalDesign"].num_cables))
@@ -1569,10 +1569,10 @@ def run_profast_full_plant_model(plant_config, orbit_project, electrolyzer_physi
     return lcoh, pf
 
 # set up function to run base line case
-def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, show_plots=False, save_plots=False, use_profast=True, storage_type=None, incentive_option=1, plant_design_scenario=1, output_level=1):
+def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, show_plots=False, save_plots=False, use_profast=True, storage_type=None, incentive_option=1, plant_design_scenario=1, output_level=1, location=""):
 
     # load inputs as needed
-    plant_config, turbine_config, wind_resource, floris_config = get_inputs(verbose=verbose, show_plots=show_plots, save_plots=save_plots)
+    plant_config, turbine_config, wind_resource, floris_config = get_inputs(verbose=verbose, show_plots=show_plots, save_plots=save_plots, location=location)
     
     if electrolyzer_rating != None:
         plant_config["electrolyzer"]["rating"] = electrolyzer_rating
@@ -2493,12 +2493,25 @@ def process_design_options(verbose=True, show_plots=False):
 # run the stuff
 if __name__ == "__main__":
 
-    run_simulation(verbose=True, show_plots=False, save_plots=False,  use_profast=True, incentive_option=1, plant_design_scenario=7)
+    # run_simulation(verbose=True, show_plots=False, save_plots=False,  use_profast=True, incentive_option=1, plant_design_scenario=7)
     
     
-    for i in [1,7]:
-        run_simulation(verbose=True, show_plots=False, save_plots=True, use_profast=True, incentive_option=1, plant_design_scenario=i)
+    # for i in [1,7]:
+    #     run_simulation(verbose=True, show_plots=False, save_plots=True, use_profast=True, incentive_option=1, plant_design_scenario=i)
 
+
+    lcoh_out = []
+    site_in = []
+    plant_design_in = []        
+    for site in [1,2,3,4]:
+        for plant_design in [1,7]:
+            lcoh = run_simulation(verbose=True, show_plots=False, save_plots=True, use_profast=True, incentive_option=1, plant_design_scenario=plant_design, location=site, output_level=1)
+            lcoh_out.append(lcoh)
+            site_in.append(site)
+            plant_design_in.append(plant_design)
+    
+    df = pd.DataFrame.from_dict({"LCOH": lcoh_out, "Site": site_in, "Design": plant_design_in})
+    df.to_csv("initial_out.csv")
     # run_sweeps(simulate=False)
 
     # run_policy_options(verbose=False, show_plots=False, save_plots=False,  use_profast=True)
