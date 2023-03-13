@@ -27,10 +27,8 @@ import matplotlib.ticker as ticker
 from hopp.keys import set_developer_nrel_gov_key, get_developer_nrel_gov_key
 
 # ORBIT imports 
-from ORBIT import ProjectManager, load_config
-from ORBIT.phases.design import CustomArraySystemDesign
-from ORBIT.core.library import initialize_library
-initialize_library(os.path.join(os.getcwd(), "../../input/"))
+import ORBIT as orbit
+orbit.core.library.initialize_library(os.path.join(os.getcwd(), "../../input/"))
 
 # HOPP imports 
 from hopp.resource import WindResource
@@ -64,27 +62,77 @@ global NREL_API_KEY
 NREL_API_KEY = os.getenv("NREL_API_KEY")
 set_developer_nrel_gov_key(NREL_API_KEY)  # Set this key manually here if you are not setting it using the .env or with an env var
     
+
+def convert_layout_from_floris_for_orbit(turbine_x, turbine_y, save_config=False):
+    
+    # initialize dict with data for turbines
+    turbine_dict = {
+                'id': list(range(0,len(turbine_x))),
+                'substation_id': ['OSS']*len(turbine_x),
+                'name': list(range(0,len(turbine_x))),
+                'longitude': turbine_x,
+                'latitude': turbine_y,
+                'string': [0]*len(turbine_x), # can be left empty
+                'order': [0]*len(turbine_x), # can be left empty
+                'cable_length': [0]*len(turbine_x),
+                'bury_speed': [0]*len(turbine_x)
+                }
+    string_counter = -1
+    order_counter = 0
+    for i in range(0, len(turbine_x)):
+        if turbine_x[i] -400 == 0:
+            string_counter += 1
+            order_counter = 0
+        
+        turbine_dict["order"][i] = order_counter
+        turbine_dict["string"][i] = string_counter
+
+        order_counter += 1
+    
+    # initialize dict with substation information
+    substation_dict = {
+                'id': 'OSS',
+                'substation_id': 'OSS',
+                'name': 'OSS',
+                'longitude': np.min(turbine_x)-200,
+                'latitude': np.average(turbine_y),
+                'string': "" , # can be left empty
+                'order': "", # can be left empty
+                'cable_length': "",
+                'bury_speed': ""
+                }
+    
+    # combine turbine and substation dicts
+    for key in turbine_dict.keys():
+        # turbine_dict[key].append(substation_dict[key])
+        turbine_dict[key].insert(0, substation_dict[key])
+
+    if save_config:
+        # create pandas data frame
+        df = pd.DataFrame.from_dict(turbine_dict)
+        
+        # df.drop("index")
+        df.set_index("id")
+
+        # save to csv
+        df.to_csv("../../input/cables/osw_cable_layout.csv", index=False)
+
+    return turbine_dict
+
 # Function to load inputs
 def get_inputs(turbine_model="osw_18MW", verbose=False, show_plots=False, save_plots=False, location=""):
     
     if location != "":
         location = "_"+location
     ################ load plant inputs from yaml
-    plant_config = load_config("../../input/plant/orbit-config-"+turbine_model+location+".yaml")
+
+    plant_config = orbit.load_config("../../input/plant/orbit-config-"+turbine_model+location+".yaml")
     turbine_model = plant_config["turbine"]
     # print plant inputs if desired
     if verbose:
         print("\nPlant configuration:")
         for key in plant_config.keys():
             print(key, ": ", plant_config[key])
-
-    ############### set up custom turbine layout
-    # array = CustomArraySystemDesign(config)
-    # save_path = array.config["array_system_design"]["location_data"]
-    # array.create_project_csv(save_path)
-    # array.run()
-    # pprint(array.config)
-    # quit()
 
     ############### load turbine inputs from yaml
 
@@ -110,11 +158,32 @@ def get_inputs(turbine_model="osw_18MW", verbose=False, show_plots=False, save_p
     else:
         floris_config = None
 
+    # if plant_config["plant"]["layout"] == "custom":
+    #     # load custom turbine layout
+    #     plant_config["array_system_design"]["location_data"] = {}
+    #     plant_config["array_system_design"]["location_data"]["loc"] = floris_config["farm"]
+
     # print turbine inputs if desired
     if verbose:
         print("\nTurbine configuration:")
         for key in turbine_config.keys():
             print(key, ": ", turbine_config[key])
+
+    # generate ORBIT config from floris layout
+    for (i, x) in enumerate(floris_config["farm"]["layout_x"]):
+        floris_config["farm"]["layout_x"][i] = x + 400
+    
+    layout_config = convert_layout_from_floris_for_orbit(floris_config["farm"]["layout_x"], floris_config["farm"]["layout_y"], save_config=True)
+    plant_config = orbit.core.library.extract_library_data(plant_config, additional_keys=layout_config)
+    # print(plant_config)
+    # array_custom = orbit.phases.design.CustomArraySystemDesign(plant_config)
+    # # for key in array_custom.keys(): print(array_custom[key])
+    # array_custom.run()
+    # print(array_custom.location_data_x)
+    # print(array_custom.turbines_y)
+    # array_custom.plot_array_system(show=True)
+
+    # quit()
 
     ############## load wind resource
     wind_resource = WindResource(lat=plant_config["project_location"]["lat"], 
@@ -164,7 +233,7 @@ def run_orbit(plant_config, verbose=False, weather=None):
     # set up ORBIT
     if verbose:
         print("Initializing ORBIT")
-    project = ProjectManager(plant_config, weather=weather)
+    project = orbit.ProjectManager(plant_config, weather=weather)
     if verbose:
         print("ORBIT initialization complete")
     # run ORBIT
@@ -173,9 +242,6 @@ def run_orbit(plant_config, verbose=False, weather=None):
     project.run(availability=plant_config["installation_availability"])
     if verbose:
         print("ORBIT run complete")
-    # print(project.phases["ArraySystemDesign"].coordinates*263)
-    # project.phases["ArraySystemDesign"].plot_array_system(show=True)
-    # quit()
     # print results if desired
     if verbose:
         print(f"Installation CapEx:  {project.installation_capex/1e6:.0f} M")
@@ -226,8 +292,8 @@ def setup_hopp(plant_config, turbine_config, wind_resource, orbit_project, flori
     ################ set up HOPP technology inputs
     if use_floris: # TODO check
 
-        floris_config["farm"]["layout_x"] = orbit_project.phases["ArraySystemDesign"].turbines_x.flatten()*1E3 # ORBIT gives coordinates in km
-        floris_config["farm"]["layout_y"] = orbit_project.phases["ArraySystemDesign"].turbines_y.flatten()*1E3 # ORBIT gives coordinates in km
+        # floris_config["farm"]["layout_x"] = orbit_project.phases["CustomArraySystemDesign"].turbines_x.flatten()*1E3 # ORBIT gives coordinates in km
+        # floris_config["farm"]["layout_y"] = orbit_project.phases["CustomArraySystemDesign"].turbines_y.flatten()*1E3 # ORBIT gives coordinates in km
         # print(turbine_config["rotor_diameter"])
         # if show_plots or save_plots:
         #     fig, ax = plt.subplots(1)
@@ -1017,7 +1083,7 @@ def run_capex(hopp_results, orbit_project, electrolyzer_cost_results, h2_pipe_ar
     # site_df = orbit_project.capex_breakdown # pull from ORBIT
     # print(site_df) # set_export_financials assumes per kw rates, not total costs. I'm giving total costs. I need to just make my own function
     # wind_cost_kw, wind_om_cost_kw, total_export_system_cost, total_export_om_cost = hopp_tools.set_export_financials(plant_config["plant"]["capacity"], plant_config["project_parameters"]["turbine_capex"], plant_config["project_parameters"]["opex_rate"], plant_config["project_parameters"]["project_lifetime"], site_df)
-   
+    # print(orbit_project.capex_breakdown)
     array_cable_equipment_cost = orbit_project.capex_breakdown["Array System"]
     array_cable_installation_cost = orbit_project.capex_breakdown["Array System Installation"]
     total_array_cable_system_capex = array_cable_equipment_cost + array_cable_installation_cost
@@ -1547,8 +1613,6 @@ def run_profast_full_plant_model(plant_config, orbit_project, electrolyzer_physi
 
         # ROI = 
     if save_plots or show_plots:
-
-
         if not os.path.exists("figures"):
             os.mkdir("figures")
             os.mkdir("figures/lcoh_breakdown")
@@ -1558,12 +1622,9 @@ def run_profast_full_plant_model(plant_config, orbit_project, electrolyzer_physi
         for savepath in savepaths:
             if not os.path.exists(savepath):
                 os.mkdir(savepath)
-
         pf.plot_capital_expenses(fileout="figures/capex/capital_expense_%i.pdf" %(design_scenario["id"]), show_plot=show_plots)
         pf.plot_cashflow(fileout="figures/annual_cash_flow/cash_flow_%i.png" %(design_scenario["id"]), show_plot=show_plots)
-        
         pf.cash_flow_out_table.to_csv("data/cash_flow_%i.csv" %(design_scenario["id"]))
-
         pf.plot_costs("figures/lcoh_breakdown/lcoh_%i" %(design_scenario["id"]), show_plot=show_plots)
     
     return lcoh, pf
@@ -2490,14 +2551,16 @@ def process_design_options(verbose=True, show_plots=False):
 
     return 0
 
+
+
 # run the stuff
 if __name__ == "__main__":
 
     run_simulation(verbose=True, show_plots=False, save_plots=False,  use_profast=True, incentive_option=1, plant_design_scenario=7)
     
     
-    for i in [1,7]:
-        run_simulation(verbose=True, show_plots=False, save_plots=True, use_profast=True, incentive_option=1, plant_design_scenario=i)
+    # for i in [1,7]:
+    #     run_simulation(verbose=True, show_plots=False, save_plots=True, use_profast=True, incentive_option=1, plant_design_scenario=i)
 
     # run_sweeps(simulate=False)
 
