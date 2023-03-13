@@ -1,7 +1,6 @@
 # [1] https://www.sciencedirect.com/science/article/pii/S1364032122003811
 # [2] 10.1016/j.apenergy.2021.117189
 turbine_type: 'osw_18MW'
-name: 18MW Generic Turbine
 rated_windspeed: 11   # m/s
 rotor_diameter: 263   # m
 generator_efficiency: 1.0

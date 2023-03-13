@@ -77,12 +77,12 @@ def get_inputs(turbine_model="osw_18MW", verbose=False, show_plots=False, save_p
             print(key, ": ", plant_config[key])
 
     ############### set up custom turbine layout
-    array = CustomArraySystemDesign(config)
-    save_path = array.config["array_system_design"]["location_data"]
-    array.create_project_csv(save_path)
-    array.run()
-    pprint(array.config)
-    quit()
+    # array = CustomArraySystemDesign(config)
+    # save_path = array.config["array_system_design"]["location_data"]
+    # array.create_project_csv(save_path)
+    # array.run()
+    # pprint(array.config)
+    # quit()
 
     ############### load turbine inputs from yaml
 
@@ -134,6 +134,10 @@ def get_inputs(turbine_model="osw_18MW", verbose=False, show_plots=False, save_p
     # quit()
 
     if show_plots or save_plots:
+
+        if not os.path.exists("figures"):
+            os.mkdir("figures")
+            os.mkdir("figures/lcoh_breakdown")
         # plot wind resource if desired
         print("\nPlotting Wind Resource")
         wind_speed = [W[2] for W in wind_resource._data['data']]
@@ -491,8 +495,11 @@ def run_electrolyzer_physics(hopp_results, hopp_scenario, hopp_h2_args, plant_co
         ax[2,1].set(xlabel="Hour", ylim=[0,6000], xlim=[4*7*24-1,len(H2_Results["hydrogen_hourly_production"]+4*7*24+2)])
 
         plt.tight_layout()
+        savepath = "figures/production/"
+        if not os.path.exists(savepath):
+            os.mkdir(savepath)
         if save_plots:
-            plt.savefig("figures/production/production_overview_%i.png" %(design_scenario["id"]), transparent=True)
+            plt.savefig(savepath+"production_overview_%i.png" %(design_scenario["id"]), transparent=True)
         if show_plots:
             plt.show()
 
@@ -1265,6 +1272,9 @@ def run_profast_lcoe(plant_config, orbit_project, capex_breakdown, opex_breakdow
         print("\nProFAST LCOE: ", "%.2f" % (lcoe*1E3), "$/MWh")
 
     if show_plots or save_plots:
+        savepath = "figures/wind_only/"
+        if not os.path.exists(savepath):
+            os.mkdir(savepath)
         pf.plot_costs_yearly(per_kg=False, scale='M', remove_zeros=True, remove_depreciation=False, fileout="figures/wind_only/annual_cash_flow_wind_only_%i.png" %(design_scenario["id"]), show_plot=show_plots)
         pf.plot_costs_yearly2(per_kg=False, scale='M', remove_zeros=True, remove_depreciation=False, fileout="figures/wind_only/annual_cash_flow_wind_only_%i.html" %(design_scenario["id"]), show_plot=show_plots)
         pf.plot_capital_expenses(fileout="figures/wind_only/capital_expense_only_%i.png" %(design_scenario["id"]), show_plot=show_plots)
@@ -1533,15 +1543,22 @@ def run_profast_full_plant_model(plant_config, orbit_project, electrolyzer_physi
         # ROI = 
     if save_plots or show_plots:
 
-        # pf.plot_costs_yearly(per_kg=False, scale='M', remove_zeros=True, remove_depreciation=False, fileout="annual_cash_flow.pdf")
 
-        # pf.plot_costs_yearly2(per_kg=False, scale='M', remove_zeros=True, remove_depreciation=False, fileout="annual_cash_flow.html")
+        if not os.path.exists("figures"):
+            os.mkdir("figures")
+            os.mkdir("figures/lcoh_breakdown")
+            os.mkdir("figures/capex")
+            os.mkdir("figures/annual_cash_flow")
+        savepaths = ["figures/capex/", "figures/annual_cash_flow/", "figures/lcoh_breakdown/", "data/"]
+        for savepath in savepaths:
+            if not os.path.exists(savepath):
+                os.mkdir(savepath)
+
         pf.plot_capital_expenses(fileout="figures/capex/capital_expense_%i.pdf" %(design_scenario["id"]), show_plot=show_plots)
         pf.plot_cashflow(fileout="figures/annual_cash_flow/cash_flow_%i.png" %(design_scenario["id"]), show_plot=show_plots)
-        # pf.plot_costs()
-    
-        # pf.plot_time_series()
+        
         pf.cash_flow_out_table.to_csv("data/cash_flow_%i.csv" %(design_scenario["id"]))
+
         pf.plot_costs("figures/lcoh_breakdown/lcoh_%i" %(design_scenario["id"]), show_plot=show_plots)
     
     return lcoh, pf
@@ -1648,7 +1665,10 @@ def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, sho
             plt.ylabel("Power (GW)")
             plt.tight_layout()
             if save_plots:
-                plt.savefig("figures/power_series/power_%i.png" %(design_scenario["id"]), transparent=True)
+                savepath = "figures/power_series/"
+                if not os.path.exists(savepath):
+                    os.mkdir(savepath)
+                plt.savefig(savepath+"power_%i.png" %(design_scenario["id"]), transparent=True)
             if show_plots:
                 plt.show()
         if solver:
@@ -2030,7 +2050,10 @@ def visualize_plant(plant_config, orbit_project, platform_results, desal_results
     ## save the plot
     plt.tight_layout()
     if save_plots:
-        plt.savefig("figures/layout/plant_layout_%i.png" %(plant_design_number), transparent=True)
+        savepath = "figures/layout/"
+        if not os.path.exists(savepath):
+            os.mkdir(savepath)
+        plt.savefig(savepath+"plant_layout_%i.png" %(plant_design_number), transparent=True)
     if show_plots:
         plt.show()
     return 0
@@ -2050,6 +2073,10 @@ def post_process_simulation(pf_lcoh, pf_lcoe, hopp_results, electrolyzer_physics
     if show_plots or save_plots:
         visualize_plant(plant_config, orbit_project, platform_results, desal_results, h2_storage_results, electrolyzer_physics_results, design_scenario, colors, plant_design_number, show_plots=show_plots, save_plots=save_plots)
 
+    if not os.path.exists("data"):
+        os.mkdir("data")
+        os.mkdir("data/lcoe")
+        os.mkdir("data/lcoh")
     pf_lcoh.get_cost_breakdown().to_csv("data/lcoh/cost_breakdown_lcoh_design%i_incentive%i_%sstorage.csv" %(plant_design_number, incentive_option, plant_config["h2_storage"]["type"]))
     pf_lcoe.get_cost_breakdown().to_csv("data/lcoe/cost_breakdown_lcoe_design%i_incentive%i_%sstorage.csv" %(plant_design_number, incentive_option, plant_config["h2_storage"]["type"]))
 
@@ -2274,6 +2301,8 @@ def run_policy_storage_design_options(verbose=False, show_plots=False, save_plot
                     annual_energy_breakdown_series[key].append(annual_energy_breakdown[key])
 
     df = pd.DataFrame.from_dict({"Design": design_series, "Storage": storage_series, "Policy": policy_series,"LCOH [$/kg]": lcoh_series, "LCOE [$/kWh]": lcoe_series, "Electrolyzer capacity factor": electrolyzer_capacity_factor_series})
+    if not os.path.exists("data"):
+        os.mkdir("data")
     df.to_csv("data/design-storage-policy-lcoh.csv")
 
     df_energy = pd.DataFrame.from_dict(annual_energy_breakdown_series)
@@ -2358,6 +2387,8 @@ def run_design_options(verbose=False, show_plots=False, save_plots=False,  incen
     df_opex = df_opex.transpose()
 
     results_path = "./combined_results/"
+    if not os.path.exists(results_path):
+        os.mkdir(results_path)
     df_aggregate.to_csv(results_path+"metrics.csv")
     df_capex.to_csv(results_path+"capex.csv")
     df_opex.to_csv(results_path+"opex.csv")
