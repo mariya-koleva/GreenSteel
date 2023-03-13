@@ -15,15 +15,13 @@ site:
   distance: 55 
   distance_to_landfall: 45
   mean_windspeed: 9.45779794520548 # m/s
-substructure:
-  takt_time: 168
 plant:
   capacity: 990 # MW
   layout: grid
   num_turbines: 55 # needs to be changed based on turbine model
-  row_spacing: 7 # rotor diameters # based on rule of thumb of 7D but looking to increase capacity factor, so increased to 8. original 10
+  row_spacing: 7 # rotor diameters 
   substation_distance: 1 # from ORBIT/examples/configs/example_fixed_project.yaml
-  turbine_spacing: 7 # rotor diameters # original 10
+  turbine_spacing: 7 # rotor diameters 
 
 landfall:
   interconnection_distance: 5 #OSW
@@ -46,9 +44,15 @@ towing_vessel_groups:
   num_groups : 1 # note these numbers are different than the default for ORBIT- I believe ORCA assumes only one installation group of 3 vessels total for floating
   station_keeping_vessels: 1
   towing_vessels: 2
+
+# Module Specific
+OffshoreSubstationInstallation:
+  feeder: floating_barge
+array_system:
+  free_cable_length: 0.5
 array_system_design:
   cables:
-  - XLPE_630mm_66kV # from RFI
+  - XLPE_630mm_66kV # 
 export_system_design:
   cables: HVDC_2000mm_320kV # as done for OSW
   percent_added_length: 0.0 # OSW
@@ -66,6 +70,10 @@ install_phases:
   MooringSystemInstallation: 0
   OffshoreSubstationInstallation: 0  
     feeder: floating_barge
+
+substructure:
+  takt_time: 168
+  
 # Wind Project Inputs
 project_parameters:
   turbine_capex: 1300 # $USD turbine CAPEX only as per 2022 ATB https://atb.nrel.gov/electricity/2022/offshore_wind

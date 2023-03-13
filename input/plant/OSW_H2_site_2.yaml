@@ -39,8 +39,7 @@ towing_vessel_groups:
 array_system_design:
   cables:
   - XLPE_630mm_66kV # matches orca based on what I found
-commissioning: 0.01
-decommissioning: 0.15
+
 export_system_design:
   cables: XLPE_1000m_220kV # matches orca based on what I found
   percent_added_length: 0.0
@@ -57,4 +56,6 @@ install_phases:
   MooringSystemInstallation: 0
   OffshoreSubstationInstallation: 0  
     feeder: floating_barge
-
+project_parameters:
+  commissioning: 0.01
+  decommissioning: 0.15
