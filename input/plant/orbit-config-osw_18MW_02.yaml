@@ -1,0 +1,107 @@
+# Site + Plant Parameters - production start around 2027/2028
+# Central Atlantic (Call Area E) - Floating
+# lengths in m
+turbine: "osw_18MW"
+  feeder: floating_barge
+atb_year: 2025 
+cost_year: 2022 # to match ATB
+installation_availability: 0.7 # 30% downtime during installation to match ORCA
+wind_resource_year: 2013
+project_location:
+  lat: 37.48358 #
+  lon: -73.72925 # 
+site:
+  depth: 2000 # m
+  distance: 110 # km
+  distance_to_landfall: 110 # km
+  mean_windspeed: 9.499538812785387 # m/s
+substructure:
+  takt_time: 168
+plant:
+  capacity: 990 # MW
+  layout: grid
+  num_turbines: 55 # needs to be changed based on turbine model
+  row_spacing: 7 # rotor diameters # based on rule of thumb of 7D but looking to increase capacity factor, so increased to 8. original 10
+  substation_distance: 1 # from ORBIT/examples/configs/example_fixed_project.yaml
+  turbine_spacing: 7 # rotor diameters # original 10
+
+landfall:
+  interconnection_distance: 5 #OSW
+  trench_length: 4 #OSW
+port:
+  monthly_rate: 2000000.0
+  sub_assembly_lines: 3
+  turbine_assembly_cranes: 3
+  num_cranes : 3
+# Vessels
+array_cable_install_vessel: example_cable_lay_vessel # from ORBIT/examples/configs/example_fixed_project.yaml
+array_system:
+  free_cable_length: 0.5
+export_cable_install_vessel: example_cable_lay_vessel
+mooring_install_vessel: example_support_vessel
+oss_install_vessel: floating_heavy_lift_vessel
+support_vessel: example_support_vessel
+towing_vessel: example_towing_vessel
+towing_vessel_groups:
+  num_groups : 1 # note these numbers are different than the default for ORBIT- I believe ORCA assumes only one installation group of 3 vessels total for floating
+  station_keeping_vessels: 1
+  towing_vessels: 2
+array_system_design:
+  cables:
+  - XLPE_630mm_66kV # from RFI
+export_system_design:
+  cables: HVDC_2000mm_320kV # as done for OSW
+  percent_added_length: 0.0 # OSW
+# Configured Phases 
+design_phases:
+- ArraySystemDesign
+- ExportSystemDesign
+- MooringSystemDesign
+- ElectricalDesign
+- SemiSubmersibleDesign
+install_phases:
+  ArrayCableInstallation: 0 # from ORBIT/examples/configs/example_fixed_project.yaml
+  ExportCableInstallation: 0 # from ORBIT/examples/configs/example_fixed_project.yaml
+  MooredSubInstallation: 0
+  MooringSystemInstallation: 0
+  OffshoreSubstationInstallation: 0  
+    feeder: floating_barge
+
+plant_design:
+  scenario1:
+    h2_location: "onshore" # can be one of ["onshore", "turbine", "platform"]
+    transportation: "hvdc" # can be one of ["hvdc", "pipeline", "none"]
+    h2_storage: "onshore" # can be one of ["onshore", "turbine", "central_platform"]
+  scenario2:
+    h2_location: "onshore" # can be one of ["onshore", "turbine", "platform"]
+    transportation: "hvdc" # can be one of ["hvdc", "pipeline", "none"]
+    h2_storage: "platform" # can be one of ["onshore", "turbine", "central_platform"]
+  scenario3:
+    h2_location: "turbine" # can be one of ["onshore", "turbine", "platform"]
+    transportation: "none" # can be one of ["hvdc", "pipeline", "none"]
+    h2_storage: "turbine" # can be one of ["onshore", "turbine", "central_platform"]
+  scenario4:
+    h2_location: "turbine" # can be one of ["onshore", "turbine", "platform"]
+    transportation: "none" # can be one of ["hvdc", "pipeline", "none"]
+    h2_storage: "platform" # can be one of ["onshore", "turbine", "central_platform"]
+  scenario5:
+    h2_location: "turbine" # can be one of ["onshore", "turbine", "platform"]
+    transportation: "pipeline" # can be one of ["hvdc", "pipeline", "none"]
+    h2_storage: "onshore" # can be one of ["onshore", "turbine", "central_platform"]
+  scenario6:
+    h2_location: "platform" # can be one of ["onshore", "turbine", "platform"]
+    transportation: "none" # can be one of ["hvdc", "pipeline", "none"]
+    h2_storage: "platform" # can be one of ["onshore", "turbine", "central_platform"]
+  scenario7:
+    h2_location: "platform" # can be one of ["onshore", "turbine", "platform"]
+    transportation: "pipeline" # can be one of ["hvdc", "pipeline", "none"]
+    h2_storage: "onshore" # can be one of ["onshore", "turbine", "central_platform"]
+
+# design A -> scenario 1
+    # onshore electrolysis 
+    # HVDC transport, HVDC_2000mm_320kV
+    # no storage
+# design B -> scenario 7
+    # electrolysis on platform
+    # pipe transport to shore
+    # no storage
