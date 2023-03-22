@@ -920,7 +920,7 @@ def run_h2_storage(plant_config, turbine_config, electrolyzer_physics_results, d
 
         h2_storage_results["storage_capex"] = capex 
         h2_storage_results["storage_opex"] = opex 
-        h2_storage_results["storage_energy"] = energy # total in kWh
+        h2_storage_results["storage_energy"] = energy*electrolyzer_physics_results["H2_Results"]["hydrogen_annual_output"] # output is in kWh/(kg h2 stored) 
         h2_storage_results["tank_mass_full_kg"] = h2_storage.get_tank_mass(h2_capacity)[1] + h2_capacity
         h2_storage_results["tank_footprint_m2"] = h2_storage.get_tank_footprint(h2_capacity, upright=True)[1]
         h2_storage_results["tank volume (m^3)"] = h2_storage.compressed_gas_function.Vtank
@@ -1350,7 +1350,8 @@ def run_profast_grid_only(plant_config, orbit_project, electrolyzer_physics_resu
     pf.add_fixed_cost(name="Hydrogen Storage Fixed O&M Cost",usage=1.0,unit='$/year',cost=opex_breakdown["h2_storage"],escalation=gen_inflation)
 
     #---------------------- Add feedstocks, note the various cost options-------------------
-    pf.add_feedstock(name='Water',usage=electrolyzer_physics_results["H2_Results"]['water_annual_usage']/electrolyzer_physics_results["H2_Results"]['hydrogen_annual_output'],unit='kg-water', cost='US Average', escalation=gen_inflation)
+    galperkg_h2o = 3.785411784
+    pf.add_feedstock(name='Water',usage=electrolyzer_physics_results["H2_Results"]['water_annual_usage']*galperkg_h2o/electrolyzer_physics_results["H2_Results"]['hydrogen_annual_output'],unit='kg-water', cost='US Average', escalation=gen_inflation)
     
     # if plant_config["project_parameters"]["grid_connection"]:
     
@@ -1474,7 +1475,8 @@ def run_profast_full_plant_model(plant_config, orbit_project, electrolyzer_physi
 
     #---------------------- Add feedstocks, note the various cost options-------------------
     if design_scenario["h2_location"] == "onshore":
-        pf.add_feedstock(name='Water',usage=electrolyzer_physics_results["H2_Results"]['water_annual_usage']/electrolyzer_physics_results["H2_Results"]['hydrogen_annual_output'],unit='kg-water', cost='US Average', escalation=gen_inflation)
+        galperkg_h2o = 3.785411784
+        pf.add_feedstock(name='Water',usage=electrolyzer_physics_results["H2_Results"]['water_annual_usage']*galperkg_h2o/electrolyzer_physics_results["H2_Results"]['hydrogen_annual_output'],unit='kg-water', cost='US Average', escalation=gen_inflation)
     else:
         pf.add_capital_item(name="Desal System", cost=capex_breakdown["desal"], depr_type=plant_config["finance_parameters"]["depreciation_method"], depr_period=plant_config["finance_parameters"]["depreciation_period_electrolyzer"], refurb=[0])
         pf.add_fixed_cost(name="Desal Fixed O&M Cost",usage=1.0,unit='$/year',cost=opex_breakdown["desal"],escalation=gen_inflation)
