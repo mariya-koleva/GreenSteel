@@ -52,7 +52,7 @@ array_system:
   free_cable_length: 0.5
 array_system_design:
   cables:
-  - XLPE_630mm_66kV # matches orca based on what I found
+  - XLPE_500mm_132kV # Updated to match FLORIS layout #XLPE_630mm_66kV # matches orca based on what I found
 export_system_design:
   cables:
   - HVDC_2000mm_320kV # HVDC lines

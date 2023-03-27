@@ -43,7 +43,7 @@ OffshoreSubstationInstallation:
   num_feeders: 1 # from ORBIT/examples/configs/example_fixed_project.yaml
 array_system_design:
   cables:
-  - XLPE_630mm_66kV # from RFI
+  - XLPE_500mm_132kV # Updated to match FLORIS layout #XLPE_630mm_66kV # from RFI
 export_system_design:
   cables: HVDC_2000mm_320kV # as done for OSW
   percent_added_length: 0.0 # OSW

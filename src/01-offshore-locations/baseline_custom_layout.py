@@ -8,6 +8,7 @@ import numpy_financial as npf
 import sys
 from scipy import optimize
 from pprint import pprint
+from time import time
 
 # yaml imports
 import yaml
@@ -123,7 +124,7 @@ def convert_layout_from_floris_for_orbit(turbine_x, turbine_y, save_config=False
 def get_inputs(turbine_model="osw_18MW", verbose=False, show_plots=False, save_plots=False, location=""):
     
     if location != "":
-        location = "_"+location
+        location = "_0"+str(location)
     ################ load plant inputs from yaml
 
     plant_config = orbit.load_config("../../input/plant/orbit-config-"+turbine_model+location+".yaml")
@@ -1311,20 +1312,20 @@ def run_profast_lcoe(plant_config, orbit_project, capex_breakdown, opex_breakdow
     pf.set_params('sales tax', plant_config["finance_parameters"]["sales_tax_rate"]) 
     pf.set_params('license and permit',{'value':00,'escalation':gen_inflation})
     pf.set_params('rent',{'value':0,'escalation':gen_inflation})
-    pf.set_params('property tax and insurance percent', plant_config["finance_parameters"]["property_tax"] + plant_config["finance_parameters"]["property_insurance"])
-    pf.set_params('admin expense percent', plant_config["finance_parameters"]["administrative_expense_percent_of_sales"])
+    pf.set_params('property tax and insurance', plant_config["finance_parameters"]["property_tax"] + plant_config["finance_parameters"]["property_insurance"])
+    pf.set_params('admin expense', plant_config["finance_parameters"]["administrative_expense_percent_of_sales"])
     pf.set_params('total income tax rate', plant_config["finance_parameters"]["total_income_tax_rate"])
     pf.set_params('capital gains tax rate', plant_config["finance_parameters"]["capital_gains_tax_rate"])
     pf.set_params('sell undepreciated cap', True)
     pf.set_params('tax losses monetized', True)
-    pf.set_params('operating incentives taxable', True)
+    # pf.set_params('operating incentives taxable', True)
     pf.set_params('general inflation rate', gen_inflation)
     pf.set_params('leverage after tax nominal discount rate', plant_config["finance_parameters"]["discount_rate"])
     pf.set_params('debt equity ratio of initial financing', (plant_config["finance_parameters"]["debt_equity_split"]/(100-plant_config["finance_parameters"]["debt_equity_split"])))
     pf.set_params('debt type', plant_config["finance_parameters"]["debt_type"])
     pf.set_params('loan period if used', plant_config["finance_parameters"]["loan_period"])
     pf.set_params('debt interest rate', plant_config["finance_parameters"]["debt_interest_rate"])
-    pf.set_params('cash onhand percent', plant_config["finance_parameters"]["cash_onhand_months"])
+    pf.set_params('cash onhand', plant_config["finance_parameters"]["cash_onhand_months"])
 
     #----------------------------------- Add capital items to ProFAST ----------------
     pf.add_capital_item(name="Wind System",cost=capex_breakdown["wind"], depr_type=plant_config["finance_parameters"]["depreciation_method"], depr_period=plant_config["finance_parameters"]["depreciation_period"],refurb=[0])
@@ -1379,20 +1380,20 @@ def run_profast_grid_only(plant_config, orbit_project, electrolyzer_physics_resu
     pf.set_params('sales tax', plant_config["finance_parameters"]["sales_tax_rate"]) 
     pf.set_params('license and permit',{'value':00,'escalation':gen_inflation})
     pf.set_params('rent',{'value':0,'escalation':gen_inflation})
-    pf.set_params('property tax and insurance percent', plant_config["finance_parameters"]["property_tax"] + plant_config["finance_parameters"]["property_insurance"])
-    pf.set_params('admin expense percent', plant_config["finance_parameters"]["administrative_expense_percent_of_sales"])
+    pf.set_params('property tax and insurance', plant_config["finance_parameters"]["property_tax"] + plant_config["finance_parameters"]["property_insurance"])
+    pf.set_params('admin expense', plant_config["finance_parameters"]["administrative_expense_percent_of_sales"])
     pf.set_params('total income tax rate', plant_config["finance_parameters"]["total_income_tax_rate"])
     pf.set_params('capital gains tax rate', plant_config["finance_parameters"]["capital_gains_tax_rate"])
     pf.set_params('sell undepreciated cap', True)
     pf.set_params('tax losses monetized', True)
-    pf.set_params('operating incentives taxable', True)
+    # pf.set_params('operating incentives taxable', True)
     pf.set_params('general inflation rate', gen_inflation)
     pf.set_params('leverage after tax nominal discount rate', plant_config["finance_parameters"]["discount_rate"])
     pf.set_params('debt equity ratio of initial financing', (plant_config["finance_parameters"]["debt_equity_split"]/(100-plant_config["finance_parameters"]["debt_equity_split"])))
     pf.set_params('debt type', plant_config["finance_parameters"]["debt_type"])
     pf.set_params('loan period if used', plant_config["finance_parameters"]["loan_period"])
     pf.set_params('debt interest rate', plant_config["finance_parameters"]["debt_interest_rate"])
-    pf.set_params('cash onhand percent', plant_config["finance_parameters"]["cash_onhand_months"])
+    pf.set_params('cash onhand', plant_config["finance_parameters"]["cash_onhand_months"])
 
     #----------------------------------- Add capital items to ProFAST ----------------
     # pf.add_capital_item(name="Wind System",cost=capex_breakdown["wind"], depr_type=plant_config["finance_parameters"]["depreciation_method"], depr_period=plant_config["finance_parameters"]["depreciation_period"],refurb=[0])
@@ -1492,20 +1493,20 @@ def run_profast_full_plant_model(plant_config, orbit_project, electrolyzer_physi
     pf.set_params('license and permit',{'value':00, 'escalation':gen_inflation})
     pf.set_params('rent',{'value':0, 'escalation':gen_inflation})
     # TODO how to handle property tax and insurance for fully offshore?
-    pf.set_params('property tax and insurance percent', plant_config["finance_parameters"]["property_tax"] + plant_config["finance_parameters"]["property_insurance"])
-    pf.set_params('admin expense percent', plant_config["finance_parameters"]["administrative_expense_percent_of_sales"])
+    pf.set_params('property tax and insurance', plant_config["finance_parameters"]["property_tax"] + plant_config["finance_parameters"]["property_insurance"])
+    pf.set_params('admin expense', plant_config["finance_parameters"]["administrative_expense_percent_of_sales"])
     pf.set_params('total income tax rate', plant_config["finance_parameters"]["total_income_tax_rate"])
     pf.set_params('capital gains tax rate', plant_config["finance_parameters"]["capital_gains_tax_rate"])
     pf.set_params('sell undepreciated cap', True)
     pf.set_params('tax losses monetized', True)
-    pf.set_params('operating incentives taxable', True) # TODO check with Matt and tell Kaitlin
+    # pf.set_params('operating incentives taxable', True) # TODO check with Matt and tell Kaitlin
     pf.set_params('general inflation rate', gen_inflation)
     pf.set_params('leverage after tax nominal discount rate', plant_config["finance_parameters"]["discount_rate"])
     pf.set_params('debt equity ratio of initial financing', (plant_config["finance_parameters"]["debt_equity_split"]/(100-plant_config["finance_parameters"]["debt_equity_split"]))) #TODO this may not be put in right
     pf.set_params('debt type', plant_config["finance_parameters"]["debt_type"])
     pf.set_params('loan period if used', plant_config["finance_parameters"]["loan_period"])
     pf.set_params('debt interest rate', plant_config["finance_parameters"]["debt_interest_rate"])
-    pf.set_params('cash onhand percent', plant_config["finance_parameters"]["cash_onhand_months"])
+    pf.set_params('cash onhand', plant_config["finance_parameters"]["cash_onhand_months"])
 
     #----------------------------------- Add capital and fixed items to ProFAST ----------------
     pf.add_capital_item(name="Wind System",cost=capex_breakdown["wind"], depr_type=plant_config["finance_parameters"]["depreciation_method"], depr_period=plant_config["finance_parameters"]["depreciation_period"],refurb=[0])
@@ -1632,10 +1633,10 @@ def run_profast_full_plant_model(plant_config, orbit_project, electrolyzer_physi
     return lcoh, pf
 
 # set up function to run base line case
-def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, show_plots=False, save_plots=False, use_profast=True, storage_type=None, incentive_option=1, plant_design_scenario=1, output_level=1):
+def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, show_plots=False, save_plots=False, use_profast=True, storage_type=None, incentive_option=1, plant_design_scenario=1, output_level=1, location=""):
 
     # load inputs as needed
-    plant_config, turbine_config, wind_resource, floris_config = get_inputs(verbose=verbose, show_plots=show_plots, save_plots=save_plots)
+    plant_config, turbine_config, wind_resource, floris_config = get_inputs(verbose=verbose, show_plots=show_plots, save_plots=save_plots, location=location)
     
     if electrolyzer_rating != None:
         plant_config["electrolyzer"]["rating"] = electrolyzer_rating
@@ -2553,17 +2554,46 @@ def process_design_options(verbose=True, show_plots=False):
 
     return 0
 
+def run_for_greensteel_lcoh():
 
+    sites = ["Gulf of Mexico", "Central Atlantic", "New York Bight", "California"]
+    policies = ["Base", "Min", "Max"]
+    designs = ["Onshore H2", "Offshore H2"]
+    lcoh_out = []
+    site_in = []
+    plant_design_in = [] 
+    policy_in = []       
+    t1 = time()
+    count = 0
+    for (i, site) in enumerate([1,2,3,4]):
+        for (j, plant_design) in enumerate([1,7]):
+            for (k, policy) in enumerate([1, 2, 3]):
+                lcoh = run_simulation(verbose=True, show_plots=False, save_plots=True, use_profast=True, incentive_option=policy, plant_design_scenario=plant_design, location=site, output_level=1)
+                lcoh_out.append(lcoh)
+                site_in.append(sites[i])
+                plant_design_in.append(designs[j])
+                policy_in.append(policies[k])
+                count += 1
+    t2 = time() 
+    print("Runs: ", count)
+    print("total time: ", t2-t1)
+    print("Time per run: ", (t2-t1)/count)
+    
+    df = pd.DataFrame.from_dict({"Site": site_in, "Design": plant_design_in, "Policy": policy_in, "LCOH": lcoh_out})
+    df.to_csv("initial_out.csv")
+    pprint(df)
 
+    return 0 
 # run the stuff
 if __name__ == "__main__":
 
-    run_simulation(verbose=True, show_plots=False, save_plots=False,  use_profast=True, incentive_option=1, plant_design_scenario=7)
+    # run_simulation(verbose=True, show_plots=False, save_plots=False,  use_profast=True, incentive_option=1, plant_design_scenario=7)
     
     
     # for i in [1,7]:
     #     run_simulation(verbose=True, show_plots=False, save_plots=True, use_profast=True, incentive_option=1, plant_design_scenario=i)
 
+    run_for_greensteel_lcoh()
     # run_sweeps(simulate=False)
 
     # run_policy_options(verbose=False, show_plots=False, save_plots=False,  use_profast=True)
