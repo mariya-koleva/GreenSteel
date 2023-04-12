@@ -194,31 +194,31 @@ policy_parameters: # these should be adjusted for inflation prior to application
 
 plant_design:
   scenario1:
-    h2_location: "onshore" # can be one of ["onshore", "turbine", "platform"]
+    electrolyzer_location: "onshore" # can be one of ["onshore", "turbine", "platform"]
     transportation: "hvdc" # can be one of ["hvdc", "pipeline", "none"]
     h2_storage: "onshore" # can be one of ["onshore", "turbine", "central_platform"]
   scenario2:
-    h2_location: "onshore" # can be one of ["onshore", "turbine", "platform"]
+    electrolyzer_location: "onshore" # can be one of ["onshore", "turbine", "platform"]
     transportation: "hvdc" # can be one of ["hvdc", "pipeline", "none"]
     h2_storage: "platform" # can be one of ["onshore", "turbine", "central_platform"]
   scenario3:
-    h2_location: "turbine" # can be one of ["onshore", "turbine", "platform"]
+    electrolyzer_location: "turbine" # can be one of ["onshore", "turbine", "platform"]
     transportation: "none" # can be one of ["hvdc", "pipeline", "none"]
     h2_storage: "turbine" # can be one of ["onshore", "turbine", "central_platform"]
   scenario4:
-    h2_location: "turbine" # can be one of ["onshore", "turbine", "platform"]
+    electrolyzer_location: "turbine" # can be one of ["onshore", "turbine", "platform"]
     transportation: "none" # can be one of ["hvdc", "pipeline", "none"]
     h2_storage: "platform" # can be one of ["onshore", "turbine", "central_platform"]
   scenario5:
-    h2_location: "turbine" # can be one of ["onshore", "turbine", "platform"]
+    electrolyzer_location: "turbine" # can be one of ["onshore", "turbine", "platform"]
     transportation: "pipeline" # can be one of ["hvdc", "pipeline", "none"]
     h2_storage: "onshore" # can be one of ["onshore", "turbine", "central_platform"]
   scenario6:
-    h2_location: "platform" # can be one of ["onshore", "turbine", "platform"]
+    electrolyzer_location: "platform" # can be one of ["onshore", "turbine", "platform"]
     transportation: "none" # can be one of ["hvdc", "pipeline", "none"]
     h2_storage: "platform" # can be one of ["onshore", "turbine", "central_platform"]
   scenario7:
-    h2_location: "platform" # can be one of ["onshore", "turbine", "platform"]
+    electrolyzer_location: "platform" # can be one of ["onshore", "turbine", "platform"]
     transportation: "pipeline" # can be one of ["hvdc", "pipeline", "none"]
     h2_storage: "onshore" # can be one of ["onshore", "turbine", "central_platform"]
 
