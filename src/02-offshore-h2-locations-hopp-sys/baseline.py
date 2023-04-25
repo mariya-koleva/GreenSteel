@@ -57,6 +57,9 @@ def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, sho
     if electrolyzer_rating != None:
         plant_config["electrolyzer"]["rating"] = electrolyzer_rating
 
+    if grid_connection != None:
+        plant_config["project_parameters"]["grid_connection"] = grid_connection
+
     if storage_type != None:
         plant_config["h2_storage"]["type"] = storage_type
 
@@ -69,8 +72,8 @@ def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, sho
     design_scenario = plant_config["plant_design"]["scenario%s" %(plant_design_scenario)]
     design_scenario["id"] = plant_design_scenario
 
-    if design_scenario["h2_storage_location"] == "turbine":
-        plant_config["h2_storage"]["type"] = "turbine"
+    # if design_scenario["h2_storage_location"] == "turbine":
+    #     plant_config["h2_storage"]["type"] = "turbine"
 
     # run orbit for wind plant construction and other costs
     ## TODO get correct weather (wind, wave) inputs for ORBIT input (possibly via ERA5)
@@ -94,8 +97,12 @@ def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, sho
         # set energy input profile
         ### subtract peripheral power from supply to get what is left for electrolyzer
         remaining_power_profile_in = np.zeros_like(hopp_results["combined_pv_wind_power_production_hopp"])
+
+        high_count = sum(np.asarray(hopp_results["combined_pv_wind_power_production_hopp"]) >= power_for_peripherals_kw_in)
+        total_peripheral_energy = power_for_peripherals_kw_in*365*24
+        distributed_peripheral_power = total_peripheral_energy/high_count
         for i in range(len(hopp_results["combined_pv_wind_power_production_hopp"])):
-            r = hopp_results["combined_pv_wind_power_production_hopp"][i] - power_for_peripherals_kw_in
+            r = hopp_results["combined_pv_wind_power_production_hopp"][i] - distributed_peripheral_power
             if r > 0:
                 # print(r)
                 remaining_power_profile_in[i] = r
@@ -354,6 +361,8 @@ def run_policy_storage_design_options(verbose=False, show_plots=False, save_plot
                                 "policy": [],
                                 "storage": [],
                                 "wind_kwh": [],
+                                "renewable_kwh": [],
+                                "grid_power_kwh": [],
                                 "electrolyzer_kwh": [],
                                 "desal_kwh": [],
                                 "h2_transport_compressor_power_kwh": [], 
