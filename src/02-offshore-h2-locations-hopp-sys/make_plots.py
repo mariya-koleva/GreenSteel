@@ -195,12 +195,14 @@ def plot_lcoh_breakdown():
     print(total)
     print()
     return
-
+def appendDictToDF(df,dictToAppend):
+  df = pd.concat([df, pd.DataFrame.from_records([dictToAppend])])
+  return df
 def plot_orbit_costs(save_plots=False, show_plots=False):
     threshold = 0.001
     round_digits = 2
-    df = pd.read_csv("data/orbit_costs/orbit_cost_breakdown_with_onshore_substation_lcoh_design1_incentive1_pressure_vesselstorage.csv")#.set_index("Unnamed: 0").transpose()
-    
+    # df = pd.read_csv("data/orbit_costs/orbit_cost_breakdown_with_onshore_substation_lcoh_design1_incentive1_pressure_vesselstorage.csv")#.set_index("Unnamed: 0").transpose()
+    df = pd.read_csv("data/orbit_costs/orbit_cost_breakdown_with_onshore_substation_lcoh_design7_incentive3_nonestorage.csv")
     # df.drop(["Unnamed: 0"], inplace=True)
     df.rename(columns={"Unnamed: 0": "Item", "0": "CAPEX"}, inplace=True)
     
@@ -212,7 +214,8 @@ def plot_orbit_costs(save_plots=False, show_plots=False):
     # print(df_low)
     df_plot = df_high.copy()
     if df_low["CAPEX"].sum() > 0:
-        df_plot = df_plot.append({'Item': "Other", 'CAPEX': round(df_low["CAPEX"].sum(), ndigits=round_digits)}, ignore_index=True)
+        df_plot = appendDictToDF(df_plot, {'Item': "Other", 'CAPEX': round(df_low["CAPEX"].sum(), ndigits=round_digits)})
+        # df_plot = df_plot.append({'Item': "Other", 'CAPEX': round(df_low["CAPEX"].sum(), ndigits=round_digits)}, ignore_index=True)
     print(df_plot)
     df_plot = df_plot.sort_values("CAPEX")
     df_plot["CAPEX"] = round(df_plot["CAPEX"]*1E-6, ndigits=round_digits)
@@ -244,8 +247,8 @@ def plot_orbit_costs(save_plots=False, show_plots=False):
 def plot_orbit_costs_percent(save_plots=False, show_plots=False, return_labels=False):
     threshold = 0.0
     round_digits = 3
-    df = pd.read_csv("data/orbit_costs/orbit_cost_breakdown_with_onshore_substation_lcoh_design1_incentive1_pressure_vesselstorage.csv")#.set_index("Unnamed: 0").transpose()
-    
+    # df = pd.read_csv("data/orbit_costs/orbit_cost_breakdown_with_onshore_substation_lcoh_design1_incentive1_pressure_vesselstorage.csv")#.set_index("Unnamed: 0").transpose()
+    df = pd.read_csv("data/orbit_costs/orbit_cost_breakdown_with_onshore_substation_lcoh_design7_incentive3_nonestorage.csv")
     # df.drop(["Unnamed: 0"], inplace=True)
     df.rename(columns={"Unnamed: 0": "Item", "0": "CAPEX"}, inplace=True)
     
@@ -580,11 +583,13 @@ if __name__ == "__main__":
     save_plots = True
     show_plots = True
     
-    plot_policy_storage_design_options(show_plots=show_plots, save_plots=save_plots)
+    if not os.path.exists("figures"):
+        os.mkdir("figures")
+    # plot_policy_storage_design_options(show_plots=show_plots, save_plots=save_plots)
     # plot_lcoh_breakdown()
     # plot_energy_breakdown()
     # plot_design_options(show_plots=show_plots, save_plots=save_plots)
-    # plot_orbit_costs(show_plots=show_plots, save_plots=save_plots)
+    plot_orbit_costs(show_plots=show_plots, save_plots=save_plots)
     # plot_orbit_costs_percent(show_plots=show_plots, save_plots=save_plots)
     # plot_sweep(save_plots=save_plots, show_plots=show_plots)
     # process_design_options(save_plots=save_plots, show_plots=show_plots)  
