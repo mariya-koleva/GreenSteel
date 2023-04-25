@@ -42,15 +42,23 @@ array_cable_install_vessel: example_cable_lay_vessel # from ORBIT/examples/confi
 array_system:
   free_cable_length: 0.5
 export_cable_install_vessel: example_cable_lay_vessel
+# export_cable_bury_vessel: example_cable_lay_vessel
+# Assume the dynamic cables will be suspended in the water column (not buried)
 mooring_install_vessel: example_support_vessel
-oss_install_vessel: floating_heavy_lift_vessel
+ahts_vessel: example_ahts_vessel
+oss_install_vessel: example_support_vessel # assume that this is towed out with a anchor handling vessel
+# spi_vessel: example_large_scour_protection_vessel  # Define a custom vessel in analysis repo (data/vessels) since standard SPI vessel isn't big enough for 15 MW turbine scour
+# Scour protection installation (SPI) vessel only for fixed bottom foundations to prevent erosion at seabed
 support_vessel: example_support_vessel
 towing_vessel: example_towing_vessel
 towing_vessel_groups:
-  num_groups : 1 # note these numbers are different than the default for ORBIT- I believe ORCA assumes only one installation group of 3 vessels total for floating
+  ahts_vessels: 1
   station_keeping_vessels: 1
   towing_vessels: 2
+  num_groups: 3 # note these numbers are different than the default for ORBIT- I believe ORCA assumes only one installation group of 3 vessels total for floating
 
+# WTIVs, feeders, num_feeders are for fixed bottom installations
+# wtiv: floating_heavy_lift_vessel
 # Module Specific
 OffshoreSubstationInstallation:
   feeder: floating_barge
@@ -58,27 +66,49 @@ array_system:
   free_cable_length: 0.5
 array_system_design:
   cables:
-  - XLPE_500mm_132kV # Updated to match FLORIS layout #XLPE_630mm_66kV # from RFI
+  # - XLPE_500mm_132kV # Updated to match FLORIS layout #XLPE_630mm_66kV # matches orca based on what I found
+  - XLPE_185mm_66kV #TODO: Better understand which cables to use
+  - XLPE_630mm_66kV
 export_system_design:
-  cables: HVDC_2000mm_320kV # as done for OSW
-  percent_added_length: 0.0 # OSW
-# Configured Phases 
+  cables:
+  - HVDC_2000mm_320kV # HVDC lines
+  percent_added_length: 0.0
+substation_design:
+  floating_oss: True
+mooring_system_design:
+  num_lines: 3
+  drag_embedment_fixed_length: 0
+# Configured Phases
 design_phases:
-- ArraySystemDesign
-- ExportSystemDesign
-- MooringSystemDesign
-- ElectricalDesign
-- SemiSubmersibleDesign
+- ArraySystemDesign # from ORBIT/examples/configs/example_floating_project.yaml
+- SemiSubmersibleDesign # from ORBIT/examples/configs/example_floating_project.yaml
+- ElectricalDesign  # new addition from Sophie Bradenkamp combined ExportSystemDesign and OffshoreSubstationDesign phases
+# - CustomArraySystemDesign
+- SemiTautMooringSystemDesign  # MooringSystemDesign old system design could use for very deep water but out of date design
+- OffshoreFloatingSubstationDesign
 install_phases:
-  ArrayCableInstallation: 0 # from ORBIT/examples/configs/example_fixed_project.yaml
-  ExportCableInstallation: 0 # from ORBIT/examples/configs/example_fixed_project.yaml
-  MooredSubInstallation: 0
+     # Define some dependent start times, ie, Array Cables start when Monopile are 100% complete
+  ArrayCableInstallation: !!python/tuple
+  - MonopileInstallation
+  - 1.0
+  ArrayCableInstallation: !!python/tuple
+  - MooredSubInstallation
+  - 0.5 # Start array cable installation when 50% of floaters are installed
+  ExportCableInstallation: 0
+  MooredSubInstallation: !!python/tuple
+  - MooringSystemInstallation
+  - 0.5 # Start substructure install when 50% of mooring lines installed
   MooringSystemInstallation: 0
-  OffshoreSubstationInstallation: 0
+  # OffshoreSubstationInstallation: !!python/tuple
+  FloatingSubstationInstallation: !!python/tuple
+  - ExportCableInstallation
+  - 0.25 # Start OSS installation when 25% of cable installation is complete
 
+substation_design:
+  floating_oss: True
 substructure:
   takt_time: 168
-  
+  unit_cost: 11757583 # USD, IEA VolutrnUS Reference Hull. Output from a run by Garret , Wisdem. 19 Aug 2022. 
 # Wind Project Inputs
 project_parameters:
   turbine_capex: 1300 # $USD turbine CAPEX only as per 2022 ATB https://atb.nrel.gov/electricity/2022/offshore_wind
