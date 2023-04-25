@@ -21,8 +21,6 @@ YamlIncludeConstructor.add_to_loader_class(loader_class=yaml.FullLoader, base_di
 
 # visualization imports
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-import matplotlib.ticker as ticker
 
 # packages needed for setting NREL API key
 from hopp.keys import set_developer_nrel_gov_key, get_developer_nrel_gov_key
@@ -45,7 +43,7 @@ import hopp.eco.hydrogen_mgmt as he_h2
 # set_developer_nrel_gov_key(NREL_API_KEY)  # Set this key manually here if you are not setting it using the .env or with an env var
     
 # set up function to run base line case
-def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, show_plots=False, save_plots=False, use_profast=True, storage_type=None, incentive_option=1, plant_design_scenario=1, output_level=1, location=""):
+def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, show_plots=False, save_plots=False, use_profast=True, storage_type=None, incentive_option=1, plant_design_scenario=1, output_level=1, location="", grid_connection=None):
 
     # load inputs as needed
     if location !="":
