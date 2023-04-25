@@ -223,7 +223,7 @@ def plot_orbit_costs(save_plots=False, show_plots=False):
     # get percent labels
     percent_labels = plot_orbit_costs_percent(save_plots=False, show_plots=False, return_labels=True)
 
-    ax = df_plot.plot.barh(stacked=True, y="CAPEX", x="Item", legend=False, xlabel="Cost (M USD)", ylabel="", xlim=[0,1000])
+    ax = df_plot.plot.barh(stacked=True, y="CAPEX", x="Item", legend=False, xlabel="Cost (M USD)", ylabel="")#, xlim=[0,1000])
 
     labels = []
     for cl, pl in zip(ax.containers[0], percent_labels):
