@@ -1,7 +1,7 @@
 # Site + Plant Parameters - production start around 2027/2028
-# Gulf of Mexico (west portion of Call Area) - fixed bottom
+# New York Bight (Bright Wind Holdings Lease) - Fixed bottom
 # lengths in m
-turbine: "osw_18MW"
+turbine: "osw_15MW"
 wind:
   flag: True
   performance_model: "floris"
@@ -14,17 +14,17 @@ cost_year: 2022 # to match ATB
 installation_availability: 0.7 # 30% downtime during installation to match ORCA
 wind_resource_year: 2013
 project_location: 
-  lat: 27.18624 
-  lon: -96.9516 
+  lat: 39.53852 
+  lon: -73.1956 
 site:
-  depth: 45 
-  distance: 80 
-  distance_to_landfall: 85 # km estimate for direct to land crossing barrier island # using roughly 5 km past distance to port # original 85 # km 
-  mean_windspeed: 8.45863584474886 # m/s
+  depth: 40  
+  distance: 100  
+  distance_to_landfall: 80 
+  mean_windspeed: 9.635234018264839 # m/s
 plant:
   capacity: 990 # MW
   layout: grid
-  num_turbines: 55 # needs to be changed based on turbine model
+  num_turbines: 66 # needs to be changed based on turbine model
   row_spacing: 7 # rotor diameters 
   substation_distance: 1 # from ORBIT/examples/configs/example_fixed_project.yaml
   turbine_spacing: 7 # rotor diameters 
@@ -151,9 +151,9 @@ h2_transport_pipe:
   outlet_pressure: 10 # bar - from example in code from Jamie #TODO check this value
 h2_storage:
   # capacity_kg: 18750 # kg
-  capacity_from_max_on_turbine_storage: False #True # if True, then days of storage is ignored and storage capacity is based on how much h2 storage fits on the turbines in the plant using Kottenstete 2003.
-  type: "pressure_vessel" #"none" # can be one of ["none", "pipe", "pressure_vessel", "salt_cavern"] ### not yet implemented:  ["line_rock_cavern"] #TODO fix salt cavern, just a number right now
-  days: 1.2 # [days] how many days worth of production we should be able to store (this is ignored if `capacity_from_max_on_turbine_storage` is set to True)
+  capacity_from_max_on_turbine_storage: True # if True, then days of storage is ignored and storage capacity is based on how much h2 storage fits on the turbines in the plant using Kottenstete 2003.
+  type: "none" # can be one of ["none", "pipe", "pressure_vessel", "salt_cavern"] ### not yet implemented:  ["line_rock_cavern"] #TODO fix salt cavern, just a number right now
+  days: 3 # [days] how many days worth of production we should be able to store (this is ignored if `capacity_from_max_on_turbine_storage` is set to True)
 platform:
   opex_rate: 0.0111 # % of capex to determine opex (see table 5 in https://www.acm.nl/sites/default/files/documents/study-on-estimation-method-for-additional-efficient-offshore-grid-opex.pdf)
   installation_days: 14 # days

@@ -38,20 +38,21 @@ import hopp.eco.utilities as he_util
 import hopp.eco.hydrogen_mgmt as he_h2
 
 # ################ Set API key
-# global NREL_API_KEY
-# NREL_API_KEY = os.getenv("NREL_API_KEY")
-# set_developer_nrel_gov_key(NREL_API_KEY)  # Set this key manually here if you are not setting it using the .env or with an env var
+#global NREL_API_KEY
+#NREL_API_KEY = os.getenv("NREL_API_KEY")
+
+#set_developer_nrel_gov_key(NREL_API_KEY)  # Set this key manually here if you are not setting it using the .env or with an env var
     
 # set up function to run base line case
-def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, show_plots=False, save_plots=False, use_profast=True, storage_type=None, incentive_option=1, plant_design_scenario=1, output_level=1, location="", grid_connection=None):
+def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, show_plots=False, save_plots=True, use_profast=True, storage_type=None, turbine_model=None, incentive_option=1, plant_design_scenario=1, output_level=1, location="", grid_connection=None, days=None):
 
     # load inputs as needed
     if location !="":
         location = "_0"+str(location)
-    turbine_model = "osw_18MW"
+    turbine_model = str(turbine_model)
     filename_turbine_config = "../../input/turbines/"+turbine_model+".yaml"
     filename_orbit_config = "../../input/plant/orbit-config-"+turbine_model+location+".yaml"
-    filename_floris_config = "../../input/floris/floris_input_iea_18MW_osw" + ".yaml"
+    filename_floris_config = "../../input/floris/floris_input_iea_"+turbine_model+ ".yaml"
     plant_config, turbine_config, wind_resource, floris_config = he_util.get_inputs(filename_orbit_config=filename_orbit_config, filename_floris_config=filename_floris_config , filename_turbine_config=filename_turbine_config, verbose=verbose, show_plots=show_plots, save_plots=save_plots)
 
     if electrolyzer_rating != None:
@@ -59,6 +60,7 @@ def run_simulation(electrolyzer_rating=None, plant_size=None, verbose=False, sho
 
     if storage_type != None:
         plant_config["h2_storage"]["type"] = storage_type
+        plant_config["h2_storage"]["days"] = days
 
     if plant_size != None:
         plant_config["plant"]["capacity"] = plant_size
@@ -392,7 +394,7 @@ def run_policy_storage_design_options(verbose=False, show_plots=False, save_plot
     df_energy.to_csv(savepath+"annual_energy_breakdown.csv")
     return 0
 
-def run_design_options(verbose=False, show_plots=False, save_plots=False,  incentive_option=1):
+def run_design_options(verbose=False, show_plots=False, save_plots=True,  incentive_option=1):
 
     design_options = range(1,8) # 8
     scenario_lcoh = []
@@ -403,7 +405,7 @@ def run_design_options(verbose=False, show_plots=False, save_plots=False,  incen
     scenario_electrolyzer_physics = []
 
     for design in design_options:
-        lcoh, lcoe, capex_breakdown, opex_breakdown_annual, pf, electrolyzer_physics_results = run_simulation(verbose=verbose, show_plots=show_plots, use_profast=True, incentive_option=incentive_option, plant_design_scenario=design, output_level=2)
+        lcoh, lcoe, capex_breakdown, opex_breakdown_annual, pf, electrolyzer_physics_results = run_simulation(verbose=verbose, show_plots=show_plots, save_plots=save_plots,use_profast=True, incentive_option=incentive_option, plant_design_scenario=design, output_level=2)
         scenario_lcoh.append(lcoh)
         scenario_lcoe.append(lcoe)
         scenario_capex_breakdown.append(capex_breakdown)
@@ -432,20 +434,82 @@ def run_design_options(verbose=False, show_plots=False, save_plots=False,  incen
     print(df_capex)
     print(df_opex)
     return 0
-
-def run_for_greensteel_lcoh(verbose=True, show_plots=False, save_plots=False,  use_profast=True):
-    sites = [#"Gulf of Mexico", 
-    # "Central Atlantic", 
-    #"New York Bight", 
+def run_storage_options(verbose=True, show_plots=False, save_plots=False,  use_profast=True):
+    sites = ["Gulf of Mexico", 
+    "Central Atlantic", 
+    "New York Bight", 
     "California"
+    ]
+    policies = ["Base", 
+    ]
+    designs = ["Onshore H2", 
+    "Offshore H2"]
+    turbine_model = [
+    "osw_18MW"
+    ]
+    storage_types = ["pipe", "pressure_vessel", "salt_cavern"
+                ]
+    days_of_storage = [1,3,11]
+
+    days_of_storage_series = []
+    design_series = []
+    policy_series = []
+    site_series = []
+    storage_series = []
+    turbine_series = []
+    lcoh_series = []
+    lcoe_series = []
+    electrolyzer_capacity_factor_series = []
+    for turbine in turbine_model:
+        print(turbine)
+        for (i, site) in enumerate([1,2,3,4]):
+            for (j, plant_design) in enumerate([1,7]):
+                for storage in storage_types:
+                    for days in days_of_storage:
+                        for (k, policy) in enumerate([1]):
+                            site_series.append(sites[i])
+                            design_series.append(designs[j])
+                            turbine_series.append(turbine)
+                            policy_series.append(policies[k])
+                            storage_series.append(storage)
+                            days_of_storage_series.append(days)
+                            lcoh, lcoe, capex_breakdown, opex_breakdown_annual, pf_lcoh, electrolyzer_physics_results, pf_lcoe, annual_energy_breakdown \
+                                = run_simulation(storage_type=storage,days=days,save_plots=save_plots, turbine_model=turbine, plant_design_scenario=plant_design, incentive_option=policy, verbose=verbose, show_plots=show_plots, use_profast=use_profast,location=site, output_level=3)
+                        
+                            lcoh_series.append(lcoh)
+                            lcoe_series.append(lcoe)
+                            electrolyzer_capacity_factor_series.append(electrolyzer_physics_results["capacity_factor"])
+
+
+
+    savepath = "data/"
+    if not os.path.exists(savepath):
+        os.makedirs(savepath)
+    df = pd.DataFrame.from_dict({"Site": site_series,"Design": design_series, "Storage": storage_series,"Days of Storage": days_of_storage_series, "Policy": policy_series,"LCOH [$/kg]": lcoh_series, "LCOE [$/kWh]": lcoe_series, "Electrolyzer capacity factor": electrolyzer_capacity_factor_series})
+    df.to_csv(savepath+"design-storage-policy-lcoh.csv")
+
+
+
+def run_for_greensteel_lcoh(verbose=True, show_plots=False, save_plots=True,  use_profast=True):
+    sites = ["Gulf of Mexico", 
+    # "Central Atlantic", 
+    # "New York Bight", 
+    # "California"
     ]
 
     policies = ["Base", 
-    "Min", 
-    "Max"
+    # "Min", 
+    # "Max"
     ]
-    designs = ["Onshore H2", "Offshore H2"]
-    storage_types = ["none"]
+    designs = ["Onshore H2", 
+    "Offshore H2"]
+    turbine_model = [#"osw_12MW",
+    #"osw_15MW", 
+    "osw_18MW"
+    ]
+    storage_types = ["pressure_vessel"]
+    days_of_storage = 3
+    turbine_in = []
     lcoh_out = []
     lcoe_out = []
     site_in = []
@@ -453,24 +517,27 @@ def run_for_greensteel_lcoh(verbose=True, show_plots=False, save_plots=False,  u
     policy_in = []       
     t1 = time()
     count = 0
-    for (i, site) in enumerate([4]):
-        for (j, plant_design) in enumerate([1,7]):
-            for storage in storage_types:
-                for (k, policy) in enumerate([1, 2, 3]):
-                    lcoh, lcoe, capex_breakdown, opex_breakdown_annual, pf_lcoh, electrolyzer_physics_results, pf_lcoe, annual_energy_breakdown \
-                        = run_simulation(storage_type=storage, plant_design_scenario=plant_design, incentive_option=policy, verbose=verbose, show_plots=show_plots, use_profast=use_profast,location=site, output_level=3)
-                    lcoh_out.append(lcoh)
-                    lcoe_out.append(lcoe*1E3)
-                    site_in.append(sites[i])
-                    plant_design_in.append(designs[j])
-                    policy_in.append(policies[k])
-                    count += 1
+    for turbine in turbine_model:
+        for (i, site) in enumerate([1]):
+            for (j, plant_design) in enumerate([1]):
+                for storage in storage_types:
+                    for (k, policy) in enumerate([1]):
+                        lcoh, lcoe, capex_breakdown, opex_breakdown_annual, pf_lcoh, electrolyzer_physics_results, pf_lcoe, annual_energy_breakdown \
+                            = run_simulation(storage_type=storage,days=days_of_storage,save_plots=save_plots, turbine_model=turbine, plant_design_scenario=plant_design, incentive_option=policy, verbose=verbose, show_plots=show_plots, use_profast=use_profast,location=site, output_level=3)
+                        
+                        lcoh_out.append(lcoh)
+                        lcoe_out.append(lcoe*1E3)
+                        site_in.append(sites[i])
+                        turbine_in.append(turbine)
+                        plant_design_in.append(designs[j])
+                        policy_in.append(policies[k])
+                        count += 1
     t2 = time() 
     print("Runs: ", count)
     print("total time: ", t2-t1)
     print("Time per run: ", (t2-t1)/count)
     
-    df = pd.DataFrame.from_dict({"Site": site_in, "Design": plant_design_in, "Policy": policy_in, "LCOH": lcoh_out, "LCOE": lcoe_out})
+    df = pd.DataFrame.from_dict({"Site": site_in, "Turbine": turbine_in, "Design": plant_design_in, "Policy": policy_in, "LCOH": lcoh_out, "LCOE": lcoe_out})
     df.to_csv("initial_out.csv")
     pprint(df)
 
@@ -499,3 +566,5 @@ if __name__ == "__main__":
     # plot_policy_storage_design_options(colors, normalized=True)
 
     run_for_greensteel_lcoh()
+    #run_storage_options()
+
