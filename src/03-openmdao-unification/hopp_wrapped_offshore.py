@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from .hopp_wrapped_GSA import Capturing
+from hopp_wrapped_GSA import Capturing
 
 def run(args):
     (
@@ -552,6 +552,7 @@ if __name__ == "__main__":
 
     lcoh, lcoe, _, _, _, _ = run((plant_capacity, electrolyzer_rating))
 
+    print()
     print(f"lcoh: {lcoh}", f"lcoe: {lcoe}")
 
     #
