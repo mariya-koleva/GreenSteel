@@ -1,7 +1,7 @@
 # Site + Plant Parameters - production start around 2027/2028
-# Gulf of Mexico (west portion of Call Area) - fixed bottom
+# Central Atlantic (Call Area E) - Floating
 # lengths in m
-turbine: "osw_18MW"
+turbine: "osw_12MW"
 wind:
   flag: True
   performance_model: "floris"
@@ -13,79 +13,107 @@ atb_year: 2025 # as per discussions of operational by 2027. This also makes the 
 cost_year: 2022 # to match ATB
 installation_availability: 0.7 # 30% downtime during installation to match ORCA
 wind_resource_year: 2013
-project_location: 
-  lat: 27.18624 
-  lon: -96.9516 
+project_location:
+  lat: 37.48358 #
+  lon: -73.72925 # 
 site:
-  depth: 45 
-  distance: 80 
-  distance_to_landfall: 85 # km estimate for direct to land crossing barrier island # using roughly 5 km past distance to port # original 85 # km 
-  mean_windspeed: 8.45863584474886 # m/s
+  depth: 1300 # m Site actually located at 2000m but only 600-1300m depth works with SemiTaut Mooring Design.
+  distance: 110 # km
+  distance_to_landfall: 110 # km
+  mean_windspeed: 9.499538812785387 # m/s
 plant:
-  capacity: 990 # MW
+  capacity: 996 # MW
   layout: grid
-  num_turbines: 55 # needs to be changed based on turbine model
+  num_turbines: 83 # needs to be changed based on turbine model
   row_spacing: 7 # rotor diameters 
   substation_distance: 1 # from ORBIT/examples/configs/example_fixed_project.yaml
   turbine_spacing: 7 # rotor diameters 
 
 landfall:
-  interconnection_distance: 5 #OSW
-  trench_length: 4 #OSW
+  interconnection_distance: 5 # onshore spur line = dist_l_to_ts from ORCA
+  trench_length: 4
+
 port:
   monthly_rate: 2000000.0
-  sub_assembly_lines: 1
-  turbine_assembly_cranes: 1
+  sub_assembly_lines: 3
+  turbine_assembly_cranes: 3
+  num_cranes : 3
 # Vessels
 array_cable_install_vessel: example_cable_lay_vessel # from ORBIT/examples/configs/example_fixed_project.yaml
-export_cable_install_vessel: example_cable_lay_vessel # from ORBIT/examples/configs/example_fixed_project.yaml
-export_cable_bury_vessel: example_cable_lay_vessel # from ORBIT/examples/configs/example_fixed_project.yaml
-oss_install_vessel: example_heavy_lift_vessel # from ORBIT/examples/configs/example_fixed_project.yaml
-spi_vessel: example_scour_protection_vessel # from ORBIT/examples/configs/example_fixed_project.yaml
-wtiv: example_wtiv # from ORBIT/examples/configs/example_fixed_project.yaml
+array_system:
+  free_cable_length: 0.5
+export_cable_install_vessel: example_cable_lay_vessel
+# export_cable_bury_vessel: example_cable_lay_vessel
+# Assume the dynamic cables will be suspended in the water column (not buried)
+mooring_install_vessel: example_support_vessel
+ahts_vessel: example_ahts_vessel
+oss_install_vessel: example_support_vessel # assume that this is towed out with a anchor handling vessel
+# spi_vessel: example_large_scour_protection_vessel  # Define a custom vessel in analysis repo (data/vessels) since standard SPI vessel isn't big enough for 15 MW turbine scour
+# Scour protection installation (SPI) vessel only for fixed bottom foundations to prevent erosion at seabed
+support_vessel: example_support_vessel
+towing_vessel: example_towing_vessel
+towing_vessel_groups:
+  ahts_vessels: 1
+  station_keeping_vessels: 1
+  towing_vessels: 2
+  num_groups: 3 # note these numbers are different than the default for ORBIT- I believe ORCA assumes only one installation group of 3 vessels total for floating
+
+# WTIVs, feeders, num_feeders are for fixed bottom installations
+# wtiv: floating_heavy_lift_vessel
 # Module Specific
 OffshoreSubstationInstallation:
-  feeder: example_heavy_feeder # from ORBIT/examples/configs/example_fixed_project.yaml
-  num_feeders: 1 # from ORBIT/examples/configs/example_fixed_project.yaml
+  feeder: floating_barge
+array_system:
+  free_cable_length: 0.5
 array_system_design:
   cables:
-  - XLPE_500mm_132kV # Updated to match FLORIS layout #XLPE_630mm_66kV # from RFI
+  # - XLPE_500mm_132kV # Updated to match FLORIS layout #XLPE_630mm_66kV # matches orca based on what I found
+  - XLPE_185mm_66kV #TODO: Better understand which cables to use
+  - XLPE_630mm_66kV
 export_system_design:
-  cables: HVDC_2000mm_320kV # as done for OSW
-  percent_added_length: 0.0 # OSW
-scour_protection_design:
-  cost_per_tonne: 40 # OSW
-  scour_protection_depth: 1 # ORBIT default
-MonopileDesign:
-  monopile_steel_cost: 2250 #OSW
-  tp_steel_cost: 3230 #OSW
-# Configured Phases 
+  cables:
+  - HVDC_2000mm_320kV # HVDC lines
+  percent_added_length: 0.0
+substation_design:
+  floating_oss: True
+mooring_system_design:
+  num_lines: 3
+  drag_embedment_fixed_length: 0
+# Configured Phases
 design_phases:
-- ArraySystemDesign # from ORBIT/examples/configs/example_fixed_project.yaml
-- MonopileDesign # from ORBIT/examples/configs/example_fixed_project.yaml
-# - JacketDesign # Jacket not ready yet in ORBIT
-- ScourProtectionDesign # from ORBIT/examples/configs/example_fixed_project.yaml
-- ElectricalDesign # new addition from Sophie Bradenkamp combined ExportSystemDesign and OffshoreSubstationDesign phases
+- ArraySystemDesign # from ORBIT/examples/configs/example_floating_project.yaml
+- SemiSubmersibleDesign # from ORBIT/examples/configs/example_floating_project.yaml
+- ElectricalDesign  # new addition from Sophie Bradenkamp combined ExportSystemDesign and OffshoreSubstationDesign phases
+# - CustomArraySystemDesign
+- SemiTautMooringSystemDesign  # MooringSystemDesign old system design could use for very deep water but out of date design
+- OffshoreFloatingSubstationDesign
+install_phases:
+     # Define some dependent start times, ie, Array Cables start when Monopile are 100% complete
+  ArrayCableInstallation: !!python/tuple
+  - MonopileInstallation
+  - 1.0
+  ArrayCableInstallation: !!python/tuple
+  - MooredSubInstallation
+  - 0.5 # Start array cable installation when 50% of floaters are installed
+  ExportCableInstallation: 0
+  MooredSubInstallation: !!python/tuple
+  - MooringSystemInstallation
+  - 0.5 # Start substructure install when 50% of mooring lines installed
+  MooringSystemInstallation: 0
+  # OffshoreSubstationInstallation: !!python/tuple
+  FloatingSubstationInstallation: !!python/tuple
+  - ExportCableInstallation
+  - 0.25 # Start OSS installation when 25% of cable installation is complete
 
-install_phases: # based on Fig. B-7 in https://www.boem.gov/sites/default/files/environmental-stewardship/Environmental-Studies/Renewable-Energy/Phased-Approaches-to-Offshore-Wind-Developments-and-Use-of-Project-Design-Envelope.pdf
-  MonopileInstallation: 0 # from ORBIT/examples/configs/example_fixed_project.yaml
-  ExportCableInstallation: 0  # from ORBIT/examples/configs/example_fixed_project.yaml
-  ScourProtectionInstallation: !!python/tuple # from ORBIT/examples/configs/example_fixed_project.yaml
-  - MonopileInstallation
-  - 0.1 # start scour protection installation when 10 % of the MPs have bee installed
-  OffshoreSubstationInstallation: 0 # from ORBIT/examples/configs/example_fixed_project.yaml
-  ArrayCableInstallation: !!python/tuple # from ORBIT/examples/configs/example_fixed_project.yaml
-  - MonopileInstallation
-  - 0.2 # start array cable installation when 20% of monopiles have been installed
-  TurbineInstallation: !!python/tuple # from ORBIT/examples/configs/example_fixed_project.yaml
-  - MonopileInstallation
-  - 0.3 # start WTG installation when 30% of the monopiles have been installed
-  # JacketInstallation: 0 # Jacket not ready yet in ORBIT
-
+substation_design:
+  floating_oss: True
+substructure:
+  takt_time: 168
+  unit_cost: 11757583 # USD, IEA VolutrnUS Reference Hull. Output from a run by Garret , Wisdem. 19 Aug 2022. 
 # Wind Project Inputs
 project_parameters:
   turbine_capex: 1300 # $USD turbine CAPEX only as per 2022 ATB https://atb.nrel.gov/electricity/2022/offshore_wind
-  opex_rate: 100 # moderate Offshore Wind - Class 7 $USD/kW/yr ATB 2022, OpEx based on R&D assumptions with a base year of 2022
+  opex_rate: 82 # moderate Offshore Wind - Class 14 $USD/kW/yr ATB 2022, OpEx based on R&D assumptions with a base year of 2022.
   commissioning: 0.01 # ORBIT default
   decommissioning: 0.15 # ORBIT default
   grid_connection: False # option, can be turned on or off
@@ -127,7 +155,7 @@ finance_parameters:
     h2_transport_pipeline: 2018 # same model for costs as the h2_pipe_array
 
 electrolyzer:
-  rating: 990 # MW # 0.9*Plant rating appears near-optimal for 400 MW wind plant with 3 days of underground pipe storage # MW
+  rating: 996 # MW # 0.9*Plant rating appears near-optimal for 400 MW wind plant with 3 days of underground pipe storage # MW
   electrolyzer_capex: 827.5 # $/kW conservative 2025 centralized. high 700, low 300 # based on https://www.irena.org/-/media/Files/IRENA/Agency/Publication/2020/Dec/IRENA_Green_hydrogen_cost_2020.pdf
   time_between_replacement: 62320 # 62320 based on PEM Electrolysis H2A Production Case Study Documentation estimate of 7 years, 40000 based on current est (see unpublished report), 80000 hours based on OSW atb_year = 2025
   replacement_cost_percent: 0.15 # percent of capex - H2A default case
@@ -151,9 +179,9 @@ h2_transport_pipe:
   outlet_pressure: 10 # bar - from example in code from Jamie #TODO check this value
 h2_storage:
   # capacity_kg: 18750 # kg
-  capacity_from_max_on_turbine_storage: False #True # if True, then days of storage is ignored and storage capacity is based on how much h2 storage fits on the turbines in the plant using Kottenstete 2003.
-  type: "pressure_vessel" #"none" # can be one of ["none", "pipe", "pressure_vessel", "salt_cavern"] ### not yet implemented:  ["line_rock_cavern"] #TODO fix salt cavern, just a number right now
-  days: 1.2 # [days] how many days worth of production we should be able to store (this is ignored if `capacity_from_max_on_turbine_storage` is set to True)
+  capacity_from_max_on_turbine_storage: True # if True, then days of storage is ignored and storage capacity is based on how much h2 storage fits on the turbines in the plant using Kottenstete 2003.
+  type: "none" # can be one of ["none", "pipe", "pressure_vessel", "salt_cavern"] ### not yet implemented:  ["line_rock_cavern"] #TODO fix salt cavern, just a number right now
+  days: 3 # [days] how many days worth of production we should be able to store (this is ignored if `capacity_from_max_on_turbine_storage` is set to True)
 platform:
   opex_rate: 0.0111 # % of capex to determine opex (see table 5 in https://www.acm.nl/sites/default/files/documents/study-on-estimation-method-for-additional-efficient-offshore-grid-opex.pdf)
   installation_days: 14 # days
