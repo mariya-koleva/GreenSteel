@@ -23,6 +23,7 @@ import openmdao.api as om
 # from green_steel_sweeps.sandbox import MonolithicHopp
 
 from hopp_wrapped_GSA import run as run_GSA
+from hopp_wrapped_offshore import run as run_offshore
 
 
 class HOPP_template(om.ExplicitComponent, abc.ABC):
@@ -45,10 +46,7 @@ class HOPP_template(om.ExplicitComponent, abc.ABC):
     def setup(self):
         """setup the openmdao instance: declare variables"""
         # add inputs
-        # self.add_input("wind_size_mw", val=0.0)
-        self.add_input("solar_size_mw", val=0.0)
-        self.add_input("storage_size_mw", val=0.0)
-        self.add_input("storage_size_mwh", val=0.0)
+        self.add_input("electrolyzer_size_mw", val=1000.0)
 
         # add outputs
         self.add_output("lcoh", val=0.0)
@@ -69,12 +67,16 @@ class HOPP_GSA(HOPP_template):
     a template for running a `green_steel_ammonia` instance
     """
 
-    # def setup(self):
-    #     # add any additional inputs or outputs
-    #     pass
+    def setup(self):
+        super().setup()  # call the base class setup
+
+        # add any additional inputs or outputs
+        self.add_input("solar_size_mw", val=0.0)
+        self.add_input("storage_size_mw", val=0.0)
+        self.add_input("storage_size_mwh", val=0.0)
 
     def compute(self, inputs, outputs):
-        """compute the outputs given the outputs for this branch"""
+        """compute the outputs given the inputs for this branch"""
 
         # transfer from openmdao inputs to the input args for the run script
         solar_size_mw = inputs["solar_size_mw"]
@@ -100,12 +102,29 @@ class HOPP_offshore(HOPP_template):
     """
 
     def setup(self):
-        # add any additional inputs or outputs
-        raise NotImplementedError("@jthomas2 should implement this! -cfrontin")
+        super().setup()  # call the base class setup
 
-    def compute(self, inputs, outputs):
-        # actually do the computation here for this branch
-        raise NotImplementedError("@jthomas2 should implement this! -cfrontin")
+        # add any additional inputs or outputs
+        self.add_discrete_input("n_turbines", val=1)
+
+    def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
+        """compute the outputs given the inputs for this branch"""
+
+        # transfer from openmdao inputs to the input args for the run script
+        n_turbines = discrete_inputs["n_turbines"]
+        electrolyzer_size_mw = inputs["electrolyzer_size_mw"]
+
+        args = (n_turbines, electrolyzer_size_mw)
+
+        # pass through to the run script and run!
+        ret_vals = run_offshore(args)
+
+        # for now dump just levelized costs from the returns
+        lcoh, lcoe = ret_vals[0:2]
+
+        # pipe to openmdao
+        outputs["lcoh"] = lcoh
+        outputs["lcoe"] = lcoe
 
 
 class UnifiedHOPP(om.Group):
@@ -114,28 +133,35 @@ class UnifiedHOPP(om.Group):
     or `cfrontin`'s `green_steel_ammonia` branch
     """
 
-    def setup(self, use_GSA=True):
+    def initialize(self):
+        self.options.declare("use_GSA", types=bool)
+
+    def setup(self):
         # put together the final overarching system
         system_hopp = self.add_subsystem("system", om.Group(), promotes=["*"])
-        if use_GSA:
+        if self.options["use_GSA"]:
             system_hopp.add_subsystem(
                 "HOPP_case", HOPP_GSA(), promotes_inputs=["*"], promotes_outputs=["*"]
             )
         else:
-            raise NotImplementedError("add the offshore branch handler! -cfrontin")
+            system_hopp.add_subsystem(
+                "HOPP_case",
+                HOPP_offshore(),
+                promotes_inputs=["*"],
+                promotes_outputs=["*"],
+            )
+            # raise NotImplementedError("add the offshore branch handler! -cfrontin")
 
         # set the default solver
-        system_hopp.set_input_defaults("solar_size_mw", 1000.0)
-        system_hopp.set_input_defaults("storage_size_mw", 1000.0)
-        system_hopp.set_input_defaults("storage_size_mwh", 1000.0)
+        if self.options["use_GSA"]:
+            system_hopp.set_input_defaults("solar_size_mw", 1000.0)
+            system_hopp.set_input_defaults("storage_size_mw", 1000.0)
+            system_hopp.set_input_defaults("storage_size_mwh", 1000.0)
+        else:
+            system_hopp.set_input_defaults("n_turbines", 54)
 
         # block solver: shouldn't be needed for much?
         system_hopp.nonlinear_solver = om.NonlinearBlockGS()
-
-        # add objective and constraint modules?
-        system_hopp.add_subsystem(
-            "obj_cmp", om.ExecComp("obj=lcoe", lcoe=0.0), promotes=["*"]
-        )
 
 
 ### ############################
@@ -144,107 +170,163 @@ class UnifiedHOPP(om.Group):
 
 
 def main():
-    just_plots = True
-    if not just_plots:
-        prob = om.Problem()
-        model = prob.model
+    prob = om.Problem()
+    model = prob.model
 
-        model.add_subsystem(
-            "hopp",
-            UnifiedHOPP(),
-            promotes_inputs=[
-                "solar_size_mw",
-                "storage_size_mw",
-                "storage_size_mwh",
-            ],
-            promotes_outputs=[
-                "lcoh",
-                "lcoe",
-                "obj",
-            ],
-        )
-        # model.add_design_var("solar_size_mw", lower=0.0, upper=2000.0)
-        model.add_design_var("storage_size_mw", lower=500.0, upper=2000.0)
-        model.add_design_var("storage_size_mwh", lower=500.0, upper=2000.0)
-        # model.add_objective("obj", )
-        model.add_objective("lcoe")
-        model.add_objective("lcoh")
+    use_GSA = True  # variable to use green-steel-ammonia or offshore-h2
 
-        prob.model.approx_totals()  # set up approximation of differentials
+    model.add_subsystem(
+        "hopp",
+        UnifiedHOPP(use_GSA=use_GSA),
+        promotes_inputs=["*"],
+        promotes_outputs=["*"],
+    )
 
-        prob.driver = om.DOEDriver(om.FullFactorialGenerator(levels=7))
-        recorder = om.SqliteRecorder("cases.sql")
-        prob.driver.add_recorder(recorder)
-        prob.model.add_recorder(recorder)
-        # prob.driver.options["optimizer"] = "SNOPT"
+    if use_GSA:
+        experiments = [
+            {  # green-steel-ammonia: electrolyzer_size_mw vs. (lcoe, lcoh)
+                "type": "sensitivity",
+                "design_variables": [
+                    {
+                        "name": "electrolyzer_size_mw",
+                        "query": np.arange(1000.0, 2100.0, 100.0),
+                        "print": "electrolyzer size (MW)",
+                    },
+                ],
+                "objectives": [
+                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
+                ],
+            },
+            # {  # green-steel-ammonia: solar_size_mw vs. (lcoe, lcoh)
+            #     "type": "sensitivity",
+            #     "design_variables": [
+            #         {
+            #             "name": "solar_size_mw",
+            #             "query": np.arange(0.0, 1501.0, 100.0),
+            #             "print": "solar size (MW)",
+            #         },
+            #     ],
+            #     "objectives": [
+            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
+            #     ],
+            # },
+            # {  # green-steel-ammonia: storage_size_mw vs. (lcoe, lcoh)
+            #     "type": "sensitivity",
+            #     "design_variables": [
+            #         {
+            #             "name": "storage_size_mw",
+            #             "query": np.arange(100.0, 1501.0, 100.0),
+            #             "print": "storage power (MW)",
+            #         },
+            #     ],
+            #     "objectives": [
+            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
+            #     ],
+            # },
+            # {  # green-steel-ammonia: storage_size_mwh vs. (lcoe, lcoh)
+            #     "type": "sensitivity",
+            #     "design_variables": [
+            #         {
+            #             "name": "storage_size_mwh",
+            #             "query": np.arange(100.0, 1501.0, 100.0),
+            #             "print": "storage capacity (MWh)",
+            #         },
+            #     ],
+            #     "objectives": [
+            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
+            #     ],
+            # },
+        ]
+    else:
+        experiments = [
+            {  # offshore_h2: n_turbines vs. (lcoe, lcoh)
+                "type": "sensitivity",
+                "design_variables": [
+                    {
+                        "name": "n_turbines",
+                        "query": np.arange(24, 31 + 1),
+                        "print": "number of turbines (-)",
+                        "match_electrolyzer": True,
+                    },
+                ],
+                "objectives": [
+                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
+                ],
+            },
+            {  # offshore_h2: electrolyzer_size_mw vs. (lcoe, lcoh)
+                "type": "sensitivity",
+                "design_variables": [
+                    {
+                        "name": "electrolyzer_size_mw",
+                        "query": np.arange(1000.0, 2100.0, 100.0),
+                        "print": "electrolyzer size (MW)",
+                    },
+                ],
+                "objectives": [
+                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
+                ],
+            },
+        ]
 
+    if use_GSA:
+        default_values = {
+            "electrolyzer_size_mw": 1000.0,
+            "solar_size_mw": 0.0,
+            "storage_size_mw": 1000.0,
+            "storage_size_mwh": 1000.0,
+        }
+    else:
+        default_values = {
+            "electrolyzer_size_mw": 1000.0,
+            "n_turbines": 27,
+        }
+
+    for exp in experiments:
         prob.setup()
-        prob.set_solver_print(level=1)
 
-        prob.set_val("solar_size_mw", 1000.0)
-        prob.set_val("storage_size_mw", 1000.0)
-        prob.set_val("storage_size_mwh", 1000.0)
+        for var, def_val in default_values.items():
+            prob.set_val(var, def_val)
 
-        prob.run_model()
-        print(f"lcoh: {prob['lcoh']}")
-        print(f"lcoe: {prob['lcoe']}")
+        if exp["type"] != "sensitivity":
+            raise NotImplementedError(
+                "only set up for sensitivity studies rn. -cfrontin"
+            )
 
-        prob.run_driver()
-        # print(f"minimum found at:\n\tsolar_size_mw: {prob.get_val('solar_size_mw')}")
-        prob.cleanup()
+        for dv in exp["design_variables"]:
+            data_x = dv["query"]
+            name_x = dv["name"]
+            printname_x = dv["print"]
 
-    cr = om.CaseReader("cases.sql")
-    cases = cr.list_cases("driver")
+            data_y = {
+                obj["name"]: np.zeros_like(data_x, dtype=float)
+                for obj in exp["objectives"]
+            }
 
-    values = []
-    for case in cases:
-        outputs = cr.get_case(case).outputs
-        values.append(
-            [
-                float(x)
-                for x in [
-                    outputs["storage_size_mw"],
-                    outputs["storage_size_mwh"],
-                    outputs["lcoe"],
-                    outputs["lcoh"],
-                ]
-            ]
-        )
-    print(
-        "\n".join(
-            [
-                f"storage_power: {xyf[0]:5.2f}, "
-                + f"storage_capacity: {xyf[1]:5.2f}; "
-                + f"lcoe: {xyf[2]:5.2f}, lcoh: {xyf[3]:5.2f}"
-                for xyf in values
-            ]
-        )
-    )
+            for idx, nq in enumerate(data_x):
+                prob.set_val(name_x, nq)
+                if dv.get("match_electrolyzer"):
+                    turbine_rating = 18.0  # if this isn't right you'll get an error
+                    prob.set_val("electrolyzer_size_mw", turbine_rating * nq)
+                prob.run_model()
 
-    df = pd.DataFrame(
-        values, columns=["storage_size_mw", "storage_size_mwh", "lcoe", "lcoh"]
-    )
-    df.sort_values("storage_size_mw", inplace=True)
-    print(df)
-    # fig, ax = plt.subplots()
-    # ax.plot(df.storage_size_mw, df.lcoe, label="lcoe")
-    # axb = ax.twinx()
-    # axb.plot([], [], label="__")
-    # axb.plot(df.storage_size_mw, df.lcoh, label="lcoh")
-    # ax.set_xlabel("storage size (MW)")
-    # ax.set_ylabel("lcoe (-)")
-    # axb.set_ylabel("lcoh (-)")
-    # fig.legend()
-    fig, ax = plt.subplots()
-    ct0 = ax.tricontourf(df.storage_size_mw, df.storage_size_mwh, df.lcoe, label="lcoe")
-    ct1 = ax.tricontour(
-        df.storage_size_mw, df.storage_size_mwh, df.lcoh, colors="k", label="lcoh"
-    )
-    ax.clabel(ct1)
-    ax.set_xlabel("storage power (MW)")
-    ax.set_ylabel("storage capacity (MWh)")
-    fig.colorbar(ct0)
-    ax.legend()
+                for obj in exp["objectives"]:
+                    data_y[obj["name"]][idx] = float(prob[obj["name"]])
+
+                prob.cleanup()
+
+            fig, axes = plt.subplots(len(exp["objectives"]), 1, sharex=True)
+            for idx_obj, obj in enumerate(exp["objectives"]):
+                axes[idx_obj].plot(data_x, data_y[obj["name"]], ".-")
+                if idx_obj == (len(axes) - 1):
+                    axes[idx_obj].set_xlabel(dv["print"])
+                axes[idx_obj].set_ylabel(obj["print"])
+            fig.tight_layout()
     plt.show()
 
 

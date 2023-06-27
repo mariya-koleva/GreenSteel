@@ -83,7 +83,7 @@ def run(args):
         # ^- use 'optimize' for Sanjana's controller; 'basic' to not optimize
         run_reopt_flag = False
         custom_powercurve = True  # flag applicable w/ PySAM WindPower (not FLORIS)
-        storage_used = False
+        storage_used = True
         battery_can_grid_charge = False
         grid_connected_hopp = False
         user_defined_electrolyzer_EOL_eff_drop = True
@@ -1385,8 +1385,8 @@ def run(args):
 
 if __name__ == "__main__":
     solar_size_mw = 1000.0
-    storage_size_mw = 0.0 # 1000.0
-    storage_size_mwh = 0.0 # 1000.0
+    storage_size_mw = 0.0  # 1000.0
+    storage_size_mwh = 0.0  # 1000.0
 
     args = (solar_size_mw, storage_size_mw, storage_size_mwh)
 
