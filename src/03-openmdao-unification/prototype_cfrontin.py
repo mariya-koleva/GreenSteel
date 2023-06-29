@@ -46,6 +46,7 @@ class HOPP_template(om.ExplicitComponent, abc.ABC):
     def setup(self):
         """setup the openmdao instance: declare variables"""
         # add inputs
+        self.add_discrete_input("n_turbines", val=10)
         self.add_input("electrolyzer_size_mw", val=1000.0)
 
         # add outputs
@@ -75,15 +76,23 @@ class HOPP_GSA(HOPP_template):
         self.add_input("storage_size_mw", val=0.0)
         self.add_input("storage_size_mwh", val=0.0)
 
-    def compute(self, inputs, outputs):
+    def compute(self, inputs, outputs, discrete_inputs, discrete_outputs=None):
         """compute the outputs given the inputs for this branch"""
 
         # transfer from openmdao inputs to the input args for the run script
+        n_turbines = discrete_inputs["n_turbines"]
+        electrolyzer_size_mw = inputs["electrolyzer_size_mw"]
         solar_size_mw = inputs["solar_size_mw"]
         storage_size_mw = inputs["storage_size_mw"]
         storage_size_mwh = inputs["storage_size_mwh"]
 
-        args = (solar_size_mw, storage_size_mw, storage_size_mwh)
+        args = (
+            n_turbines,
+            electrolyzer_size_mw,
+            solar_size_mw,
+            storage_size_mw,
+            storage_size_mwh,
+        )
 
         # pass through to run script and run!
         ret_vals = run_GSA(args)
@@ -105,7 +114,7 @@ class HOPP_offshore(HOPP_template):
         super().setup()  # call the base class setup
 
         # add any additional inputs or outputs
-        self.add_discrete_input("n_turbines", val=1)
+        # self.add_discrete_input("n_turbines", val=1)
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
         """compute the outputs given the inputs for this branch"""
@@ -184,12 +193,27 @@ def main():
 
     if use_GSA:
         experiments = [
+            {  # green-steel-ammonia: n_turbines vs. (lcoe, lcoh)
+                "type": "sensitivity",
+                "design_variables": [
+                    {
+                        "name": "n_turbines",
+                        "query": np.arange(75, 125+1, 5),
+                        "print": "number of turbines (-)",
+                        "match_electrolyzer": True,
+                    },
+                ],
+                "objectives": [
+                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
+                ],
+            },
             {  # green-steel-ammonia: electrolyzer_size_mw vs. (lcoe, lcoh)
                 "type": "sensitivity",
                 "design_variables": [
                     {
                         "name": "electrolyzer_size_mw",
-                        "query": np.arange(1000.0, 2100.0, 100.0),
+                        "query": np.arange(100.0, 1000.0, 100.0),
                         "print": "electrolyzer size (MW)",
                     },
                 ],
@@ -198,48 +222,48 @@ def main():
                     {"name": "lcoh", "print": "LCOH (\$/kg)"},
                 ],
             },
-            # {  # green-steel-ammonia: solar_size_mw vs. (lcoe, lcoh)
-            #     "type": "sensitivity",
-            #     "design_variables": [
-            #         {
-            #             "name": "solar_size_mw",
-            #             "query": np.arange(0.0, 1501.0, 100.0),
-            #             "print": "solar size (MW)",
-            #         },
-            #     ],
-            #     "objectives": [
-            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
-            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
-            #     ],
-            # },
-            # {  # green-steel-ammonia: storage_size_mw vs. (lcoe, lcoh)
-            #     "type": "sensitivity",
-            #     "design_variables": [
-            #         {
-            #             "name": "storage_size_mw",
-            #             "query": np.arange(100.0, 1501.0, 100.0),
-            #             "print": "storage power (MW)",
-            #         },
-            #     ],
-            #     "objectives": [
-            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
-            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
-            #     ],
-            # },
-            # {  # green-steel-ammonia: storage_size_mwh vs. (lcoe, lcoh)
-            #     "type": "sensitivity",
-            #     "design_variables": [
-            #         {
-            #             "name": "storage_size_mwh",
-            #             "query": np.arange(100.0, 1501.0, 100.0),
-            #             "print": "storage capacity (MWh)",
-            #         },
-            #     ],
-            #     "objectives": [
-            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
-            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
-            #     ],
-            # },
+            {  # green-steel-ammonia: solar_size_mw vs. (lcoe, lcoh)
+                "type": "sensitivity",
+                "design_variables": [
+                    {
+                        "name": "solar_size_mw",
+                        "query": np.arange(0.0, 1501.0, 100.0),
+                        "print": "solar size (MW)",
+                    },
+                ],
+                "objectives": [
+                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
+                ],
+            },
+            {  # green-steel-ammonia: storage_size_mw vs. (lcoe, lcoh)
+                "type": "sensitivity",
+                "design_variables": [
+                    {
+                        "name": "storage_size_mw",
+                        "query": np.arange(100.0, 1501.0, 100.0),
+                        "print": "storage power (MW)",
+                    },
+                ],
+                "objectives": [
+                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
+                ],
+            },
+            {  # green-steel-ammonia: storage_size_mwh vs. (lcoe, lcoh)
+                "type": "sensitivity",
+                "design_variables": [
+                    {
+                        "name": "storage_size_mwh",
+                        "query": np.arange(100.0, 1501.0, 100.0),
+                        "print": "storage capacity (MWh)",
+                    },
+                ],
+                "objectives": [
+                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
+                ],
+            },
         ]
     else:
         experiments = [
@@ -276,6 +300,7 @@ def main():
 
     if use_GSA:
         default_values = {
+            "n_turbines": 100,
             "electrolyzer_size_mw": 1000.0,
             "solar_size_mw": 0.0,
             "storage_size_mw": 1000.0,
@@ -283,8 +308,8 @@ def main():
         }
     else:
         default_values = {
-            "electrolyzer_size_mw": 1000.0,
             "n_turbines": 27,
+            "electrolyzer_size_mw": 1000.0,
         }
 
     for exp in experiments:

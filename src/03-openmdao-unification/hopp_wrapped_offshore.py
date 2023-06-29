@@ -68,8 +68,8 @@ def run(args):
         NREL_API_KEY
     )  # Set this key manually here if you are not setting it using the .env or with an env var
 
-    for _dummyvariable in [None,]:
-    # with Capturing() as output:
+    # for _dummyvariable in [None,]:
+    with Capturing() as output:
         # load inputs as needed
         turbine_model = "osw_18MW"
         filename_orbit_config = os.path.realpath(
@@ -127,9 +127,6 @@ def run(args):
             show_plots=show_plots,
             save_plots=save_plots,
         )
-        print("\n\n")
-        pp.pprint(hopp_technologies["wind"])
-        print("\n\n")
 
         # run HOPP model
         hopp_results = he_hopp.run_hopp(
@@ -201,7 +198,6 @@ def run(args):
                 save_plots=save_plots,
                 verbose=verbose,
             )
-            print(electrolyzer_physics_results)
 
             # run electrolyzer cost model
             electrolyzer_cost_results = he_elec.run_electrolyzer_cost(
@@ -362,7 +358,6 @@ def run(args):
         # define function to provide to the brent solver
         def energy_residual_function(power_for_peripherals_kw_in):
             # get results for current design
-            # print("power peri in: ", power_for_peripherals_kw_in)
             power_for_peripherals_kw_out = energy_internals(
                 power_for_peripherals_kw_in=power_for_peripherals_kw_in,
                 solver=True,
@@ -371,7 +366,6 @@ def run(args):
 
             # collect residual
             power_residual = power_for_peripherals_kw_out - power_for_peripherals_kw_in
-            # print("\nresidual: ", power_residual)
 
             return power_residual
 
@@ -403,16 +397,10 @@ def run(args):
         solver_results = simple_solver(0)
         solver_result = solver_results[0]
 
-        # this is a check on the simple solver
-        # print("\nsolver result: ", solver_result)
-        # residual = energy_residual_function(solver_result)
-        # print("\nresidual: ", residual)
-
         # this approach exactly sizes the energy needed for the non-electrolyzer components (according to the current models anyway)
         # solver_result = optimize.brentq(energy_residual_function, -10, 20000, rtol=1E-5)
         # OptimizeResult = optimize.root(energy_residual_function, 11E3, tol=1)
         # solver_result = OptimizeResult.x
-        # print(solver_result)
         ##################################################################################################################
 
         # get results for final design
@@ -476,13 +464,6 @@ def run(args):
             platform_results,
             verbose=verbose,
             total_export_system_cost=capex_breakdown["electrical_export_system"],
-        )
-
-        print(
-            "wind capacity factor: ",
-            np.sum(hopp_results["combined_pv_wind_power_production_hopp"])
-            * 1e-3
-            / (plant_config["plant"]["capacity"] * 365 * 24),
         )
 
         if use_profast:

@@ -5,6 +5,7 @@ import os
 import sys
 import copy
 import io
+from pprint import pprint
 
 # IO imports
 from dotenv import load_dotenv
@@ -30,7 +31,15 @@ class Capturing(list):
 
 # overall run script
 def run(args):
-    (solar_size_mw, storage_size_mw, storage_size_mwh) = args
+    (
+        num_turbines_in,
+        electrolyzer_size_mw,
+        solar_size_mw,
+        storage_size_mw,
+        storage_size_mwh,
+    ) = args
+    num_turbines_in = int(num_turbines_in)
+    electrolyzer_size_mw = float(electrolyzer_size_mw)
     solar_size_mw = float(solar_size_mw)
     storage_size_mw = float(storage_size_mw)
     storage_size_mwh = float(storage_size_mwh)
@@ -63,11 +72,12 @@ def run(args):
     set_developer_nrel_gov_key("NREL_API_KEY")
 
     # capture stdout
+    # for _dummy_ in [None,]:
     with Capturing() as output:
         ### settings
 
         ## analysis switches
-        floris = False
+        floris = True
         run_RODeO_selector = False  # turn False to run ProFAST for H2 LCOH
         grid_price_scenario = (
             "retail-flat"  # ['wholesale', 'retail-peaks', 'retail-flat']
@@ -174,7 +184,7 @@ def run(args):
         price_breakdown_dir = os.path.join(
             project_root, "results", "Phase1B", "ProFAST_price"
         )
-        floris_dir = os.path.join(source_root, "floris_input_files")
+        floris_dir = os.path.join(project_root, "input", "floris")
         orbit_path = os.path.join(
             source_root,
             "examples",
@@ -352,7 +362,7 @@ def run(args):
             "discount_rate": discount_rate,
             "forced_sizes": forced_sizes,
             "force_electrolyzer_cost": force_electrolyzer_cost,
-            # 'wind_size': wind_size_mw,
+            # "wind_size": wind_size_mw,
             "solar_size": solar_size_mw,
             "storage_size_mw": storage_size_mw,
             "storage_size_mwh": storage_size_mwh,
@@ -368,7 +378,7 @@ def run(args):
             "battery_can_grid_charge": battery_can_grid_charge,
             "grid_connected_hopp": grid_connected_hopp,
             # 'interconnection_size_mw': interconnection_size_mw,
-            # 'electrolyzer_size_mw': electrolyzer_size_mw,
+            "electrolyzer_size_mw": electrolyzer_size_mw,
             "scenario": {
                 "Useful Life": useful_life,
                 "Debt Equity": debt_equity_split,
@@ -400,7 +410,6 @@ def run(args):
         hopp_dict, scenario, policy_option = hopp_tools_steel.set_policy_values(
             hopp_dict, scenario, policy_set, policy_key
         )
-        # print(scenario['Wind PTC'])
 
         scenario_df = xl.parse()
         scenario_df.set_index(["Parameter"], inplace=True)
@@ -419,6 +428,15 @@ def run(args):
             site_location,
             grid_connection_scenario,
         )
+
+        if floris:
+            if nTurbs < num_turbines_in:
+                raise Exception("default farm doesn't have enough turbines!")
+            else:
+                floris_config["farm"]["layout_x"] = floris_config["farm"]["layout_x"][:num_turbines_in]
+                floris_config["farm"]["layout_y"] = floris_config["farm"]["layout_y"][:num_turbines_in]
+                nTurbs_avail = nTurbs
+                nTurbs = num_turbines_in
 
         # Establish wind farm and electrolyzer sizing
 
@@ -462,49 +480,22 @@ def run(args):
                 hydrogen_production_target_kgpy / (8760 * cf_estimate)
             )
 
-            # Electrolyzer power requirement at BOL - namplate capacity in MWe?
-            electrolyzer_capacity_BOL_MW = (
-                hydrogen_production_capacity_required_kgphr
-                * electrolyzer_energy_kWh_per_kg_estimate_BOL
-                / 1000
-            )
-
-            # Electrolyzer power requirement at EOL
-            electrolyzer_capacity_EOL_MW = (
-                hydrogen_production_capacity_required_kgphr
-                * electrolyzer_energy_kWh_per_kg_estimate_EOL
-                / 1000
-            )
-
             # Size wind plant for providing power to electrolyzer at EOL. Do not size wind plant here to consider wind degradation
             # because we are not actually modeling wind plant degradation; if we size it in here we will have more wind generation
             # than we would in reality becaue the model does not take into account degradation. Wind plant degradation can be factored
             # into capital cost later.
-            n_turbines = int(
-                np.ceil(np.ceil(electrolyzer_capacity_EOL_MW) / turbine_rating)
-            )
+            n_turbines = nTurbs
             wind_size_mw = n_turbines * turbine_rating
             # wind_size_mw = electrolyzer_capacity_EOL_MW
             # wind_size_mw = electrolyzer_capacity_EOL_MW*1.08
 
         else:
             wind_size_mw = nTurbs * turbine_rating
-            electrolyzer_capacity_EOL_MW = wind_size_mw
-            electrolyzer_capacity_BOL_MW = electrolyzer_capacity_EOL_MW / (
-                1 + electrolyzer_degradation_power_increase
-            )
 
-            hydrogen_production_capacity_required_kgphr = (
-                electrolyzer_capacity_BOL_MW
-                * 1000
-                / electrolyzer_energy_kWh_per_kg_estimate_BOL
-            )
+            hydrogen_production_capacity_required_kgphr = electrolyzer_size_mw*1000/electrolyzer_energy_kWh_per_kg_estimate_BOL
 
         interconnection_size_mw = wind_size_mw  # this makes sense because wind_size_mw captures extra electricity needed by electrolzyer at end of life
-        n_pem_clusters_max = int(
-            np.ceil(np.ceil(electrolyzer_capacity_BOL_MW) / cluster_cap_mw)
-        )
-        electrolyzer_size_mw = n_pem_clusters_max * cluster_cap_mw
+        n_pem_clusters_max = int(np.ceil(electrolyzer_size_mw / cluster_cap_mw))
 
         if electrolysis_scale == "Distributed":
             n_pem_clusters = 1
@@ -995,7 +986,6 @@ def run(args):
             hydrogen_storage_capacity_kg = (
                 hydrogen_storage_capacity_kg * storage_capacity_multiplier
             )
-            # print(storage_status_message)
 
             # Run ProFAST to get LCOH
 
@@ -1104,7 +1094,6 @@ def run(args):
         )
 
         lcoh = lcoh + h2_transmission_price
-        # print(grid_connection_scenario, ' LCOH without policy:', lcoh)
         # Policy impacts on LCOH
 
         if run_RODeO_selector == True:
@@ -1127,8 +1116,6 @@ def run(args):
                 useful_life,
                 lcoh,
             )
-
-            # print('LCOH with policy:', lcoh)
 
         # Step 7: Calculate break-even cost of steel production without oxygen and heat integration
         lime_unit_cost = (
