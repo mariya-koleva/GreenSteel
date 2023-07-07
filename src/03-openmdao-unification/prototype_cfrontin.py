@@ -48,6 +48,9 @@ class HOPP_template(om.ExplicitComponent, abc.ABC):
         # add inputs
         self.add_discrete_input("n_turbines", val=10)
         self.add_input("electrolyzer_size_mw", val=1000.0)
+        self.add_input("solar_size_mw", val=0.0)
+        self.add_input("storage_size_mw", val=0.0)
+        self.add_input("storage_size_mwh", val=0.0)
 
         # add outputs
         self.add_output("lcoh", val=0.0)
@@ -72,9 +75,7 @@ class HOPP_GSA(HOPP_template):
         super().setup()  # call the base class setup
 
         # add any additional inputs or outputs
-        self.add_input("solar_size_mw", val=0.0)
-        self.add_input("storage_size_mw", val=0.0)
-        self.add_input("storage_size_mwh", val=0.0)
+        # self.add_input("...", val=0.0)
 
     def compute(self, inputs, outputs, discrete_inputs, discrete_outputs=None):
         """compute the outputs given the inputs for this branch"""
@@ -122,8 +123,11 @@ class HOPP_offshore(HOPP_template):
         # transfer from openmdao inputs to the input args for the run script
         n_turbines = discrete_inputs["n_turbines"]
         electrolyzer_size_mw = inputs["electrolyzer_size_mw"]
+        solar_size_mw = inputs["solar_size_mw"]
+        storage_size_mw = inputs["storage_size_mw"]
+        storage_size_mwh = inputs["storage_size_mwh"]
 
-        args = (n_turbines, electrolyzer_size_mw)
+        args = (n_turbines, electrolyzer_size_mw, solar_size_mw, storage_size_mw, storage_size_mwh)
 
         # pass through to the run script and run!
         ret_vals = run_offshore(args)
@@ -201,6 +205,7 @@ def main():
                         "query": np.arange(75, 125+1, 5),
                         "print": "number of turbines (-)",
                         "match_electrolyzer": True,
+                        "turbine_rating": 6, # MW
                     },
                 ],
                 "objectives": [
@@ -275,6 +280,7 @@ def main():
                         "query": np.arange(24, 31 + 1),
                         "print": "number of turbines (-)",
                         "match_electrolyzer": True,
+                        "turbine_rating": 18, # MW
                     },
                 ],
                 "objectives": [
@@ -296,6 +302,48 @@ def main():
                     {"name": "lcoh", "print": "LCOH (\$/kg)"},
                 ],
             },
+            {  # offshore_h2: solar_size_mw vs. (lcoe, lcoh)
+                "type": "sensitivity",
+                "design_variables": [
+                    {
+                        "name": "solar_size_mw",
+                        "query": np.arange(0.0, 2500.0*1.001, 250.0),
+                        "print": "solar size (MW)",
+                    },
+                ],
+                "objectives": [
+                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
+                ],
+            },
+            # {  # offshore_h2: storage_size_mw vs. (lcoe, lcoh)
+            #     "type": "sensitivity",
+            #     "design_variables": [
+            #         {
+            #             "name": "storage_size_mw",
+            #             "query": np.arange(0.0, 100.0*1.001, 10.0),
+            #             "print": "storage power (MW)",
+            #         },
+            #     ],
+            #     "objectives": [
+            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
+            #     ],
+            # },
+            # {  # offshore_h2: storage_size_mwh vs. (lcoe, lcoh)
+            #     "type": "sensitivity",
+            #     "design_variables": [
+            #         {
+            #             "name": "storage_size_mwh",
+            #             "query": np.arange(0.0, 100.0*1.001, 10.0),
+            #             "print": "storage capacity (MWh)",
+            #         },
+            #     ],
+            #     "objectives": [
+            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
+            #     ],
+            # },
         ]
 
     if use_GSA:
@@ -336,7 +384,7 @@ def main():
             for idx, nq in enumerate(data_x):
                 prob.set_val(name_x, nq)
                 if dv.get("match_electrolyzer"):
-                    turbine_rating = 18.0  # if this isn't right you'll get an error
+                    turbine_rating = dv["turbine_rating"]  # if this isn't right you'll get an error
                     prob.set_val("electrolyzer_size_mw", turbine_rating * nq)
                 prob.run_model()
 
@@ -352,6 +400,7 @@ def main():
                     axes[idx_obj].set_xlabel(dv["print"])
                 axes[idx_obj].set_ylabel(obj["print"])
             fig.tight_layout()
+            fig.savefig(f"figures/{'GS' if use_GSA else 'oH2'}_{exp['type']}_{name_x}_vs_{'_'.join([x['name'] for x in exp['objectives']])}.png")
     plt.show()
 
 

@@ -18,10 +18,16 @@ def run(args):
     (
         num_turbines_in,
         electrolyzer_size_mw,
+        solar_size_mw,
+        storage_size_mw,
+        storage_size_mwh,
     ) = args
     # wind_plant_size_mw = float(wind_plant_size_mw)
     num_turbines_in = int(num_turbines_in)
     electrolyzer_size_mw = float(electrolyzer_size_mw)
+    solar_size_mw = float(solar_size_mw)
+    storage_size_mw = float(storage_size_mw)
+    storage_size_mwh = float(storage_size_mwh)
 
     # specifications
     electrolyzer_rating = electrolyzer_size_mw
@@ -98,6 +104,15 @@ def run(args):
 
         if storage_type != None:
             plant_config["h2_storage"]["type"] = storage_type
+
+        if solar_size_mw > 0:
+            plant_config["pv"]["flag"] = True
+            plant_config["pv"]["system_capacity_kw"] = storage_size_mw*1e3
+            plant_config["pv"]["system_capacity_kwh"] = storage_size_mwh*1e3
+
+        if (storage_size_mw > 0) and (storage_size_mwh > 0):
+            plant_config["battery"]["flag"] = True
+            plant_config["battery"]["flag"] = True
 
         plant_config["plant"]["num_turbines"] = num_turbines_in
         plant_config["plant"]["capacity"] = plant_size = (
