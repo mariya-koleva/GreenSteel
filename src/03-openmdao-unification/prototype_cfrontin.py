@@ -127,7 +127,13 @@ class HOPP_offshore(HOPP_template):
         storage_size_mw = inputs["storage_size_mw"]
         storage_size_mwh = inputs["storage_size_mwh"]
 
-        args = (n_turbines, electrolyzer_size_mw, solar_size_mw, storage_size_mw, storage_size_mwh)
+        args = (
+            n_turbines,
+            electrolyzer_size_mw,
+            solar_size_mw,
+            storage_size_mw,
+            storage_size_mwh,
+        )
 
         # pass through to the run script and run!
         ret_vals = run_offshore(args)
@@ -197,22 +203,22 @@ def main():
 
     if use_GSA:
         experiments = [
-            {  # green-steel-ammonia: n_turbines vs. (lcoe, lcoh)
-                "type": "sensitivity",
-                "design_variables": [
-                    {
-                        "name": "n_turbines",
-                        "query": np.arange(75, 125+1, 5),
-                        "print": "number of turbines (-)",
-                        "match_electrolyzer": True,
-                        "turbine_rating": 6, # MW
-                    },
-                ],
-                "objectives": [
-                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
-                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
-                ],
-            },
+            # {  # green-steel-ammonia: n_turbines vs. (lcoe, lcoh)
+            #     "type": "sensitivity",
+            #     "design_variables": [
+            #         {
+            #             "name": "n_turbines",
+            #             "query": np.arange(75, 125 + 1, 5),
+            #             "print": "number of turbines (-)",
+            #             "match_electrolyzer": True,
+            #             "turbine_rating": 6,  # MW
+            #         },
+            #     ],
+            #     "objectives": [
+            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
+            #     ],
+            # },
             {  # green-steel-ammonia: electrolyzer_size_mw vs. (lcoe, lcoh)
                 "type": "sensitivity",
                 "design_variables": [
@@ -227,48 +233,48 @@ def main():
                     {"name": "lcoh", "print": "LCOH (\$/kg)"},
                 ],
             },
-            {  # green-steel-ammonia: solar_size_mw vs. (lcoe, lcoh)
-                "type": "sensitivity",
-                "design_variables": [
-                    {
-                        "name": "solar_size_mw",
-                        "query": np.arange(0.0, 1501.0, 100.0),
-                        "print": "solar size (MW)",
-                    },
-                ],
-                "objectives": [
-                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
-                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
-                ],
-            },
-            {  # green-steel-ammonia: storage_size_mw vs. (lcoe, lcoh)
-                "type": "sensitivity",
-                "design_variables": [
-                    {
-                        "name": "storage_size_mw",
-                        "query": np.arange(100.0, 1501.0, 100.0),
-                        "print": "storage power (MW)",
-                    },
-                ],
-                "objectives": [
-                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
-                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
-                ],
-            },
-            {  # green-steel-ammonia: storage_size_mwh vs. (lcoe, lcoh)
-                "type": "sensitivity",
-                "design_variables": [
-                    {
-                        "name": "storage_size_mwh",
-                        "query": np.arange(100.0, 1501.0, 100.0),
-                        "print": "storage capacity (MWh)",
-                    },
-                ],
-                "objectives": [
-                    {"name": "lcoe", "print": "LCOE (\$/MWh)"},
-                    {"name": "lcoh", "print": "LCOH (\$/kg)"},
-                ],
-            },
+            # {  # green-steel-ammonia: solar_size_mw vs. (lcoe, lcoh)
+            #     "type": "sensitivity",
+            #     "design_variables": [
+            #         {
+            #             "name": "solar_size_mw",
+            #             "query": np.arange(0.0, 1501.0, 100.0),
+            #             "print": "solar size (MW)",
+            #         },
+            #     ],
+            #     "objectives": [
+            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
+            #     ],
+            # },
+            # {  # green-steel-ammonia: storage_size_mw vs. (lcoe, lcoh)
+            #     "type": "sensitivity",
+            #     "design_variables": [
+            #         {
+            #             "name": "storage_size_mw",
+            #             "query": np.arange(100.0, 1501.0, 100.0),
+            #             "print": "storage power (MW)",
+            #         },
+            #     ],
+            #     "objectives": [
+            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
+            #     ],
+            # },
+            # {  # green-steel-ammonia: storage_size_mwh vs. (lcoe, lcoh)
+            #     "type": "sensitivity",
+            #     "design_variables": [
+            #         {
+            #             "name": "storage_size_mwh",
+            #             "query": np.arange(100.0, 1501.0, 100.0),
+            #             "print": "storage capacity (MWh)",
+            #         },
+            #     ],
+            #     "objectives": [
+            #         {"name": "lcoe", "print": "LCOE (\$/MWh)"},
+            #         {"name": "lcoh", "print": "LCOH (\$/kg)"},
+            #     ],
+            # },
         ]
     else:
         experiments = [
@@ -280,7 +286,7 @@ def main():
                         "query": np.arange(24, 31 + 1),
                         "print": "number of turbines (-)",
                         "match_electrolyzer": True,
-                        "turbine_rating": 18, # MW
+                        "turbine_rating": 18,  # MW
                     },
                 ],
                 "objectives": [
@@ -307,7 +313,7 @@ def main():
                 "design_variables": [
                     {
                         "name": "solar_size_mw",
-                        "query": np.arange(0.0, 2500.0*1.001, 250.0),
+                        "query": np.arange(0.0, 2500.0 * 1.001, 250.0),
                         "print": "solar size (MW)",
                     },
                 ],
@@ -384,7 +390,9 @@ def main():
             for idx, nq in enumerate(data_x):
                 prob.set_val(name_x, nq)
                 if dv.get("match_electrolyzer"):
-                    turbine_rating = dv["turbine_rating"]  # if this isn't right you'll get an error
+                    turbine_rating = dv[
+                        "turbine_rating"
+                    ]  # if this isn't right you'll get an error
                     prob.set_val("electrolyzer_size_mw", turbine_rating * nq)
                 prob.run_model()
 
@@ -400,7 +408,9 @@ def main():
                     axes[idx_obj].set_xlabel(dv["print"])
                 axes[idx_obj].set_ylabel(obj["print"])
             fig.tight_layout()
-            fig.savefig(f"figures/{'GS' if use_GSA else 'oH2'}_{exp['type']}_{name_x}_vs_{'_'.join([x['name'] for x in exp['objectives']])}.png")
+            fig.savefig(
+                f"figures/{'GS' if use_GSA else 'oH2'}_{exp['type']}_{name_x}_vs_{'_'.join([x['name'] for x in exp['objectives']])}.png"
+            )
     plt.show()
 
 

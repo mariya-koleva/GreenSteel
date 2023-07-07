@@ -433,8 +433,12 @@ def run(args):
             if nTurbs < num_turbines_in:
                 raise Exception("default farm doesn't have enough turbines!")
             else:
-                floris_config["farm"]["layout_x"] = floris_config["farm"]["layout_x"][:num_turbines_in]
-                floris_config["farm"]["layout_y"] = floris_config["farm"]["layout_y"][:num_turbines_in]
+                floris_config["farm"]["layout_x"] = floris_config["farm"]["layout_x"][
+                    :num_turbines_in
+                ]
+                floris_config["farm"]["layout_y"] = floris_config["farm"]["layout_y"][
+                    :num_turbines_in
+                ]
                 nTurbs_avail = nTurbs
                 nTurbs = num_turbines_in
 
@@ -463,36 +467,13 @@ def run(args):
             * (1 + electrolyzer_degradation_power_increase)
         )
 
-        # Annual electricity target to meet hydrogen production target - use this to calculate renewable plant sizing
-        # electricity_production_target_MWhpy = hydrogen_production_target_kgpy*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
+        wind_size_mw = nTurbs * turbine_rating
 
-        # Estimate required electrolyzer capacity
-        if floris == False:
-            if grid_connection_scenario == "off-grid":
-                # for PySAM, use probable wind capacity factors by location if off-grid
-                cf_estimate = cf_estimate_offgrid
-            else:
-                # if grid-connected, base capacity off of constant full-power operation (steel/ammonia plant CF is incorporated above)
-                cf_estimate = 1
-
-            # Electrolyzer rated hydrogen production capacity - independent of degradation
-            hydrogen_production_capacity_required_kgphr = (
-                hydrogen_production_target_kgpy / (8760 * cf_estimate)
-            )
-
-            # Size wind plant for providing power to electrolyzer at EOL. Do not size wind plant here to consider wind degradation
-            # because we are not actually modeling wind plant degradation; if we size it in here we will have more wind generation
-            # than we would in reality becaue the model does not take into account degradation. Wind plant degradation can be factored
-            # into capital cost later.
-            n_turbines = nTurbs
-            wind_size_mw = n_turbines * turbine_rating
-            # wind_size_mw = electrolyzer_capacity_EOL_MW
-            # wind_size_mw = electrolyzer_capacity_EOL_MW*1.08
-
-        else:
-            wind_size_mw = nTurbs * turbine_rating
-
-            hydrogen_production_capacity_required_kgphr = electrolyzer_size_mw*1000/electrolyzer_energy_kWh_per_kg_estimate_BOL
+        hydrogen_production_capacity_required_kgphr = (
+            electrolyzer_size_mw
+            * 1000
+            / electrolyzer_energy_kWh_per_kg_estimate_BOL
+        )
 
         interconnection_size_mw = wind_size_mw  # this makes sense because wind_size_mw captures extra electricity needed by electrolzyer at end of life
         n_pem_clusters_max = int(np.ceil(electrolyzer_size_mw / cluster_cap_mw))

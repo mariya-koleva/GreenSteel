@@ -107,8 +107,8 @@ def run(args):
 
         if solar_size_mw > 0:
             plant_config["pv"]["flag"] = True
-            plant_config["pv"]["system_capacity_kw"] = storage_size_mw*1e3
-            plant_config["pv"]["system_capacity_kwh"] = storage_size_mwh*1e3
+            plant_config["pv"]["system_capacity_kw"] = storage_size_mw * 1e3
+            plant_config["pv"]["system_capacity_kwh"] = storage_size_mwh * 1e3
 
         if (storage_size_mw > 0) and (storage_size_mwh > 0):
             plant_config["battery"]["flag"] = True
