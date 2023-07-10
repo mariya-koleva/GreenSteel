@@ -9,6 +9,6 @@ In brief, project code uses software code to conduct computational analysis.  Th
 Clone the GreenSteel repository directly.  No fork is needed as user's should only work on their respective files.  Before pushing changes, make sure to pull from Git.  This will avoid conflicts.  Finally, push changes directly to main.
 
 ## Collaboration
-Collaboration in Green Steel shall be stored in the source directory.  Individual's codes and analysis will be stored here under their name and numbered.  To accomplish this, create a personal directory in src labeled with user's NREL Git ID, then scripts and analysis shall be placed in user's directory and numbered.  For example, the path should look like `GreenSteel/src/<NREL GIR USERNAME>/01-h2-vs-rotor-diameter`.  An example of the organization style desired is in src under ckiefer.
+Collaboration in Green Steel shall be stored in the source directory.  Individual's codes and analysis will be stored here under their name and numbered.  To accomplish this, create a personal directory in src labeled with user's NREL Git ID, then scripts and analysis shall be placed in user's directory and numbered.  For example, the path should look like `GreenSteel/src/<NREL Git Username>/01-h2-vs-rotor-diameter`.  An example of the organization style desired is in src under ckiefer.
                 
 
