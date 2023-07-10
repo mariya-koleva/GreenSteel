@@ -1,10 +1,11 @@
 from examples.H2_Analysis import underground_pipe_storage, compressor, h2_main
-#plt.rcParams['savefig.dpi'] = 1200
-#plt.rcParams["figure.figsize"] = [10,10]
 import numpy as np
 import numpy_financial as npf #for calculating the NPV and IRR 
 
-#import SALib 
+'''Sources
+    NIST [1]
+    Abhinav Bhaskar [2]
+    ''' #NEED TO FILL OUT AN UPDATE
 
 def establish_save_output_dict():
     """
