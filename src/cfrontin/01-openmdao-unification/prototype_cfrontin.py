@@ -224,7 +224,7 @@ def main():
                 "design_variables": [
                     {
                         "name": "electrolyzer_size_mw",
-                        "query": np.arange(100.0, 1000.0, 100.0),
+                        "query": np.arange(10.0, 100.0, 10.0),
                         "print": "electrolyzer size (MW)",
                     },
                 ],
@@ -354,11 +354,11 @@ def main():
 
     if use_GSA:
         default_values = {
-            "n_turbines": 100,
+            "n_turbines": 30,
             "electrolyzer_size_mw": 1000.0,
             "solar_size_mw": 0.0,
-            "storage_size_mw": 1000.0,
-            "storage_size_mwh": 1000.0,
+            "storage_size_mw": 100.0,
+            "storage_size_mwh": 100.0,
         }
     else:
         default_values = {

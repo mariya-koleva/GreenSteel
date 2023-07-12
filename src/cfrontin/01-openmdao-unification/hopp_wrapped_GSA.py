@@ -72,8 +72,8 @@ def run(args):
     set_developer_nrel_gov_key("NREL_API_KEY")
 
     # capture stdout
-    # for _dummy_ in [None,]:
-    with Capturing() as output:
+    for _dummy_ in [None,]:
+    # with Capturing() as output:
         ### settings
 
         ## analysis switches
@@ -526,6 +526,7 @@ def run(args):
             turbine_rating,
             direct_coupling,
         )
+        print("electrolyzer_capex_kw:", electrolyzer_capex_kw)
 
         electrolyzer_installation_factor = 12 / 100
         electrolyzer_direct_cost_kw = electrolyzer_capex_kw * (
