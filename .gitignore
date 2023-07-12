@@ -1,15 +1,15 @@
 
 ### USER-SPEC:
 
-src/03-openmdao-unification/reports
-src/03-openmdao-unification/results
-src/03-openmdao-unification/out_cfrontin
-src/03-openmdao-unification/*.png
-src/03-openmdao-unification/cases.sql
-src/03-openmdao-unification/SNOPT_*.out
-src/03-openmdao-unification/data
-src/03-openmdao-unification/input
-src/03-openmdao-unification/speed_dir_data.csv
+src/cfrontin/01-openmdao-unification/reports
+src/cfrontin/01-openmdao-unification/results
+src/cfrontin/01-openmdao-unification/out_cfrontin
+src/cfrontin/01-openmdao-unification/*.png
+src/cfrontin/01-openmdao-unification/cases.sql
+src/cfrontin/01-openmdao-unification/SNOPT_*.out
+src/cfrontin/01-openmdao-unification/data
+src/cfrontin/01-openmdao-unification/input
+src/cfrontin/01-openmdao-unification/speed_dir_data.csv
 
 ### DEFAULTS: PYTHON
 
