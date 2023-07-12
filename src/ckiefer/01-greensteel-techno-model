@@ -3,9 +3,13 @@ import numpy as np
 import numpy_financial as npf #for calculating the NPV and IRR 
 
 '''Sources
-    NIST [1]
-    Abhinav Bhaskar [2]
+    [1] Chase, M.W., Jr. 1998. "NIST-JANAF Themochemical Tables, Fourth Edition." J. Phys. Chem. Ref. Data, Monograph 9 1-1951. doi:https://doi.org/10.18434/T4D303
+    [2] Bhaskar, Abhinav, Assadi Mohsen, and Somehsaraei Nikpey Homam. 2020. "Decarbonization of the Iron and Steel Industry with Direct Reduction of Iron Ore with Green Hydrogen." Energies 13 (3): 758. doi: https://doi.org/10.3390/en13030758 
+    [2] Bhaskar, Abhinav, Rockey Abhishek, Mohsen Assadi, and Homan Nikpey Somehesaraei. 2022. "Decarbonizing primary steel production : Techno-economic assessment of a hydrogen based green steel production plant in Norway." Journal of Cleaner Production 350: 131339. doi: https://doi.org/10.1016/j.jclepro.2022.131339. 
+    [3] Midrex Technologies, Inc. 2018. "DRI Products + Applications: Providing flexibility for steelmaking." April. Accessed May 2, 2022. https://www.midrex.com/wp-content/uploads/MIdrexDRI_ProductsBrochure_4-12-18.pdf.
     ''' #NEED TO FILL OUT AN UPDATE
+
+    #Needs a test file
 
 def establish_save_output_dict():
     """
@@ -44,6 +48,7 @@ def establish_save_output_dict():
 def HDRI_EAF_Model(site_name,scenario_name,eta_el,h2_prod_yr,plant_life,tax_rate,interest_rate,electricity_cost,iron_ore_cost,emission_cost,carbon_steel_price,O2_price,el_spec,h2_investment_2020,emission_factor,elec_limit,perc_O2_sold,true_electrolyzer_size):
     #molecular weights of the materials fed into DRI from national institute of standards and technology
     #Iron and impurities
+    '''[1] NIST Properties'''
     mol_weight_fe=      55.845  #grams/mol
     mol_weight_fe203=   159.69  #grams/mol
     mol_weight_sio2=    60.084  #grams/mol
@@ -60,7 +65,7 @@ def HDRI_EAF_Model(site_name,scenario_name,eta_el,h2_prod_yr,plant_life,tax_rate
 
     # Enthalpy calculations of the different streams
     ##Equations and values based of NIST equation --->https://webbook.nist.gov/cgi/cbook.cgi?Source=1998CHA1-1951&Mask=2
-
+    '''[1] Enthalpy equations are from NIST'''
     def H2_enthalpy_1(T):   #H2 Temp of 0 C / 298 K. Returns KJ/g
         t=T/1000
         A=33.066178
@@ -252,6 +257,7 @@ def HDRI_EAF_Model(site_name,scenario_name,eta_el,h2_prod_yr,plant_life,tax_rate
 
 
     #Temperatures in System all in Kelvin
+    '''[2] '''
     T1= 298     #Pellets entering DRI
     T2= 973     #95% reduced Iron exiting DRI/Entering EAF !!Assuming 0 heat Losses!!
     T3= 1923    #Liquid Steel exiting EAF
@@ -271,6 +277,7 @@ def HDRI_EAF_Model(site_name,scenario_name,eta_el,h2_prod_yr,plant_life,tax_rate
 
 
     ##Masses, Metallization rate
+    '''[3]'''
     alpha=0.94          #Metallization rate of DRI
     Fe2O3_pure=0.95     #ammount of Fe2O3 in raw material. accounts for 5% impurities in raw material
 
@@ -330,6 +337,7 @@ def HDRI_EAF_Model(site_name,scenario_name,eta_el,h2_prod_yr,plant_life,tax_rate
 
     #steel plant Data
     #40 years
+    '''[2]'''
     lang_factor=3   #estimated ratio of the total cost of creating a process within a plant, to the cost of all major technical components
 
     steel_prod_yr=steel_per_hr*operating_hours  #total steel produced in a year in tonnes
@@ -373,7 +381,7 @@ def HDRI_EAF_Model(site_name,scenario_name,eta_el,h2_prod_yr,plant_life,tax_rate
 
 
     #Reaction enthalpy Calculation
-
+    '''Either [2] or [3]'''
     h_activation=35     #Kj/mol activation energy
     h_endothermic=99.5  #kJ/mol reaction energy absorbed
 
@@ -448,6 +456,7 @@ def HDRI_EAF_Model(site_name,scenario_name,eta_el,h2_prod_yr,plant_life,tax_rate
     #####Not necessary for code##########
 
     ##EAF Carbon input
+    '''[2]'''
     m6=10           #kg
     m7=50           #kg
     m7_cao=.75*m7   #kg
@@ -543,7 +552,7 @@ def HDRI_EAF_Model(site_name,scenario_name,eta_el,h2_prod_yr,plant_life,tax_rate
         # Specific CO2 emissions from HDRI-EAF System
 
         #emission_factor=0.413 # corresponds to emissions from the grid
-
+        '''[2]'''
         EAF_co2=0.050               #ton/tls
         cao_emission=0.056          #tco2/tls
         co2_eaf_electrode=0.0070    #tco2/tls
