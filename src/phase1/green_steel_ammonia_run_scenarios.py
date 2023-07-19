@@ -175,7 +175,7 @@ def batch_generator_kernel(arg_list):
     solar_cost_kw = 9999 #THESE ARE OVERWRITTEN LATER
     solar_om_cost_kw=9999
 
-    filename_st_xl = os.path.join(hopp_path, 'to_organize', 'probably_to_project', 'H2_Analysis', 'storage_costs_ATB.csv')
+    filename_st_xl = os.path.join(project_path, 'H2_Analysis', 'storage_costs_ATB.csv')
     st_xl=pd.read_csv(filename_st_xl,index_col=0)
     storage_costs=st_xl[str(atb_year)]
     storage_cost_kwh=storage_costs['Battery Energy Capital Cost ($/kWh)']
@@ -580,6 +580,7 @@ def batch_generator_kernel(arg_list):
                 # Run HOPP
             hopp_dict, combined_pv_wind_power_production_hopp, energy_shortfall_hopp, combined_pv_wind_curtailment_hopp, hybrid_plant, wind_size_mw, solar_size_mw, lcoe = \
                 hopp_tools_steel.run_HOPP(
+                            project_path,
                             hopp_dict,
                             scenario,
                             site,
@@ -899,7 +900,7 @@ def batch_generator_kernel(arg_list):
             grid_year = 2040
 
         # Read in csv for grid prices
-        grid_prices = pd.read_csv(os.path.join(hopp_path, "to_organize", "probably_to_project", "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
+        grid_prices = pd.read_csv(os.path.join(project_path, "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
         elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
         # if site_name =='WY':
         #     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,'TX'].tolist()[0]
