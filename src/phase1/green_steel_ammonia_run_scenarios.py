@@ -16,10 +16,10 @@ from lcoe.lcoe import lcoe as lcoe_calc
 import warnings
 warnings.filterwarnings("ignore")
 
-import hopp_tools_steel
+import hopp.to_organize.hopp_tools_steel
 import inputs_py
 import copy
-from hopp_tools_steel import hoppDict
+from hopp.to_organize.hopp_tools_steel import hoppDict
 import run_RODeO
 import run_profast_for_hydrogen
 import distributed_pipe_cost_analysis
