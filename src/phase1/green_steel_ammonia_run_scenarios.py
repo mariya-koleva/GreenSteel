@@ -16,7 +16,7 @@ from lcoe.lcoe import lcoe as lcoe_calc
 import warnings
 warnings.filterwarnings("ignore")
 
-import hopp.to_organize.hopp_tools_steel
+import hopp.to_organize.hopp_tools_steel as hopp_tools_steel
 import inputs_py
 import copy
 from hopp.to_organize.hopp_tools_steel import hoppDict
