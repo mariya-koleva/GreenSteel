@@ -1,6 +1,6 @@
 import numpy as np
 import numpy_financial as npf
-from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
+from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
 
 
 def basic_H2_cost_model(electrolyzer_capex_kw, time_between_replacement,\

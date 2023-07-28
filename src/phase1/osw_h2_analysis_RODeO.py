@@ -4,16 +4,16 @@ sys.path.append('')
 from dotenv import load_dotenv
 import pandas as pd
 import json
-from hybrid.sites import SiteInfo
-from hybrid.sites import flatirons_site as sample_site
-from hybrid.keys import set_developer_nrel_gov_key
+from hopp.simulation.technologies.sites import SiteInfo
+from hopp.simulation.technologies.sites import flatirons_site as sample_site
+from hopp.utilities.keys import set_developer_nrel_gov_key
 # from plot_reopt_results import plot_reopt_results
 # from run_reopt import run_reopt
-from examples.H2_Analysis.hopp_for_h2 import hopp_for_h2
-from examples.H2_Analysis.run_h2a import run_h2a as run_h2a
-from examples.H2_Analysis.simple_dispatch import SimpleDispatch
-from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
-import examples.H2_Analysis.run_h2_PEM as run_h2_PEM
+from hopp.to_organize.H2_Analysis.hopp_for_h2 import hopp_for_h2
+from hopp.to_organize.H2_Analysis.run_h2a import run_h2a as run_h2a
+from hopp.to_organize.H2_Analysis.simple_dispatch import SimpleDispatch
+from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
+import hopp.simulation.technologies.hydrogen.electrolysis.run_h2_PEM as run_h2_PEM
 import numpy as np
 import numpy_financial as npf
 from lcoe.lcoe import lcoe as lcoe_calc
@@ -24,9 +24,10 @@ import time
 
 import subprocess
 
-import run_pyfast_for_steel as steel_economics
+from hopp.to_organize import run_profast_for_steel as steel_economics
+#import run_profast_for_steel as steel_economics
 sys.path.append('../PyFAST/')
-import src.PyFAST as PyFAST
+#import src.PyFAST as PyFAST
 
 warnings.filterwarnings("ignore")
 
@@ -1056,8 +1057,8 @@ for i in policy:
                             site_depth = site_depth + m
                     site_depth = int(site_depth)
     
-                    #from examples.H2_Analysis.pipeline_model import Pipeline
-                    from examples.H2_Analysis.pipelineASME import PipelineASME
+                    #from hopp.to_organize.H2_Analysis.pipelineASME import PipelineASME
+                    from hopp.to_organize.H2_Analysis.pipelineASME import PipelineASME
                     in_dict = dict()
                     #in_dict['pipeline_model'] = 'nrwl'
                     #in_dict['pipeline_model'] = 'nexant'

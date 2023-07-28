@@ -14,11 +14,11 @@ from lcoe.lcoe import lcoe as lcoe_calc
 import warnings
 warnings.filterwarnings("ignore")
 
-import hopp.to_organize.hopp_tools_steel
+import hopp.to_organize.hopp_tools_steel as hopp_tools_steel
 import copy
 import run_profast_for_hydrogen
 import distributed_pipe_cost_analysis
-#import hopp_tools_run_wind_solar
+#import examples.hopp_tools_run_wind_solar
 #from hybrid.PEM_Model_2Push import run_PEM_master
 
 def solar_storage_param_sweep(arg_list,save_best_solar_case_pickle,save_param_sweep_summary,solar_test_sizes_mw=None,battery_sizes_mw=None,battery_sizes_mwh=None):

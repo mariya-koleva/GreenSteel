@@ -3,16 +3,16 @@ import sys
 sys.path.append('')
 from dotenv import load_dotenv
 import pandas as pd
-from hybrid.sites import SiteInfo
-from hybrid.sites import flatirons_site as sample_site
-from hybrid.keys import set_developer_nrel_gov_key
+from hopp.simulation.technologies.sites import SiteInfo
+from hopp.simulation.technologies.sites import flatirons_site as sample_site
+from hopp.utilities.keys import set_developer_nrel_gov_key
 # from plot_reopt_results import plot_reopt_results
 # from run_reopt import run_reopt
-from examples.H2_Analysis.hopp_for_h2 import hopp_for_h2
-from examples.H2_Analysis.run_h2a import run_h2a as run_h2a
-from examples.H2_Analysis.simple_dispatch import SimpleDispatch
-from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
-import examples.H2_Analysis.run_h2_PEM as run_h2_PEM
+from hopp.to_organize.H2_Analysis.hopp_for_h2 import hopp_for_h2
+from hopp.to_organize.H2_Analysis.run_h2a import run_h2a as run_h2a
+from hopp.to_organize.H2_Analysis.simple_dispatch import SimpleDispatch
+from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
+import hopp.simulation.technologies.hydrogen.electrolysis.run_h2_PEM as run_h2_PEM
 import numpy as np
 import numpy_financial as npf
 from lcoe.lcoe import lcoe as lcoe_calc
@@ -646,14 +646,14 @@ for option in policy:
                     #cf_h2_annuals = H2A_Results['expenses_annual_cashflow'] # This is unreliable.
                     pass  
                 elif h2_model == 'Simple':
-                    from examples.H2_Analysis.H2_cost_model import basic_H2_cost_model
+                    from hopp.simulation.technologies.hydrogen.electrolysis.H2_cost_model import basic_H2_cost_model
                     
                     cf_h2_annuals, electrolyzer_total_capital_cost, electrolyzer_OM_cost, electrolyzer_capex_kw, time_between_replacement, h2_tax_credit = \
                         basic_H2_cost_model(electrolyzer_size, useful_life, atb_year,
                         electrical_generation_timeseries, H2_Results['hydrogen_annual_output'], scenario['H2 PTC'])
 
                 #Step 6b: Run desal model
-                from examples.H2_Analysis.desal_model import RO_desal
+                from hopp.simulation.technologies.hydrogen.desal.desal_model import RO_desal
 
                 water_usage_electrolyzer = H2_Results['water_hourly_usage']
                 m3_water_per_kg_h2 = 0.01
@@ -687,7 +687,7 @@ for option in policy:
 
                 #Compressor Model
                 #Not currently used in analysis (there is a built in compressor cost in electrolyzer but not other compression is considered)
-                from examples.H2_Analysis.compressor import Compressor
+                from hopp.to_organize.H2_Analysis.compressor import Compressor
                 in_dict = dict()
                 in_dict['flow_rate_kg_hr'] = 89
                 in_dict['P_outlet'] = 100
@@ -704,7 +704,7 @@ for option in policy:
 
                 #Pressure Vessel Model Example
                 #No end use so pressure vessel is not utilized
-                from examples.H2_Analysis.underground_pipe_storage import Underground_Pipe_Storage
+                from hopp.simulation.technologies.hydrogen.h2_storage.pipe_storage import Underground_Pipe_Storage
                 storage_input = dict()
                 storage_input['H2_storage_kg'] = 18750
                 # storage_input['storage_duration_hrs'] = 4
@@ -734,8 +734,8 @@ for option in policy:
                         site_depth = site_depth + m
                 site_depth = int(site_depth)
 
-                #from examples.H2_Analysis.pipeline_model import Pipeline
-                from examples.H2_Analysis.pipelineASME import PipelineASME
+                #from hopp.to_organize.H2_Analysis.pipelineASME import PipelineASME as Pipeline
+                from hopp.to_organize.H2_Analysis.pipelineASME import PipelineASME
                 in_dict = dict()
                 #in_dict['pipeline_model'] = 'nrwl'
                 #in_dict['pipeline_model'] = 'nexant'
