@@ -4,16 +4,16 @@ sys.path.append('')
 from dotenv import load_dotenv
 import pandas as pd
 import json
-from hybrid.sites import SiteInfo
-from hybrid.sites import flatirons_site as sample_site
-from hybrid.keys import set_developer_nrel_gov_key
+from hopp.simulation.technologies.sites import SiteInfo
+from hopp.simulation.technologies.sites import flatirons_site as sample_site
+from hopp.utilities.keys import set_developer_nrel_gov_key
 # from plot_reopt_results import plot_reopt_results
 # from run_reopt import run_reopt
-from examples.H2_Analysis.hopp_for_h2_floris import hopp_for_h2
-from examples.H2_Analysis.run_h2a import run_h2a as run_h2a
-from examples.H2_Analysis.simple_dispatch import SimpleDispatch
-from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
-import examples.H2_Analysis.run_h2_PEM as run_h2_PEM
+from hopp.to_organize.H2_Analysis.hopp_for_h2_floris import hopp_for_h2_floris
+from hopp.to_organize.H2_Analysis.run_h2a import run_h2a as run_h2a
+from hopp.to_organize.H2_Analysis.simple_dispatch import SimpleDispatch
+from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
+import hopp.simulation.technologies.hydrogen.electrolysis.run_h2_PEM as run_h2_PEM
 import numpy as np
 import numpy_financial as npf
 from lcoe.lcoe import lcoe as lcoe_calc
@@ -490,7 +490,7 @@ for ptc_avail in ptc_options:
                 #                     }
                 hybrid_plant, combined_pv_wind_power_production_hopp, combined_pv_wind_curtailment_hopp,\
                 energy_shortfall_hopp, annual_energies, wind_plus_solar_npv, npvs, lcoe =  \
-                    hopp_for_h2(site, scenario, technologies,
+                    hopp_for_h2_floris(site, scenario, technologies,
                                 wind_size_mw, solar_size_mw, storage_size_mw, storage_size_mwh, storage_hours,
                     wind_cost_kw, solar_cost_kw, storage_cost_kw, storage_cost_kwh,
                     kw_continuous, load,
@@ -659,7 +659,7 @@ for ptc_avail in ptc_options:
                     # plt.show()
 
                 #Step 6b: Run desal model
-                from examples.H2_Analysis.desal_model import RO_desal
+                from hopp.simulation.technologies.hydrogen.desal.desal_model import RO_desal
 
                 water_usage_electrolyzer = H2_Results['water_hourly_usage']
                 m3_water_per_kg_h2 = 0.01
@@ -691,7 +691,7 @@ for ptc_avail in ptc_options:
                 # plt.show()
 
                 #Compressor Model
-                from examples.H2_Analysis.compressor import Compressor
+                from hopp.to_organize.H2_Analysis.compressor import Compressor
                 in_dict = dict()
                 in_dict['flow_rate_kg_hr'] = 89
                 in_dict['P_outlet'] = 100
@@ -707,7 +707,7 @@ for ptc_avail in ptc_options:
                 print("Compressor opex [USD/yr]: ", compressor_results['compressor_opex'])
 
                 #Pressure Vessel Model Example
-                from examples.H2_Analysis.underground_pipe_storage import Underground_Pipe_Storage
+                from hopp.simulation.technologies.hydrogen.h2_storage.pipe_storage import Underground_Pipe_Storage
                 storage_input = dict()
                 storage_input['H2_storage_kg'] = 18750
                 # storage_input['storage_duration_hrs'] = 4
@@ -730,7 +730,7 @@ for ptc_avail in ptc_options:
                         dist_to_port = dist_to_port + m
                 dist_to_port = int(dist_to_port)
 
-                from examples.H2_Analysis.pipeline_model import Pipeline
+                from hopp.to_organize.H2_Analysis.pipelineASME import PipelineASME as Pipeline
                 in_dict = dict()
                 #in_dict['pipeline_model'] = 'nrwl'
                 in_dict['pipeline_model'] = 'nexant'
@@ -784,7 +784,7 @@ for ptc_avail in ptc_options:
                 # Run HOPP again to provide wind capital costs in pipeline scenario
                 hybrid_plant_pipeline, combined_pv_wind_power_production_hopp_pipeline, combined_pv_wind_curtailment_hopp_pipeline,\
                 energy_shortfall_hopp_pipeline, annual_energies_pipeline, wind_plus_solar_npv_pipeline, npvs_pipeline, lcoe_pipeline =  \
-                    hopp_for_h2(site, scenario, technologies,
+                    hopp_for_h2_floris(site, scenario, technologies,
                                 wind_size_mw, solar_size_mw, storage_size_mw, storage_size_mwh, storage_hours,
                     new_wind_cost_kw, solar_cost_kw, storage_cost_kw, storage_cost_kwh,
                     kw_continuous, load,

@@ -1,4 +1,4 @@
-from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
+from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
 
 class Compressor():
     def __init__(self, input_dict, output_dict):

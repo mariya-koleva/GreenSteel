@@ -4,15 +4,15 @@ sys.path.append('')
 from dotenv import load_dotenv
 import pandas as pd
 import json
-from hybrid.sites import SiteInfo
-from hybrid.keys import set_developer_nrel_gov_key
+from hopp.simulation.technologies.sites import SiteInfo
+from hopp.utilities.keys import set_developer_nrel_gov_key
 # from plot_reopt_results import plot_reopt_results
 # from run_reopt import run_reopt
-from examples.H2_Analysis.hopp_for_h2 import hopp_for_h2
-from examples.H2_Analysis.run_h2a import run_h2a as run_h2a
-from examples.H2_Analysis.simple_dispatch import SimpleDispatch
-from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
-import examples.H2_Analysis.run_h2_PEM as run_h2_PEM
+from hopp.to_organize.H2_Analysis.hopp_for_h2 import hopp_for_h2
+from hopp.to_organize.H2_Analysis.run_h2a import run_h2a as run_h2a
+from hopp.to_organize.H2_Analysis.simple_dispatch import SimpleDispatch
+from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
+import hopp.simulation.technologies.hydrogen.electrolysis.run_h2_PEM as run_h2_PEM
 import numpy as np
 import numpy_financial as npf
 from lcoe.lcoe import lcoe as lcoe_calc
@@ -22,18 +22,21 @@ from pathlib import Path
 import time
 warnings.filterwarnings("ignore")
 
-import hopp_tools
-# import hopp_tools_steel
-import hopp_tools_steel_ESG as hopp_tools_steel
+from examples import hopp_tools
+# import examples.hopp_tools_steel
+#import examples.hopp_tools_steel_ESG as hopp_tools_steel
+from hopp.to_organize import hopp_tools_steel
 import inputs_py
 import copy 
-import plot_results
-from hopp_tools_steel import hoppDict
+from hopp.to_organize import plot_results
+from hopp.to_organize.hopp_tools_steel import hoppDict
 import yaml
 import run_RODeO
 # import run_pyfast_for_hydrogen
-import run_pyfast_for_hydrogen_esg as run_pyfast_for_hydrogen
-import run_pyfast_for_steel
+from hopp.to_organize import run_profast_for_hydrogen
+#import run_pyfast_for_hydrogen_esg as run_pyfast_for_hydrogen
+from hopp.to_organize import run_profast_for_steel
+#import run_profast_for_steel
 import distributed_pipe_cost_analysis
 
 def batch_generator_kernel(arg_list):
@@ -45,7 +48,7 @@ def batch_generator_kernel(arg_list):
      save_hybrid_plant_yaml,save_model_input_yaml,save_model_output_yaml] = arg_list
     
     
-    from hybrid.sites import flatirons_site as sample_site # For some reason we have to pull this inside the definition
+    from hopp.simulation.technologies.sites import flatirons_site as sample_site # For some reason we have to pull this inside the definition
     
     # # Uncomment and adjust these values if you want to run this script on its own (not as a function)
     # i = 'option 1'
@@ -508,7 +511,7 @@ def batch_generator_kernel(arg_list):
                     water_cost=0.00533 #Commercial water cost for Cheyenne https://www.cheyennebopu.org/Residential/Billing-Rates/Water-Sewer-Rates
             
             
-                h2a_solution,h2a_summary,lcoh_breakdown,electrolyzer_installed_cost_kw = run_pyfast_for_hydrogen. run_pyfast_for_hydrogen(site_location,electrolyzer_size_mw,H2_Results,\
+                h2a_solution,h2a_summary,lcoh_breakdown,electrolyzer_installed_cost_kw = run_profast_for_hydrogen. run_profast_for_hydrogen(site_location,electrolyzer_size_mw,H2_Results,\
                                                 electrolyzer_capex_kw,time_between_replacement,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,\
                                                 desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw,hybrid_plant,wind_om_cost_kw,grid_connected_hopp)
                 
