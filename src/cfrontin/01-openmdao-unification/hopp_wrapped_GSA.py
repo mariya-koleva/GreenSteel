@@ -53,13 +53,13 @@ def run(args):
     from hopp.simulation.technologies.sites import flatirons_site as sample_site
     from hopp.utilities.keys import set_developer_nrel_gov_key
 
-    import hopp_tools_steel
-    from hopp_tools_steel import hoppDict
-    import inputs_py
-    import run_profast_for_hydrogen
-    import distributed_pipe_cost_analysis
-
     # energy modeling imports (temporary)
+    import hopp.to_organize.hopp_tools_steel as hopp_tools_steel
+    from hopp.to_organize.hopp_tools_steel import hoppDict
+    import hopp.to_organize.inputs_py as inputs_py
+    import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
+    import hopp.to_organize.distributed_pipe_cost_analysis as distributed_pipe_cost_analysis
+
     from hopp.to_organize.H2_Analysis.hopp_for_h2 import hopp_for_h2
     from hopp.to_organize.H2_Analysis.run_h2a import run_h2a as run_h2a
     from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
