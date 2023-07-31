@@ -458,6 +458,7 @@ farm:
       - 25.5
       - 50.0
     ref_density_cp_ct: 1.225
+    ref_tilt_cp_ct: 5.0
     rotor_diameter: 196.0
     turbine_type: lbw_6MW
 floris_version: v3.0.0

@@ -15,12 +15,12 @@ YamlIncludeConstructor.add_to_loader_class(loader_class=yaml.FullLoader, base_di
 
 
 # HOPP functionss
-from examples.H2_Analysis.hopp_for_h2 import hopp_for_h2
-from hybrid.sites import SiteInfo
-from examples.H2_Analysis.simple_dispatch import SimpleDispatch
-from examples.H2_Analysis.compressor import Compressor
-from examples.H2_Analysis.desal_model import RO_desal
-import examples.H2_Analysis.run_h2_PEM as run_h2_PEM
+from hopp.to_organize.H2_Analysis.hopp_for_h2 import hopp_for_h2
+from hopp.simulation.technologies.sites import SiteInfo
+from hopp.to_organize.H2_Analysis.simple_dispatch import SimpleDispatch
+from hopp.to_organize.H2_Analysis.compressor import Compressor
+from hopp.simulation.technologies.hydrogen.desal.desal_model import RO_desal
+import hopp.simulation.technologies.hydrogen.electrolysis.run_h2_PEM as run_h2_PEM
 from lcoe.lcoe import lcoe as lcoe_calc
 import numpy_financial as npf
 import inspect
@@ -600,7 +600,7 @@ def run_HOPP(
                                 'floris_config': floris_config # if not specified, use default SAM models
                             }}
 
-        from examples.H2_Analysis.hopp_for_h2_floris import hopp_for_h2_floris
+        from hopp.to_organize.H2_Analysis.hopp_for_h2_floris import hopp_for_h2_floris
         custom_powercurve=False
         hybrid_plant, combined_pv_wind_power_production_hopp, combined_pv_wind_curtailment_hopp,\
                 energy_shortfall_hopp, annual_energies, wind_plus_solar_npv, npvs, lcoe, lcoe_nom =  \
@@ -705,7 +705,7 @@ def compressor_model(hopp_dict):
 def pressure_vessel(hopp_dict):
 
     #Pressure Vessel Model Example
-    from examples.H2_Analysis.underground_pipe_storage import Underground_Pipe_Storage
+    from hopp.simulation.technologies.hydrogen.h2_storage.pipe_storage import Underground_Pipe_Storage
     storage_input = dict()
     storage_input['H2_storage_kg'] = 18750
     # storage_input['storage_duration_hrs'] = 4
@@ -744,8 +744,8 @@ def pipeline(site_df,
             site_depth = site_depth + m
     site_depth = int(site_depth)
 
-    #from examples.H2_Analysis.pipeline_model import Pipeline
-    from examples.H2_Analysis.pipelineASME import PipelineASME
+    #from hopp.to_organize.H2_Analysis.pipelineASME import PipelineASME
+    from hopp.to_organize.H2_Analysis.pipelineASME import PipelineASME
     in_dict = dict()
     #in_dict['pipeline_model'] = 'nrwl'
     #in_dict['pipeline_model'] = 'nexant'
@@ -1046,14 +1046,14 @@ def calculate_financials(
         hopp_dict.add('Models', {'calculate_financials': {'input_dict': input_dict}})
 
     turbine_rating_mw = scenario['Turbine Rating']
-    from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
+    from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
 
     #Electrolyzer financial model
     if h2_model == 'H2A':
         #cf_h2_annuals = H2A_Results['expenses_annual_cashflow'] # This is unreliable.
         pass  
     elif h2_model == 'Simple':
-        from examples.H2_Analysis.H2_cost_model import basic_H2_cost_model
+        from hopp.simulation.technologies.hydrogen.electrolysis.H2_cost_model import basic_H2_cost_model
         
         cf_h2_annuals, electrolyzer_total_capital_cost, electrolyzer_OM_cost, electrolyzer_capex_kw, time_between_replacement, h2_tax_credit, h2_itc = \
             basic_H2_cost_model(
@@ -1280,7 +1280,7 @@ def write_outputs_RODeO(
 ):
 
     turbine_rating_mw = scenario['Turbine Rating']
-    from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
+    from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
     
     total_elec_production = np.sum(electrical_generation_timeseries)
     total_hopp_installed_cost = hybrid_plant.grid._financial_model.SystemCosts.total_installed_cost
@@ -1361,14 +1361,14 @@ def steel_LCOS(
 
         hopp_dict.add('Models', {'steel_LCOS': {'input_dict': input_dict}})
 
-    from run_pyfast_for_steel import run_pyfast_for_steel
+    from hopp.to_organize.run_profast_for_steel import run_profast_for_steel
     # Specify file path to PyFAST
     import sys
     #sys.path.insert(1,'../PyFAST/')
 
     sys.path.append('../PyFAST/')
 
-    import src.PyFAST as PyFAST
+    #import src.PyFAST as PyFAST
 
     # Steel production break-even price analysis
     
@@ -1386,7 +1386,7 @@ def steel_LCOS(
     electricity_cost = lcoe - ((policy_option['Wind PTC']) * 1000) / 3 # over the whole lifetime 
     
     steel_economics_from_pyfast,steel_economics_summary,steel_annual_capacity,steel_price_breakdown=\
-        run_pyfast_for_steel(max_steel_production_capacity_mtpy,\
+        run_profast_for_steel(max_steel_production_capacity_mtpy,\
             steel_capacity_factor,steel_plant_life,levelized_cost_hydrogen,\
             electricity_cost,natural_gas_cost,lime_unitcost,
                 carbon_unitcost,
@@ -1426,14 +1426,14 @@ def levelized_cost_of_ammonia(
 
         hopp_dict.add('Models', {'levelized_cost_of_ammonia': {'input_dict': input_dict}})
 
-    from run_pyfast_for_ammonia import run_pyfast_for_ammonia
+    from hopp.to_organize import run_profast_for_ammonia
     # Specify file path to PyFAST
     import sys
     #sys.path.insert(1,'../PyFAST/')
 
     sys.path.append('../PyFAST/')
 
-    import src.PyFAST as PyFAST
+    #import src.PyFAST as PyFAST
 
     # Ammonia production break-even price analysis
 
@@ -1454,7 +1454,7 @@ def levelized_cost_of_ammonia(
     
     
     ammonia_economics_from_pyfast,ammonia_economics_summary,ammonia_annual_capacity,ammonia_price_breakdown=\
-        run_pyfast_for_ammonia(max_ammonia_production_capacity_kgpy,ammonia_capacity_factor,ammonia_plant_life,\
+        run_profast_for_ammonia(max_ammonia_production_capacity_kgpy,ammonia_capacity_factor,ammonia_plant_life,\
                                levelized_cost_hydrogen, electricity_cost,
                                cooling_water_unitcost,iron_based_catalyst_unitcost,oxygen_unitcost)
 

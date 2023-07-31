@@ -28,7 +28,7 @@ price_breakdown_dir = os.path.join(project_path, "H2_Analysis", "Phase1B", "ProF
 floris_dir = os.path.join(project_path, "floris_input_files")
 orbit_path = os.path.join(project_path, "H2_Analysis", "OSW_H2_sites_turbines_and_costs.xlsx")
 renewable_cost_path = os.path.join(project_path, "H2_Analysis", "green_steel_site_renewable_costs_ATB.xlsx")
-floris = False
+floris = True
 
 # Turn to False to run ProFAST for hydrogen LCOH
 run_RODeO_selector = False

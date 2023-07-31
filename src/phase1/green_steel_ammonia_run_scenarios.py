@@ -16,14 +16,14 @@ from lcoe.lcoe import lcoe as lcoe_calc
 import warnings
 warnings.filterwarnings("ignore")
 
-import hopp_tools_steel
-import inputs_py
+import hopp.to_organize.hopp_tools_steel as hopp_tools_steel
+import hopp.to_organize.inputs_py as inputs_py
 import copy
-from hopp_tools_steel import hoppDict
-import run_RODeO
-import run_profast_for_hydrogen
-import distributed_pipe_cost_analysis
-import LCA_single_scenario
+from hopp.to_organize.hopp_tools_steel import hoppDict
+import hopp.to_organize.run_RODeO as run_RODeO
+import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
+import hopp.to_organize.distributed_pipe_cost_analysis
+import hopp.to_organize.LCA_single_scenario as LCA_single_scenario
 from green_steel_ammonia_solar_parametric_sweep import solar_storage_param_sweep
 
 def batch_generator_kernel(arg_list):

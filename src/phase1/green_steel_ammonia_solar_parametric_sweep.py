@@ -14,10 +14,10 @@ from lcoe.lcoe import lcoe as lcoe_calc
 import warnings
 warnings.filterwarnings("ignore")
 
-import hopp_tools_steel
+import hopp.to_organize.hopp_tools_steel
 import copy
-import run_profast_for_hydrogen
-import distributed_pipe_cost_analysis
+import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
+import hopp.to_organize.distributed_pipe_cost_analysis
 #import hopp_tools_run_wind_solar
 #from hybrid.PEM_Model_2Push import run_PEM_master
 
@@ -108,7 +108,7 @@ def solar_storage_param_sweep(arg_list,save_best_solar_case_pickle,save_param_sw
     else:
         battery_dispatch_load = list(np.array(load))
 
-    st_xl=pd.read_csv(parent_path + '/examples/H2_Analysis/storage_costs_ATB.csv',index_col=0)
+    st_xl=pd.read_csv(parent_path + '/H2_Analysis/storage_costs_ATB.csv',index_col=0)
     storage_costs=st_xl[str(atb_year)]
     storage_cost_main_kwh=storage_costs['Battery Energy Capital Cost ($/kWh)']
     storage_cost_main_kw=storage_costs['Battery Power Capital Cost ($/kW)']
@@ -435,7 +435,7 @@ def solar_storage_param_sweep(arg_list,save_best_solar_case_pickle,save_param_sw
 
             # Read in csv for grid prices
             #TODO: check, this has probably changed with grid stuff!
-            grid_prices = pd.read_csv('examples/H2_Analysis/annual_average_retail_prices.csv',index_col = None,header = 0)
+            grid_prices = pd.read_csv('H2_Analysis/annual_average_retail_prices.csv',index_col = None,header = 0)
             elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
 
 

@@ -4,16 +4,16 @@ sys.path.append('')
 from dotenv import load_dotenv
 import pandas as pd
 import json
-from hybrid.sites import SiteInfo
-from hybrid.sites import flatirons_site as sample_site
-from hybrid.keys import set_developer_nrel_gov_key
+from hopp.simulation.technologies.sites import SiteInfo
+from hopp.simulation.technologies.sites import flatirons_site as sample_site
+from hopp.utilities.keys import set_developer_nrel_gov_key
 # from plot_reopt_results import plot_reopt_results
 # from run_reopt import run_reopt
-from examples.H2_Analysis.hopp_for_h2 import hopp_for_h2
-from examples.H2_Analysis.run_h2a import run_h2a as run_h2a
-from examples.H2_Analysis.simple_dispatch import SimpleDispatch
-from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
-import examples.H2_Analysis.run_h2_PEM as run_h2_PEM
+from hopp.to_organize.H2_Analysis.hopp_for_h2 import hopp_for_h2
+from hopp.to_organize.H2_Analysis.run_h2a import run_h2a as run_h2a
+from hopp.to_organize.H2_Analysis.simple_dispatch import SimpleDispatch
+from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
+import hopp.simulation.technologies.hydrogen.electrolysis.run_h2_PEM as run_h2_PEM
 import numpy as np
 import numpy_financial as npf
 from lcoe.lcoe import lcoe as lcoe_calc
@@ -23,13 +23,16 @@ from pathlib import Path
 import time
 warnings.filterwarnings("ignore")
 
-import hopp_tools
+#import examples.hopp_tools
+from examples import hopp_tools
 import inputs_py
 import copy 
-import plot_results
+from hopp.to_organize import plot_results
 import run_RODeO
-import run_pyfast_for_hydrogen
-import run_pyfast_for_steel
+from hopp.to_organize import run_profast_for_hydrogen
+#import run_pyfast_for_hydrogen
+from hopp.to_organize import run_profast_for_steel
+#import run_profast_for_steel
 
 """
 Perform a LCOH analysis for an offshore wind + Hydrogen PEM system
@@ -325,7 +328,7 @@ for i in policy:
                     water_consumption_galperkg = 3.78
                     water_cost = 0.01
                     
-                    h2a_solution,h2a_summary = run_pyfast_for_hydrogen.run_pyfast_for_hydrogen(site_location,electrolyzer_size_mw,electrolyzer_energy_kWh_per_kg,electrolyzer_capacity_factor,\
+                    h2a_solution,h2a_summary = run_profast_for_hydrogen.run_profast_for_hydrogen(site_location,electrolyzer_size_mw,electrolyzer_energy_kWh_per_kg,electrolyzer_capacity_factor,\
                                                 electrolyzer_capex_kw,storage_capacity_MWh,useful_life,water_consumption_galperkg,water_cost,lcoe/100)
                     
                     lcoh = h2a_solution.get('price')

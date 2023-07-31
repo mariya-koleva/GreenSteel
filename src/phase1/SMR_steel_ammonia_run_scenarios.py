@@ -16,8 +16,10 @@ import run_profast_for_hydrogen_SMR
 sys.path.append('')
 import warnings
 warnings.filterwarnings("ignore")
-import hopp_tools_steel
-import hopp_tools
+#import examples.hopp_tools_steel
+from hopp.to_organize import hopp_tools_steel
+from examples import hopp_tools
+#import examples.hopp_tools
 
 parent_path = os.path.abspath('')
 dir1 = os.getcwd()

@@ -38,6 +38,7 @@ def run(args):
         storage_size_mw,
         storage_size_mwh,
     ) = args
+
     num_turbines_in = int(num_turbines_in)
     electrolyzer_size_mw = float(electrolyzer_size_mw)
     solar_size_mw = float(solar_size_mw)
@@ -47,24 +48,21 @@ def run(args):
     ### imports
 
     # energy modeling imports (clean)
-    from hybrid.sites import SiteInfo
-    from hybrid.sites import flatirons_site as sample_site
-    from hybrid.keys import set_developer_nrel_gov_key
+    import hopp
+    from hopp.simulation.technologies.sites import SiteInfo
+    from hopp.simulation.technologies.sites import flatirons_site as sample_site
+    from hopp.utilities.keys import set_developer_nrel_gov_key
 
-    import hopp_tools_steel
-    from hopp_tools_steel import hoppDict
-    import inputs_py
-    import run_profast_for_hydrogen
-    import distributed_pipe_cost_analysis
+    # energy modeling imports (temporary)
+    import hopp.to_organize.hopp_tools_steel as hopp_tools_steel
+    from hopp.to_organize.hopp_tools_steel import hoppDict
+    import hopp.to_organize.inputs_py as inputs_py
+    import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
+    import hopp.to_organize.distributed_pipe_cost_analysis as distributed_pipe_cost_analysis
 
-    # energy modeling imports (dirty)
-    source_root = os.path.split(hopp_tools_steel.__file__)[0]
-    sys.path.append(source_root)
-    from examples.H2_Analysis.hopp_for_h2 import hopp_for_h2
-    from examples.H2_Analysis.run_h2a import run_h2a as run_h2a
-    from examples.H2_Analysis.simple_cash_annuals import simple_cash_annuals
-
-    sys.path.remove(source_root)
+    from hopp.to_organize.H2_Analysis.hopp_for_h2 import hopp_for_h2
+    from hopp.to_organize.H2_Analysis.run_h2a import run_h2a as run_h2a
+    from hopp.to_organize.H2_Analysis.simple_cash_annuals import simple_cash_annuals
 
     # setup API key
     load_dotenv()
@@ -77,7 +75,7 @@ def run(args):
         ### settings
 
         ## analysis switches
-        floris = True
+        floris = False
         run_RODeO_selector = False  # turn False to run ProFAST for H2 LCOH
         grid_price_scenario = (
             "retail-flat"  # ['wholesale', 'retail-peaks', 'retail-flat']
@@ -186,14 +184,12 @@ def run(args):
         )
         floris_dir = os.path.join(project_root, "input", "floris")
         orbit_path = os.path.join(
-            source_root,
-            "examples",
+            project_root,
             "H2_Analysis",
             "OSW_H2_sites_turbines_and_costs.xlsx",
         )
         renewable_cost_path = os.path.join(
-            source_root,
-            "examples",
+            project_root,
             "H2_Analysis",
             "green_steel_site_renewable_costs_ATB.xlsx",
         )
@@ -263,7 +259,7 @@ def run(args):
         # H2 storage and battery costs
         st_xl = pd.read_csv(
             os.path.join(
-                source_root, "examples", "H2_Analysis", "storage_costs_ATB.csv"
+                project_root, "H2_Analysis", "storage_costs_ATB.csv"
             ),
             index_col=0,
         )
@@ -656,6 +652,7 @@ def run(args):
                 solar_size_mw,
                 lcoe,
             ) = hopp_tools_steel.run_HOPP(
+                project_root,
                 hopp_dict,
                 scenario,
                 site,
@@ -989,8 +986,7 @@ def run(args):
             # Read in csv for grid prices
             grid_prices = pd.read_csv(
                 os.path.join(
-                    source_root,
-                    "examples",
+                    project_root,
                     "H2_Analysis",
                     "annual_average_retail_prices.csv",
                 ),

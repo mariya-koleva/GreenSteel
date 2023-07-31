@@ -1,8 +1,13 @@
+# green steel code
+
 from csv import writer
 import os
+import sys
+sys.path.append("c:/Users/CKIEFER/GreenSteel/HDRI-EAF-Technoeconomic-model/NREL/HOPP")
+sys.path.append("C:/Users/CKIEFER/GreenSteel/HDRI-EAF-Technoeconomic-model")
 from dotenv import load_dotenv
 import pandas as pd
-
+import json
 from hopp.simulation.technologies.sites import SiteInfo
 from hopp.simulation.technologies.sites import flatirons_site as sample_site
 from hopp.utilities.keys import set_developer_nrel_gov_key
@@ -479,7 +484,6 @@ def h2_main():
                     electricity_cost_USDMWH=lcoe*10
                     #True_electrolyzer_size=H2A_Results['total_plant_size']
                     True_electrolyzer_size=H2A_Results['total_plant_size']
-                    from GreenSteel.src.ckiefer import greensteel_techno_model as HDRI
                     import HAGS_Testing as HDRI
                     mass_h20, Green_steel_results=HDRI.HDRI_EAF_Model(scenario['Site Name'],scenario['Scenario Name'],eta_el,H2_Results['hydrogen_annual_output'],plant_life,tax_rate,interest_rate,electricity_cost_USDMWH,iron_ore_cost,emission_cost,carbon_steel_price,O2_price,el_spec,electrolyzer_cost/1000,emission_factor,total_elec_production,perc_O2_sold,True_electrolyzer_size)
                     #print(electrolyzer_cost)
