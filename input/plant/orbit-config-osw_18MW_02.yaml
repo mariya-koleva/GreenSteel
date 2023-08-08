@@ -17,7 +17,7 @@ project_location:
   lat: 37.48358 #
   lon: -73.72925 # 
 site:
-  depth: 1300 # m Site actually located at 200m but only 600-1300m depth works with SemiTaut Mooring Design.
+  depth: 1300 # m Site actually located at 2000m but only 600-1300m depth works with SemiTaut Mooring Design.
   distance: 110 # km
   distance_to_landfall: 110 # km
   mean_windspeed: 9.499538812785387 # m/s
@@ -113,7 +113,7 @@ substructure:
 # Wind Project Inputs
 project_parameters:
   turbine_capex: 1300 # $USD turbine CAPEX only as per 2022 ATB https://atb.nrel.gov/electricity/2022/offshore_wind
-  opex_rate: 87 # conservative Offshore Wind - Class 14 $USD/kW/yr ATB 2022, OpEx based on R&D assumptions with a base year of 2022.
+  opex_rate: 82 # moderate Offshore Wind - Class 14 $USD/kW/yr ATB 2022, OpEx based on R&D assumptions with a base year of 2022.
   commissioning: 0.01 # ORBIT default
   decommissioning: 0.15 # ORBIT default
   grid_connection: False # option, can be turned on or off
@@ -179,7 +179,7 @@ h2_transport_pipe:
   outlet_pressure: 10 # bar - from example in code from Jamie #TODO check this value
 h2_storage:
   # capacity_kg: 18750 # kg
-  capacity_from_max_on_turbine_storage: True # if True, then days of storage is ignored and storage capacity is based on how much h2 storage fits on the turbines in the plant using Kottenstete 2003.
+  capacity_from_max_on_turbine_storage: False # if True, then days of storage is ignored and storage capacity is based on how much h2 storage fits on the turbines in the plant using Kottenstete 2003.
   type: "none" # can be one of ["none", "pipe", "pressure_vessel", "salt_cavern"] ### not yet implemented:  ["line_rock_cavern"] #TODO fix salt cavern, just a number right now
   days: 3 # [days] how many days worth of production we should be able to store (this is ignored if `capacity_from_max_on_turbine_storage` is set to True)
 platform:
