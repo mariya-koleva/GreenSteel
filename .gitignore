@@ -146,4 +146,7 @@ dmypy.json
 # output stuff
 *.pdf 
 *figures*
+*speed_dir_data.csv
+*initial_out.csv
+*data*
 
