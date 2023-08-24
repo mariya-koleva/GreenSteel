@@ -27,7 +27,7 @@ energy_profile_dir = os.path.join(project_path, "Results", "Profiles")
 price_breakdown_dir = os.path.join(project_path, "Results", "ProFAST")
 floris_dir = os.path.join(project_path, "floris_input_files")
 orbit_path = os.path.join(project_path, "H2_Analysis", "OSW_H2_sites_turbines_and_costs.xlsx")
-renewable_cost_path = os.path.join(project_path, "H2_Analysis", "green_steel_site_renewable_costs_ATB.xlsx")
+renewable_cost_path = os.path.join(project_path, "H2_Analysis", "green_steel_site_renewable_costs_ATB_MN.xlsx")
 floris = False
 
 # Turn to False to run ProFAST for hydrogen LCOH
@@ -88,10 +88,11 @@ if __name__ == '__main__':
 
     site_selection = [
                     #'Site 1',
-                    'Site 2',
+                    #'Site 2',
                     #'Site 3',
                     #'Site 4',
-                    #'Site 5'
+                    #'Site 5',
+                    'Site 7'
                     ]
 
     electrolysis_cases = [
@@ -100,9 +101,9 @@ if __name__ == '__main__':
                           ]
 
     grid_connection_cases = [
-                            'off-grid',
+                            #'off-grid',
                             #'grid-only',
-                            #'hybrid-grid'
+                            'hybrid-grid'
                             ]
 
     storage_capacity_cases = [
@@ -112,7 +113,7 @@ if __name__ == '__main__':
                             ]
 
     num_pem_stacks= 6
-    run_solar_param_sweep=False
+    run_solar_param_sweep=True
 #---- Create list of arguments to pass to batch generator kernel --------------
     arg_list = []
     for i in policy:

@@ -319,6 +319,8 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                     cabling_material_cost = 44514220
                 if site_name == 'MS':
                     cabling_material_cost = 62751510
+                if site_name == 'MN':
+                    cabling_material_cost = 44514220
                 transmission_cost = 0
 
                 cabling_vs_pipeline_cost_difference = cabling_material_cost - pipeline_material_cost
@@ -340,6 +342,8 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                         transmission_cost = 68034484
                     if site_name == 'MS':
                         transmission_cost = 77274704
+                    if site_name == 'MN':
+                        transmission_cost = 68034484
                 else:
                     transmission_cost = 0
 
@@ -392,6 +396,8 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 storage_type = 'Salt cavern'
             elif site_location == 'Site 5':
                 storage_type = 'Salt cavern' #Unsure
+            elif site_location == 'Site 7':
+                storage_type = 'Lined rock cavern'
 
             hydrogen_production_storage_system_output_kgprhr,hydrogen_storage_capacity_kg,hydrogen_storage_capacity_MWh_HHV,hydrogen_storage_duration_hr,hydrogen_storage_cost_USDprkg,storage_status_message\
                 = hopp_tools_steel.hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage_type)
@@ -413,6 +419,8 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 water_cost = 0.00844
             elif site_location =='Site 5': # Site 5 - Wyoming
                 water_cost=0.00533 #Commercial water cost for Cheyenne https://www.cheyennebopu.org/Residential/Billing-Rates/Water-Sewer-Rates
+            elif site_location == 'Site 7': # Site 7 - MN
+                water_cost = 0.00634
 
 
             electrolyzer_efficiency_while_running = []

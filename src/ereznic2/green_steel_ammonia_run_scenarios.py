@@ -342,6 +342,8 @@ def batch_generator_kernel(arg_list):
                 cf_estimate = 0.303
             elif site_location == 'Site 5':
                 cf_estimate = 0.511
+            elif site_location == 'Site 7':
+                cf_estimate = 0.449
 
         else:
             # If grid-connected, base capacity off of constant full-power operation (steel/ammonia plant CF is incorporated above)
@@ -741,6 +743,8 @@ def batch_generator_kernel(arg_list):
             cabling_material_cost = 44514220
         if site_name == 'MS':
             cabling_material_cost = 62751510
+        if site_name == 'MN':
+            cabling_material_cost = 44514220
         transmission_cost = 0
 
         cabling_vs_pipeline_cost_difference = cabling_material_cost - pipeline_material_cost
@@ -760,6 +764,8 @@ def batch_generator_kernel(arg_list):
                 transmission_cost = 68034484
             if site_name == 'MS':
                 transmission_cost = 77274704
+            if site_name == 'MN':
+                transmission_cost = 68034484
         else:
             transmission_cost = 0
 
@@ -856,6 +862,8 @@ def batch_generator_kernel(arg_list):
             storage_type = 'Salt cavern'
         elif site_location == 'Site 5':
             storage_type = 'Salt cavern' #Unsure
+        elif site_location == 'Site 7':
+            storage_type = 'Lined rock cavern'
 
         hydrogen_production_storage_system_output_kgprhr,hydrogen_storage_capacity_kg,hydrogen_storage_capacity_MWh_HHV,hydrogen_storage_duration_hr,hydrogen_storage_cost_USDprkg,storage_status_message\
             = hopp_tools_steel.hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage_type)
@@ -877,6 +885,8 @@ def batch_generator_kernel(arg_list):
             water_cost = 0.00844
         elif site_location =='Site 5': # Site 5 - Wyoming
             water_cost=0.00533 #Commercial water cost for Cheyenne https://www.cheyennebopu.org/Residential/Billing-Rates/Water-Sewer-Rates
+        elif site_location == 'Site 7':
+            water_cost = 0.00634 # Site 7 - MN, assuming same as WY for now
 
 
         electrolyzer_efficiency_while_running = []
