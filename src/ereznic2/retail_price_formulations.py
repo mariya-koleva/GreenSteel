@@ -9,8 +9,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-aeo_dir = '../../Cost data/AEO Data/'
-dircambium = 'Examples/H2_Analysis/Cambium_data/' 
+aeo_dir = '../../../Cost data/AEO Data/'
+dircambium = 'H2_Analysis/Cambium_data/' 
 final_retail_price_directory = 'examples/H2_Analysis/RODeO_files/Data_files/TXT_files/Elec_prices/Elec_purch_price_MWh_MC95by35_'
 
 write_output_tofile = True
@@ -18,21 +18,22 @@ write_output_tofile = True
 #---------------- Calculate Cambium average wholesale prices ------------------
 
 # Analysis years
-years_cambium = [2022,2025,2030,2035,2040,2045]
+years_cambium = [2022,2025,2030,2035,2040,2045,2050]
 
 cambium_ws_prices_IN_avg = []
 cambium_ws_prices_IA_avg = []
 cambium_ws_prices_TX_avg = []
 cambium_ws_prices_MS_avg = []
 cambium_ws_prices_WY_avg = []
+cambium_ws_prices_MN_avg = []
 
 for year in years_cambium:
     # Read in Cambium wholesale prices
-    cambium_ws_prices_IN = pd.read_csv(dircambium + 'StdScen21_MidCASE95by2035_hourly_IN_'+str(year)+'.csv',index_col = None,header = 4,usecols = ['energy_cost_enduse','total_cost_enduse'])
-    cambium_ws_prices_IA = pd.read_csv(dircambium + 'StdScen21_MidCASE95by2035_hourly_IA_'+str(year)+'.csv',index_col = None,header = 4,usecols = ['energy_cost_enduse','total_cost_enduse'])
-    cambium_ws_prices_TX = pd.read_csv(dircambium + 'StdScen21_MidCASE95by2035_hourly_TX_'+str(year)+'.csv',index_col = None,header = 4,usecols = ['energy_cost_enduse','total_cost_enduse'])
-    cambium_ws_prices_MS = pd.read_csv(dircambium + 'StdScen21_MidCASE95by2035_hourly_MS_'+str(year)+'.csv',index_col = None,header = 4,usecols = ['energy_cost_enduse','total_cost_enduse'])
-    cambium_ws_prices_WY = pd.read_csv(dircambium + 'StdScen21_MidCASE95by2035_hourly_WY_'+str(year)+'.csv',index_col = None,header = 4,usecols = ['energy_cost_enduse','total_cost_enduse'])
+    cambium_ws_prices_IN = pd.read_csv(dircambium + 'Cambium22_MidCase100by2035_hourly_IN_'+str(year)+'.csv',index_col = None,header = 5,usecols = ['energy_cost_enduse','total_cost_enduse'])
+    cambium_ws_prices_IA = pd.read_csv(dircambium + 'Cambium22_MidCase100by2035_hourly_IA_'+str(year)+'.csv',index_col = None,header = 5,usecols = ['energy_cost_enduse','total_cost_enduse'])
+    cambium_ws_prices_TX = pd.read_csv(dircambium + 'Cambium22_MidCase100by2035_hourly_TX_'+str(year)+'.csv',index_col = None,header = 5,usecols = ['energy_cost_enduse','total_cost_enduse'])
+    cambium_ws_prices_MS = pd.read_csv(dircambium + 'Cambium22_MidCase100by2035_hourly_MS_'+str(year)+'.csv',index_col = None,header = 5,usecols = ['energy_cost_enduse','total_cost_enduse'])
+    cambium_ws_prices_WY = pd.read_csv(dircambium + 'Cambium22_MidCase100by2035_hourly_WY_'+str(year)+'.csv',index_col = None,header = 5,usecols = ['energy_cost_enduse','total_cost_enduse'])
  
     # Calculate average annual Cambium wholesale prices
     cambium_ws_prices_IN_avg.append(np.mean(cambium_ws_prices_IN['total_cost_enduse']))
@@ -130,7 +131,7 @@ ax.set_ylabel('Price ($/MWh)', fontname = font, fontsize = axis_label_size)
 ax.set_xlabel('Year', fontname = font, fontsize = axis_label_size)
 ax.tick_params(axis = 'y',labelsize = 10,direction = 'in')
 ax.tick_params(axis = 'x',labelsize = 10,direction = 'in')
-ax.set_ylim([20,140])
+#ax.set_ylim([20,140])
 plt.show()
 
 # Plot future retail prices vs AEO projections
@@ -155,7 +156,7 @@ ax.set_ylabel('Price ($/MWh)', fontname = font, fontsize = axis_label_size)
 ax.set_xlabel('Year', fontname = font, fontsize = axis_label_size)
 ax.tick_params(axis = 'y',labelsize = 10,direction = 'in')
 ax.tick_params(axis = 'x',labelsize = 10,direction = 'in')
-ax.set_ylim([20,140])
+ax.set_ylim([20,200])
 plt.show()
 
 # Select whichever is higher: AEO projection or Cambium estimation
@@ -187,10 +188,10 @@ for j in range(len(years_cambium)):
     future_retail_price_MS_combined_dict[year]=max(cambium_retail_prices_MS_moving_avg[j],aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==year,'Mississippi'].tolist()[0])
     future_retail_price_WY_combined_dict[year]=max(cambium_retail_prices_WY_moving_avg[j],aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==year,'Wyoming'].tolist()[0])
  
-future_retail_prices_dict = {'IN':future_retail_price_IN_combined_dict,'IA':future_retail_price_IA_combined_dict,'TX':future_retail_price_TX_combined_dict,'MS':future_retail_price_MS_combined_dict,'WY':future_retail_price_WY_combined_dict}    
+future_retail_prices_dict = {'IN':future_retail_price_IN_combined_dict,'IA':future_retail_price_IA_combined_dict,'TX':future_retail_price_TX_combined_dict,'MS':future_retail_price_MS_combined_dict,'WY':future_retail_price_WY_combined_dict,'MN':future_retail_price_IA_combined_dict}    
 
 future_retail_prices_df = pd.DataFrame.from_dict(future_retail_prices_dict,orient='columns')
-future_retail_prices_df.to_csv('examples/H2_Analysis/RODeO_files/Data_files/TXT_files/Elec_prices/annual_average_retail_prices.csv',sep = ',')
+future_retail_prices_df.to_csv('H2_Analysis/annual_average_retail_prices.csv',sep = ',')
 
 
 # Plot combined future retail prices vs AEO projections
@@ -215,94 +216,95 @@ ax.set_ylabel('Price ($/MWh)', fontname = font, fontsize = axis_label_size)
 ax.set_xlabel('Year', fontname = font, fontsize = axis_label_size)
 ax.tick_params(axis = 'y',labelsize = 10,direction = 'in')
 ax.tick_params(axis = 'x',labelsize = 10,direction = 'in')
-ax.set_ylim([20,140])
-
-
-locations = ['IN','IA','TX','MS','WY']
-
-wholesale_price_cases = {}
-retail_flat_price_cases = {}
-retail_peak_price_cases = {}
-for location in locations:
-    for year in years_cambium:
-        #location = 'IN'
-        #year = 2026
-        scenario = location + ' ' + str(year)
-        
-        # Read in cambium wholesale prices
-        cambium_prices = pd.read_csv(dircambium + 'StdScen21_MidCASE95by2035_hourly_'+location+'_'+str(year)+'.csv',index_col = None,header = 4,usecols = ['energy_cost_enduse','total_cost_enduse'])
-
-        # Annual average retail price
-        future_retail_prices = future_retail_prices_dict[location]
-        
-        retail_price_avg_year = future_retail_prices[year]
-        
-        # Use wholesale prices if higher than annual average retail price
-        wholesale_prices_for_RODeO = []
-        retail_prices_flat_for_RODeO = []
-        retail_prices_peaks_for_RODeO = []
-        for j in range(cambium_prices.shape[0]):
-            # Wholesale only prices
-            wholesale_prices_for_RODeO.append(cambium_prices.loc[j,'total_cost_enduse'])
-            # Retail prices without peaks
-            retail_prices_flat_for_RODeO.append(retail_price_avg_year)
-            # Retail prices with wholesale peaks
-            retail_prices_peaks_for_RODeO.append(max(retail_price_avg_year,cambium_prices.loc[j,'total_cost_enduse']))
-         
-        # Formulate dataframes to work with RODeO
-        wholesale_prices_for_RODeO = pd.DataFrame(wholesale_prices_for_RODeO,columns = ['Energy Purchase Price'])
-        retail_prices_flat_for_RODeO = pd.DataFrame(retail_prices_flat_for_RODeO,columns = ['Energy Purchase Price'])
-        retail_prices_peaks_for_RODeO = pd.DataFrame(retail_prices_peaks_for_RODeO,columns = ['Energy Purchase Price'])
-        
-        wholesale_prices_for_RODeO = wholesale_prices_for_RODeO.reset_index().rename(columns = {'index':'Interval',0:1})
-        retail_prices_flat_for_RODeO = retail_prices_flat_for_RODeO.reset_index().rename(columns = {'index':'Interval',0:1})
-        retail_prices_peaks_for_RODeO = retail_prices_peaks_for_RODeO.reset_index().rename(columns = {'index':'Interval',0:1})
-        
-        wholesale_prices_for_RODeO['Interval'] = wholesale_prices_for_RODeO['Interval']+1
-        retail_prices_flat_for_RODeO['Interval'] = retail_prices_flat_for_RODeO['Interval']+1
-        retail_prices_peaks_for_RODeO['Interval'] = retail_prices_peaks_for_RODeO['Interval']+1
-        
-        wholesale_prices_for_RODeO = wholesale_prices_for_RODeO.set_index('Interval')
-        retail_prices_flat_for_RODeO = retail_prices_flat_for_RODeO.set_index('Interval')
-        retail_prices_peaks_for_RODeO = retail_prices_peaks_for_RODeO.set_index('Interval') 
-        
-        # Write retail rate dataframe to csv for importing to HOPP or RODeO    
-        if write_output_tofile == True:
-            wholesale_prices_for_RODeO.to_csv(final_retail_price_directory + 'wholesale_' + location+'_' + str(year) + '.csv',sep = ',')
-            retail_prices_flat_for_RODeO.to_csv(final_retail_price_directory + 'retail-flat_' + location+'_' + str(year) + '.csv',sep = ',')
-            retail_prices_peaks_for_RODeO.to_csv(final_retail_price_directory + 'retail-peaks_' + location+'_' + str(year) + '.csv',sep = ',') 
-            
-        # Put retail rates into dictionary for plotting
-        wholesale_price_cases[scenario]=wholesale_prices_for_RODeO
-        retail_flat_price_cases[scenario]=retail_prices_flat_for_RODeO
-        retail_peak_price_cases[scenario]=retail_prices_peaks_for_RODeO
-        
-# Plot annual retail rate profile for location and year of interest
-location = 'WY'
-year = 2025
-scenario = location + ' ' + str(year)
-
-wholesale_prices = wholesale_price_cases[scenario] 
-retail_flat_prices = retail_flat_price_cases[scenario]
-retail_peak_prices = retail_peak_price_cases[scenario]
-        
-# Plot hourly wholesale price profile
-fig, ax = plt.subplots(3,1,sharex = 'all',figsize=(4,8), dpi= resolution)
-#ax = plt.gca()
-ax[0].plot(wholesale_prices,color = 'k')
-ax[1].plot(retail_flat_prices,color = 'k')
-ax[2].plot(retail_peak_prices,color = 'k')
-ax[0].set_ylabel('Wholesale ($/MWh)', fontname = font, fontsize = axis_label_size)
-ax[1].set_ylabel('Retail Flat ($/MWh)', fontname = font, fontsize = axis_label_size)
-ax[2].set_ylabel('Retail Peaks ($/MWh)', fontname = font, fontsize = axis_label_size)
-ax[2].set_xlabel('Hour of the year', fontname = font, fontsize = axis_label_size)
-ax[0].tick_params(axis = 'y',labelsize = 10,direction = 'in')
-ax[0].tick_params(axis = 'x',labelsize = 10,direction = 'in')
-ax[1].tick_params(axis = 'y',labelsize = 10,direction = 'in')
-ax[1].tick_params(axis = 'x',labelsize = 10,direction = 'in')
-ax[2].tick_params(axis = 'y',labelsize = 10,direction = 'in')
-ax[2].tick_params(axis = 'x',labelsize = 10,direction = 'in')
+ax.set_ylim([20,200])
 plt.show()
+
+
+# locations = ['IN','IA','TX','MS','WY']
+
+# wholesale_price_cases = {}
+# retail_flat_price_cases = {}
+# retail_peak_price_cases = {}
+# for location in locations:
+#     for year in years_cambium:
+#         #location = 'IN'
+#         #year = 2026
+#         scenario = location + ' ' + str(year)
+        
+#         # Read in cambium wholesale prices
+#         cambium_prices = pd.read_csv(dircambium + 'StdScen21_MidCASE95by2035_hourly_'+location+'_'+str(year)+'.csv',index_col = None,header = 4,usecols = ['energy_cost_enduse','total_cost_enduse'])
+
+#         # Annual average retail price
+#         future_retail_prices = future_retail_prices_dict[location]
+        
+#         retail_price_avg_year = future_retail_prices[year]
+        
+#         # Use wholesale prices if higher than annual average retail price
+#         wholesale_prices_for_RODeO = []
+#         retail_prices_flat_for_RODeO = []
+#         retail_prices_peaks_for_RODeO = []
+#         for j in range(cambium_prices.shape[0]):
+#             # Wholesale only prices
+#             wholesale_prices_for_RODeO.append(cambium_prices.loc[j,'total_cost_enduse'])
+#             # Retail prices without peaks
+#             retail_prices_flat_for_RODeO.append(retail_price_avg_year)
+#             # Retail prices with wholesale peaks
+#             retail_prices_peaks_for_RODeO.append(max(retail_price_avg_year,cambium_prices.loc[j,'total_cost_enduse']))
+         
+#         # Formulate dataframes to work with RODeO
+#         wholesale_prices_for_RODeO = pd.DataFrame(wholesale_prices_for_RODeO,columns = ['Energy Purchase Price'])
+#         retail_prices_flat_for_RODeO = pd.DataFrame(retail_prices_flat_for_RODeO,columns = ['Energy Purchase Price'])
+#         retail_prices_peaks_for_RODeO = pd.DataFrame(retail_prices_peaks_for_RODeO,columns = ['Energy Purchase Price'])
+        
+#         wholesale_prices_for_RODeO = wholesale_prices_for_RODeO.reset_index().rename(columns = {'index':'Interval',0:1})
+#         retail_prices_flat_for_RODeO = retail_prices_flat_for_RODeO.reset_index().rename(columns = {'index':'Interval',0:1})
+#         retail_prices_peaks_for_RODeO = retail_prices_peaks_for_RODeO.reset_index().rename(columns = {'index':'Interval',0:1})
+        
+#         wholesale_prices_for_RODeO['Interval'] = wholesale_prices_for_RODeO['Interval']+1
+#         retail_prices_flat_for_RODeO['Interval'] = retail_prices_flat_for_RODeO['Interval']+1
+#         retail_prices_peaks_for_RODeO['Interval'] = retail_prices_peaks_for_RODeO['Interval']+1
+        
+#         wholesale_prices_for_RODeO = wholesale_prices_for_RODeO.set_index('Interval')
+#         retail_prices_flat_for_RODeO = retail_prices_flat_for_RODeO.set_index('Interval')
+#         retail_prices_peaks_for_RODeO = retail_prices_peaks_for_RODeO.set_index('Interval') 
+        
+#         # Write retail rate dataframe to csv for importing to HOPP or RODeO    
+#         if write_output_tofile == True:
+#             wholesale_prices_for_RODeO.to_csv(final_retail_price_directory + 'wholesale_' + location+'_' + str(year) + '.csv',sep = ',')
+#             retail_prices_flat_for_RODeO.to_csv(final_retail_price_directory + 'retail-flat_' + location+'_' + str(year) + '.csv',sep = ',')
+#             retail_prices_peaks_for_RODeO.to_csv(final_retail_price_directory + 'retail-peaks_' + location+'_' + str(year) + '.csv',sep = ',') 
+            
+#         # Put retail rates into dictionary for plotting
+#         wholesale_price_cases[scenario]=wholesale_prices_for_RODeO
+#         retail_flat_price_cases[scenario]=retail_prices_flat_for_RODeO
+#         retail_peak_price_cases[scenario]=retail_prices_peaks_for_RODeO
+        
+# # Plot annual retail rate profile for location and year of interest
+# location = 'WY'
+# year = 2025
+# scenario = location + ' ' + str(year)
+
+# wholesale_prices = wholesale_price_cases[scenario] 
+# retail_flat_prices = retail_flat_price_cases[scenario]
+# retail_peak_prices = retail_peak_price_cases[scenario]
+        
+# # Plot hourly wholesale price profile
+# fig, ax = plt.subplots(3,1,sharex = 'all',figsize=(4,8), dpi= resolution)
+# #ax = plt.gca()
+# ax[0].plot(wholesale_prices,color = 'k')
+# ax[1].plot(retail_flat_prices,color = 'k')
+# ax[2].plot(retail_peak_prices,color = 'k')
+# ax[0].set_ylabel('Wholesale ($/MWh)', fontname = font, fontsize = axis_label_size)
+# ax[1].set_ylabel('Retail Flat ($/MWh)', fontname = font, fontsize = axis_label_size)
+# ax[2].set_ylabel('Retail Peaks ($/MWh)', fontname = font, fontsize = axis_label_size)
+# ax[2].set_xlabel('Hour of the year', fontname = font, fontsize = axis_label_size)
+# ax[0].tick_params(axis = 'y',labelsize = 10,direction = 'in')
+# ax[0].tick_params(axis = 'x',labelsize = 10,direction = 'in')
+# ax[1].tick_params(axis = 'y',labelsize = 10,direction = 'in')
+# ax[1].tick_params(axis = 'x',labelsize = 10,direction = 'in')
+# ax[2].tick_params(axis = 'y',labelsize = 10,direction = 'in')
+# ax[2].tick_params(axis = 'x',labelsize = 10,direction = 'in')
+# plt.show()
 
 
 

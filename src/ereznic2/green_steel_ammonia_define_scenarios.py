@@ -42,8 +42,8 @@ rodeo_output_dir = os.path.join("examples", "H2_Analysis", "RODeO_files", "Outpu
 # Distributed scale power electronics direct coupling information
 direct_coupling = True
 
-# Electrolzyer cost case ('Mid' or 'Low')
-electrolyzer_cost_case = 'Low'
+# Electrolzyer cost case ('Mid', 'High', or 'Low')
+electrolyzer_cost_case = 'Mid'
 
 # Degradation penalties for capital costs to estimate cost of plant oversizing
 electrolyzer_degradation_power_increase = 0.13
@@ -101,9 +101,9 @@ if __name__ == '__main__':
                           ]
 
     grid_connection_cases = [
-                            #'off-grid',
+                            'off-grid',
                             #'grid-only',
-                            'hybrid-grid'
+                            #'hybrid-grid'
                             ]
 
     storage_capacity_cases = [
@@ -112,8 +112,8 @@ if __name__ == '__main__':
                             #1.5
                             ]
 
-    num_pem_stacks= 6
-    run_solar_param_sweep=True
+    num_pem_stacks= 6 # Doesn't actually do anything
+    run_solar_param_sweep=False
 #---- Create list of arguments to pass to batch generator kernel --------------
     arg_list = []
     for i in policy:

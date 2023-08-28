@@ -128,16 +128,20 @@ def batch_generator_kernel(arg_list):
     #storage_sizes_mw=[0]
     #storage_sizes_mwh = [0]
     if grid_connection_scenario == 'off-grid':
-        solar_sizes_mw=[0,100,250,500,750]
-        storage_sizes_mw=[0,100,100,200]
-        storage_sizes_mwh = [0,100,400,400]
+        solar_sizes_mw=[100,250,500,750]
+        storage_sizes_mw=[100,100,200]
+        storage_sizes_mwh = [100,400,400]
+        #storage_sizes_mw=[0,100,100,200]
+        #storage_sizes_mwh = [0,100,400,400]
     else:
         solar_sizes_mw = [0,100,250,500]
-        storage_sizes_mw = [0,50,50,100]
-        storage_sizes_mwh = [0,50,200,200]
+        storage_sizes_mw=[0]
+        storage_sizes_mwh = [0]
+        #storage_sizes_mw = [0,50,50,100]
+        #storage_sizes_mwh = [0,50,200,200]
 
-    save_param_sweep_general_info=True
-    save_param_sweep_best_case=True
+    save_param_sweep_general_info=False
+    save_param_sweep_best_case=False
     #THESE ARE WORKING VARIABLES NOW
     solar_size_mw = 0
     storage_size_mw = 0
@@ -343,7 +347,7 @@ def batch_generator_kernel(arg_list):
             elif site_location == 'Site 5':
                 cf_estimate = 0.511
             elif site_location == 'Site 7':
-                cf_estimate = 0.449
+                cf_estimate = 0.399
 
         else:
             # If grid-connected, base capacity off of constant full-power operation (steel/ammonia plant CF is incorporated above)
@@ -351,6 +355,9 @@ def batch_generator_kernel(arg_list):
 
         # Electrolyzer rated hydrogen production capacity - independent of degradation
         hydrogen_production_capacity_required_kgphr = hydrogen_production_target_kgpy/(8760*cf_estimate)
+
+        # Annual electricity requirement estimate
+        electricity_production_target_MWhpyr = hydrogen_production_target_kgpy*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
 
         # Electrolyzer power requirement at BOL - namplate capacity in MWe?
         electrolyzer_capacity_BOL_MW = hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
@@ -364,8 +371,7 @@ def batch_generator_kernel(arg_list):
         # into capital cost later.
         n_turbines = int(np.ceil(np.ceil(electrolyzer_capacity_EOL_MW)/turbine_rating))
         wind_size_mw = n_turbines*turbine_rating
-        wind_size_mw = electrolyzer_capacity_EOL_MW
-
+        #wind_size_mw = electrolyzer_capacity_EOL_MW
         #wind_size_mw = electrolyzer_capacity_EOL_MW*1.08
 
         # # End of life required electrolyzer capacity in MW
@@ -480,11 +486,11 @@ def batch_generator_kernel(arg_list):
             electrolyzer_size_mw,n_pem_clusters,pem_control_type,\
             electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg,time_between_replacement,\
             user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
-            electrolyzer_model_parameters]
+            electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw]
             #if solar and battery size lists are set to 'None' then defaults will be used
             #
             lcoh,hopp_dict,best_result_data,param_sweep_tracker,combined_pv_wind_power_production_hopp,combined_pv_wind_storage_power_production_hopp,\
-            combined_pv_wind_curtailment_hopp,energy_shortfall_hopp,energy_to_electrolyzer,hybrid_plant,solar_size_mw,\
+            combined_pv_wind_curtailment_hopp,energy_shortfall_hopp,energy_to_electrolyzer,hybrid_plant,solar_size_mw,wind_size_mw,\
             storage_size_mw,storage_size_mwh,renewable_plant_cost,lcoe,cost_to_buy_from_grid, profit_from_selling_to_grid,\
             cf_wind_annuals,cf_solar_annuals,wind_itc_total=solar_storage_param_sweep(project_path,inputs_for_sweep,save_param_sweep_best_case,save_param_sweep_general_info,solar_sizes_mw,storage_sizes_mw,storage_sizes_mwh)
             []
@@ -710,6 +716,15 @@ def batch_generator_kernel(arg_list):
     # Calculate capacity factor of electricity. For now  basing off wind size because we are setting electrolyzer capacity = wind capacity,
     # but in future may want to adjust this
     cf_electricity = sum(energy_to_electrolyzer)/(electrolyzer_size_mw*8760*1000)
+    if solar_size_mw > 0:
+        cf_solar = hybrid_plant.pv.capacity_factor/100
+    else:
+        cf_solar = 0
+
+    if wind_size_mw > 0:
+        cf_wind = hybrid_plant.wind.capacity_factor/100
+    else:
+        cf_wind = 0
 
 
     # Step #: Calculate hydrogen pipe costs for distributed case
@@ -1018,6 +1033,7 @@ def batch_generator_kernel(arg_list):
                             run_RODeO_selector,
                             grid_connection_scenario,
                             grid_price_scenario,
+                            elec_price,
                             lcoh,
                             h2_transmission_price,
                             lcoh_reduction_Ren_PTC,
@@ -1074,9 +1090,12 @@ def batch_generator_kernel(arg_list):
                             scenario_choice,
                             lcoe,
                             cf_electricity,
+                            cf_wind,
+                            cf_solar,
                             run_RODeO_selector,
                             grid_connection_scenario,
                             grid_price_scenario,
+                            elec_price,
                             lcoh,
                             h2_transmission_price,
                             h2_production_capex,
