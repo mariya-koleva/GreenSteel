@@ -25,6 +25,7 @@ import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
 import hopp.to_organize.distributed_pipe_cost_analysis as distributed_pipe_cost_analysis
 import hopp.to_organize.H2_Analysis.LCA_single_scenario as LCA_single_scenario
 from green_steel_ammonia_solar_parametric_sweep import solar_storage_param_sweep
+from grid_price_profiles import grid_price_interpolation
 
 def batch_generator_kernel(arg_list):
 
@@ -345,8 +346,6 @@ def batch_generator_kernel(arg_list):
             elif site_location == 'Site 4':
                 cf_estimate = 0.303
             elif site_location == 'Site 5':
-                cf_estimate = 0.511
-            elif site_location == 'Site 7':
                 cf_estimate = 0.399
 
         else:
@@ -876,9 +875,7 @@ def batch_generator_kernel(arg_list):
         elif site_location == 'Site 4':
             storage_type = 'Salt cavern'
         elif site_location == 'Site 5':
-            storage_type = 'Salt cavern' #Unsure
-        elif site_location == 'Site 7':
-            storage_type = 'Lined rock cavern'
+            storage_type = 'Lined rock cavern' 
 
         hydrogen_production_storage_system_output_kgprhr,hydrogen_storage_capacity_kg,hydrogen_storage_capacity_MWh_HHV,hydrogen_storage_duration_hr,hydrogen_storage_cost_USDprkg,storage_status_message\
             = hopp_tools_steel.hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage_type)
@@ -898,11 +895,8 @@ def batch_generator_kernel(arg_list):
             water_cost = 0.00634
         elif site_location == 'Site 4': # Site 4 - Mississippi
             water_cost = 0.00844
-        elif site_location =='Site 5': # Site 5 - Wyoming
-            water_cost=0.00533 #Commercial water cost for Cheyenne https://www.cheyennebopu.org/Residential/Billing-Rates/Water-Sewer-Rates
-        elif site_location == 'Site 7':
-            water_cost = 0.00634 # Site 7 - MN, assuming same as WY for now
-
+        elif site_location =='Site 5': # Site 5 - MN, assuming same as IA for now
+            water_cost=0.00634 
 
         electrolyzer_efficiency_while_running = []
         water_consumption_while_running = []
@@ -927,6 +921,9 @@ def batch_generator_kernel(arg_list):
         # Read in csv for grid prices
         grid_prices = pd.read_csv(os.path.join(project_path, "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
         elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
+        grid_prices_interpolated_USDperkwh = grid_price_interpolation(grid_prices,site_name,atb_year,useful_life)
+
+
         # if site_name =='WY':
         #     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,'TX'].tolist()[0]
         # else:
@@ -940,7 +937,7 @@ def batch_generator_kernel(arg_list):
                                         electrolyzer_capex_kw,time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,\
                                         desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
                                         grid_connection_scenario,atb_year, site_name, policy_option, electrical_generation_timeseries, combined_pv_wind_storage_power_production_hopp,combined_pv_wind_curtailment_hopp,\
-                                        energy_shortfall_hopp,elec_price, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency)
+                                        energy_shortfall_hopp,elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency)
 
         lcoh = h2_solution['price']
 

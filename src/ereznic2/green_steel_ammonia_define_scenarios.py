@@ -27,7 +27,7 @@ energy_profile_dir = os.path.join(project_path, "Results", "Profiles")
 price_breakdown_dir = os.path.join(project_path, "Results", "ProFAST")
 floris_dir = os.path.join(project_path, "floris_input_files")
 orbit_path = os.path.join(project_path, "H2_Analysis", "OSW_H2_sites_turbines_and_costs.xlsx")
-renewable_cost_path = os.path.join(project_path, "H2_Analysis", "green_steel_site_renewable_costs_ATB_MN.xlsx")
+renewable_cost_path = os.path.join(project_path, "H2_Analysis", "green_steel_site_renewable_costs_ATB_aug2023.xlsx")
 floris = False
 
 # Turn to False to run ProFAST for hydrogen LCOH
@@ -68,8 +68,8 @@ if __name__ == '__main__':
 #-------------------- Define scenarios to run----------------------------------
 
     atb_years = [
-                2020,
-                #2025,
+                #2020,
+                2025,
                 #2030,
                 #2035
                 ]
@@ -90,9 +90,8 @@ if __name__ == '__main__':
                     #'Site 1',
                     #'Site 2',
                     #'Site 3',
-                    #'Site 4',
-                    #'Site 5',
-                    'Site 7'
+                    'Site 4',
+                    #'Site 5'
                     ]
 
     electrolysis_cases = [

@@ -187,13 +187,26 @@ for j in range(len(years_cambium)):
     future_retail_price_TX_combined_dict[year]=max(cambium_retail_prices_TX_moving_avg[j],aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==year,'Texas'].tolist()[0])
     future_retail_price_MS_combined_dict[year]=max(cambium_retail_prices_MS_moving_avg[j],aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==year,'Mississippi'].tolist()[0])
     future_retail_price_WY_combined_dict[year]=max(cambium_retail_prices_WY_moving_avg[j],aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==year,'Wyoming'].tolist()[0])
- 
+
+# Set final year data equal to 2050 data from cambium
+future_retail_price_IN_combined.append(cambium_retail_prices_IN_avg[-1])
+future_retail_price_TX_combined.append(cambium_retail_prices_TX_avg[-1])
+future_retail_price_IA_combined.append(cambium_retail_prices_IA_avg[-1])
+future_retail_price_MS_combined.append(cambium_retail_prices_MS_avg[-1])
+future_retail_price_WY_combined.append(cambium_retail_prices_WY_avg[-1])
+
+future_retail_price_IN_combined_dict[2050] = cambium_retail_prices_IN_avg[-1]
+future_retail_price_TX_combined_dict[2050] = cambium_retail_prices_TX_avg[-1]
+future_retail_price_IA_combined_dict[2050] = cambium_retail_prices_IA_avg[-1]
+future_retail_price_MS_combined_dict[2050] = cambium_retail_prices_MS_avg[-1]
+future_retail_price_WY_combined_dict[2050] = cambium_retail_prices_WY_avg[-1]
+
 future_retail_prices_dict = {'IN':future_retail_price_IN_combined_dict,'IA':future_retail_price_IA_combined_dict,'TX':future_retail_price_TX_combined_dict,'MS':future_retail_price_MS_combined_dict,'WY':future_retail_price_WY_combined_dict,'MN':future_retail_price_IA_combined_dict}    
 
 future_retail_prices_df = pd.DataFrame.from_dict(future_retail_prices_dict,orient='columns')
 future_retail_prices_df.to_csv('H2_Analysis/annual_average_retail_prices.csv',sep = ',')
 
-
+years_cambium.append(2050)
 # Plot combined future retail prices vs AEO projections
 fig, ax = plt.subplots(1,1,figsize=(4.8,3.6), dpi= resolution)
 ax = plt.gca()
@@ -218,6 +231,7 @@ ax.tick_params(axis = 'y',labelsize = 10,direction = 'in')
 ax.tick_params(axis = 'x',labelsize = 10,direction = 'in')
 ax.set_ylim([20,200])
 plt.show()
+[]
 
 
 # locations = ['IN','IA','TX','MS','WY']

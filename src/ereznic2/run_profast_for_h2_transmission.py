@@ -75,8 +75,8 @@ def run_profast_for_h2_transmission(max_hydrogen_production_rate_kg_hr,max_hydro
     pf.set_params('sales tax',0)
     pf.set_params('license and permit',{'value':00,'escalation':gen_inflation})
     pf.set_params('rent',{'value':0,'escalation':gen_inflation})
-    pf.set_params('property tax and insurance percent',0)
-    pf.set_params('admin expense percent',0)
+    pf.set_params('property tax and insurance',0)
+    pf.set_params('admin expense',0)
     pf.set_params('total income tax rate',0.27)
     pf.set_params('capital gains tax rate',0.15)
     pf.set_params('sell undepreciated cap',True)
@@ -87,7 +87,7 @@ def run_profast_for_h2_transmission(max_hydrogen_production_rate_kg_hr,max_hydro
     pf.set_params('debt equity ratio of initial financing',1.38)
     pf.set_params('debt type','Revolving debt')
     pf.set_params('debt interest rate',0.0489)
-    pf.set_params('cash onhand percent',1)
+    pf.set_params('cash onhand',1)
 
     #----------------------------------- Add capital items to ProFAST ----------------
     pf.add_capital_item(name="Pipeline",cost=pipeline_capex,depr_type="MACRS",depr_period=7,refurb=[0])
