@@ -941,6 +941,10 @@ def batch_generator_kernel(arg_list):
 
         lcoh = h2_solution['price']
 
+        H2_PTC_firstyear = H2_PTC[atb_year+5]
+        Ren_PTC_firstyear = Ren_PTC[atb_year+5]
+
+
         # # Max hydrogen production rate [kg/hr]
         max_hydrogen_production_rate_kg_hr = np.max(H2_Results['hydrogen_hourly_production'])
         max_hydrogen_delivery_rate_kg_hr  = np.mean(H2_Results['hydrogen_hourly_production'])
@@ -1101,8 +1105,8 @@ def batch_generator_kernel(arg_list):
                             ren_frac,
                             electrolysis_total_EI_policy_grid,
                             electrolysis_total_EI_policy_offgrid,
-                            H2_PTC,
-                            Ren_PTC,
+                            H2_PTC_firstyear,
+                            Ren_PTC_firstyear,
                             run_pv_battery_sweep,
                             electrolyzer_degradation_penalty,
                             user_defined_stack_replacement_time,

@@ -68,8 +68,8 @@ if __name__ == '__main__':
 #-------------------- Define scenarios to run----------------------------------
 
     atb_years = [
-                #2020,
-                2025,
+                2020,
+                #2025,
                 #2030,
                 #2035
                 ]
@@ -88,9 +88,9 @@ if __name__ == '__main__':
 
     site_selection = [
                     #'Site 1',
-                    #'Site 2',
+                    'Site 2',
                     #'Site 3',
-                    'Site 4',
+                    #'Site 4',
                     #'Site 5'
                     ]
 
