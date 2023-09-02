@@ -23,6 +23,9 @@ def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life
     # cooling_water_cost = 0.000113349938601175 # $/Gal
     # iron_based_catalyist_cost = 23.19977341 # $/kg
     # oxygen_price = 0.0285210891617726       # $/kg
+
+    model_year_CEPCI = 596.2
+    equation_year_CEPCI = 541.7
     
     ammonia_production_kgpy = plant_capacity_kgpy*plant_capacity_factor #=  416,090,714      
     
@@ -32,14 +35,14 @@ def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life
     # CapEx
     scaling_factor_equipment = 0.6
     capex_scale_factor = scaling_ratio**scaling_factor_equipment
-    capex_air_separation_crygenic = 22506100 * capex_scale_factor
-    capex_haber_bosch = 18642800 * capex_scale_factor
-    capex_boiler = 7069100 * capex_scale_factor
-    capex_cooling_tower = 4799200 * capex_scale_factor
+    capex_air_separation_crygenic = model_year_CEPCI/equation_year_CEPCI*22506100 * capex_scale_factor
+    capex_haber_bosch = model_year_CEPCI/equation_year_CEPCI*18642800 * capex_scale_factor
+    capex_boiler = model_year_CEPCI/equation_year_CEPCI*7069100 * capex_scale_factor
+    capex_cooling_tower = model_year_CEPCI/equation_year_CEPCI*4799200 * capex_scale_factor
     capex_direct = capex_air_separation_crygenic + capex_haber_bosch\
         + capex_boiler + capex_cooling_tower
     capex_depreciable_nonequipment = capex_direct*0.42 + \
-        4112701.84103543*scaling_ratio
+       4112701.84103543*scaling_ratio
     capex_total = capex_direct + capex_depreciable_nonequipment
     
     land_cost = capex_depreciable_nonequipment
@@ -100,19 +103,19 @@ def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life
     pf.set_params('sales tax',0) 
     pf.set_params('license and permit',{'value':00,'escalation':gen_inflation})
     pf.set_params('rent',{'value':0,'escalation':gen_inflation})
-    pf.set_params('property tax and insurance percent',0)
-    pf.set_params('admin expense percent',0)
+    pf.set_params('property tax and insurance',0)
+    pf.set_params('admin expense',0)
     pf.set_params('total income tax rate',0.27)
     pf.set_params('capital gains tax rate',0.15)
     pf.set_params('sell undepreciated cap',True)
     pf.set_params('tax losses monetized',True)
-    pf.set_params('operating incentives taxable',True)
+   # pf.set_params('operating incentives taxable',True)
     pf.set_params('general inflation rate',gen_inflation)
     pf.set_params('leverage after tax nominal discount rate',0.0824)
     pf.set_params('debt equity ratio of initial financing',1.38)
     pf.set_params('debt type','Revolving debt')
     pf.set_params('debt interest rate',0.0489)
-    pf.set_params('cash onhand percent',1)
+    pf.set_params('cash onhand',1)
     
     #----------------------------------- Add capital items to ProFAST ----------------
     pf.add_capital_item(name="Air Separation by Cryogenic",cost=capex_air_separation_crygenic,depr_type="MACRS",depr_period=7,refurb=[0])

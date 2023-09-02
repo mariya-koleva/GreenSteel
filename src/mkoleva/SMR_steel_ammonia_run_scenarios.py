@@ -9,6 +9,7 @@ Created on Wed Nov 30 13:29:30 2022
 import sys
 import os
 import glob
+#import hopp
 sys.path.insert(1,'../PyFAST/')
 import pandas as pd
 sys.path.append('../PyFAST/')
@@ -17,18 +18,18 @@ sys.path.append('')
 import warnings
 warnings.filterwarnings("ignore")
 #import examples.hopp_tools_steel
-from hopp.to_organize import hopp_tools_steel
-from examples import hopp_tools
+#from hopp.to_organize import hopp_tools_steel
+import hopp_tools_steel
+#from examples import hopp_tools
 #import examples.hopp_tools
 
 parent_path = os.path.abspath('')
 dir1 = os.getcwd()
-dirin_el_prices = 'examples/H2_Analysis/'
+dirin_el_prices = 'H2_Analysis/'
 el_prices_files = glob.glob(os.path.join(dir1 + dirin_el_prices, 'annual_average_retail_prices.csv'))
-renewable_cost_path = ('examples/H2_Analysis/green_steel_site_renewable_costs_ATB.xlsx')
-#fin_sum_dir = parent_path + '/examples/H2_Analysis/SMR_results/'
-fin_sum_dir = parent_path + '/examples/H2_Analysis/Phase1B/SMR_fin_summary/'
-price_breakdown_dir = parent_path + '/examples/H2_Analysis/Phase1B/SMR_ProFAST_price/'
+renewable_cost_path = ('H2_Analysis/green_steel_site_renewable_costs_ATB_aug2023.xlsx')
+fin_sum_dir = parent_path + '/Results_SMR'
+price_breakdown_dir = parent_path + '/H2_Analysis/Phase1B/SMR_ProFAST_price/'
 
 lcoh_check_all = []
 lcoh = []
@@ -51,23 +52,23 @@ site_selection = [
                 ] 
 
 policy_cases = [
-                #'no policy',
+                'no policy',
                 'base',
-                #'max'
+                'max'
 ] 
 #['no policy', 'base', 'max']
 
 ''' SMR doesn't get any of the policy options below:
 '''
 policy_option = {
-    'no policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
-    #'base': {'Wind ITC': 0, 'Wind PTC': 0.006, "H2 PTC": 0.6, 'Storage ITC': 6},
-    #'max': {'Wind ITC': 0, 'Wind PTC': 0.029, "H2 PTC": 3.0, 'Storage ITC': 50},
-    # 'max on grid hybrid': {'Wind ITC': 0, 'Wind PTC': 0.006, "H2 PTC": 0.60, 'Storage ITC': 6},
-    # 'max on grid hybrid': {'Wind ITC': 0, 'Wind PTC': 0.029, "H2 PTC": 0.60, 'Storage ITC': 50},
-    # 'option 3': {'Wind ITC': 6, 'Wind PTC': 0, "H2 PTC": 0.6},
-    # 'option 4': {'Wind ITC': 30, 'Wind PTC': 0, "H2 PTC": 3},
-    # 'option 5': {'Wind ITC': 50, 'Wind PTC': 0, "H2 PTC": 3},
+        'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
+        'base': {'Wind ITC': 0, 'Wind PTC': 0.0051, "H2 PTC": 0.6, 'Storage ITC': 0.06},
+        'max': {'Wind ITC': 0, 'Wind PTC': 0.03072, "H2 PTC": 3.0, 'Storage ITC': 0.5},
+        # 'max on grid hybrid': {'Wind ITC': 0, 'Wind PTC': 0.0051, "H2 PTC": 0.60, 'Storage ITC': 0.06},
+        # 'max on grid hybrid': {'Wind ITC': 0, 'Wind PTC': 0.026, "H2 PTC": 0.60, 'Storage ITC': 0.5},
+        # 'option 3': {'Wind ITC': 0.06, 'Wind PTC': 0, "H2 PTC": 0.6},
+        # 'option 4': {'Wind ITC': 0.3, 'Wind PTC': 0, "H2 PTC": 3},
+        # 'option 5': {'Wind ITC': 0.5, 'Wind PTC': 0, "H2 PTC": 3},
 }
 
 NG_price_cases = ['default',
@@ -94,12 +95,13 @@ for atb_year in atb_years:
                     hydrogen_annual_production, hydrogen_storage_duration_hr, lcoh, lcoh_breakdown,profast_h2_price_breakdown,lcoe, plant_life, natural_gas_cost,\
                     price_breakdown_storage,price_breakdown_compression,\
                     price_breakdown_SMR_plant,\
+                    CO2_TnS_unit_cost,\
                     price_breakdown_SMR_FOM, price_breakdown_SMR_VOM,\
                     price_breakdown_taxes,\
                     price_breakdown_water_charges,\
                     remaining_financial,\
                     h2_production_capex = \
-                    run_profast_for_hydrogen_SMR.run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CCS_option)
+                    run_profast_for_hydrogen_SMR.run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG_price_case,CCS_option)
     
                     lime_unit_cost = site_df['Lime ($/metric tonne)'] + site_df['Lime Transport ($/metric tonne)']
                     carbon_unit_cost = site_df['Carbon ($/metric tonne)'] + site_df['Carbon Transport ($/metric tonne)']
@@ -130,7 +132,7 @@ for atb_year in atb_years:
                                 hydrogen_storage_duration_hr,
                                 hydrogen_annual_production,
                                 price_breakdown_storage,price_breakdown_compression,
-                                price_breakdown_SMR_plant,
+                                price_breakdown_SMR_plant,CO2_TnS_unit_cost,
                                 price_breakdown_SMR_FOM, price_breakdown_SMR_VOM,
                                 price_breakdown_taxes,
                                 price_breakdown_water_charges,

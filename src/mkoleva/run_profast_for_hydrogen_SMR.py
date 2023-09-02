@@ -13,11 +13,13 @@ import pandas as pd
 import ProFAST
 
 dir1 = os.getcwd()
-dirin_el_prices = '\\examples\\H2_Analysis\\'
+dirin_el_prices = 'H2_Analysis/'
 el_prices_files = glob.glob(os.path.join(dir1 + dirin_el_prices, 'annual_average_retail_prices.csv'))
-dircambium = 'Examples/H2_Analysis/Cambium_data/StdScen21_MidCase95by2035_hourly_' 
+NG_costs_csv = pd.read_csv(dir1 + '\\H2_Analysis\\' + 'Green_steel_regional_NG_prices.csv', header=0,index_col=0) #2020$
+NG_costs_csv = pd.DataFrame(NG_costs_csv, columns = ['Default','Min','Max'],index = ['Indiana',"Texas","Iowa","Mississippi","Minnesota"])
+dircambium = 'H2_Analysis/Cambium_data/Cambium22_MidCase100by2035_hourly_' 
 
-def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CCS_option):
+def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG_price_case,CCS_option):
 
     # Toggles
     #------------------------------------------------------------------------------
@@ -75,6 +77,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
     compressor_capex_USDprkWe = 39 # $/kWe
     model_year_CEPCI = 607.5
     year2018_CEPCI = 603.1
+    year2020_CEPCI = 596.2 
     # policy credit
     CO2_per_H2 = 8.3 # kg CO2e/kg H2 -> change if the capture rate is changed
     policy_credit_45Q_duration = 12 # years
@@ -85,8 +88,9 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
     NG_consumption = 176 # MJ/kgH2
     energy_demand_NG = 0.51
     total_energy_demand =  0.64 # kWh/kgH2
+    CO2_TnS_unit_cost = 0
     
-    electricity_prices = pd.read_csv('examples/H2_Analysis/annual_average_retail_prices.csv')
+    electricity_prices = pd.read_csv('H2_Analysis/annual_average_retail_prices.csv')
     for el_prices_file in el_prices_files:
         electricity_prices = pd.read_csv(el_prices_file, header=0, index_col=0)
         
@@ -101,7 +105,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
     
     # Read in Cambium data  
     cambiumdata_filepath = dircambium + site_name + '_'+str(cambium_year) + '.csv'
-    cambium_data = pd.read_csv(cambiumdata_filepath,index_col = None,header = 4,usecols = ['lrmer_co2_c','lrmer_ch4_c','lrmer_n2o_c','lrmer_co2_p','lrmer_ch4_p','lrmer_n2o_p','lrmer_co2e_c','lrmer_co2e_p','lrmer_co2e'])
+    cambium_data = pd.read_csv(cambiumdata_filepath,index_col = None,header = 5,usecols = ['lrmer_co2_c','lrmer_ch4_c','lrmer_n2o_c','lrmer_co2_p','lrmer_ch4_p','lrmer_n2o_p','lrmer_co2e_c','lrmer_co2e_p','lrmer_co2e'])
     
     cambium_data = cambium_data.reset_index().rename(columns = {'index':'Interval','lrmer_co2_c':'LRMER CO2 combustion (kg-CO2/MWh)','lrmer_ch4_c':'LRMER CH4 combustion (g-CH4/MWh)','lrmer_n2o_c':'LRMER N2O combustion (g-N2O/MWh)',\
                                                   'lrmer_co2_p':'LRMER CO2 production (kg-CO2/MWh)','lrmer_ch4_p':'LRMER CH4 production (g-CH4/MWh)','lrmer_n2o_p':'LRMER N2O production (g-N2O/MWh)','lrmer_co2e_c':'LRMER CO2 equiv. combustion (kg-CO2e/MWh)',\
@@ -123,17 +127,19 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
     # Energy demand and plant costs
     if CCS_option == 'wCCS':
         energy_demand_process_ccs = 1.5 # kWh/kgH2
-        total_plant_cost = model_year_CEPCI/year2018_CEPCI*(0.0836 * (h2_plant_capacity_kgpd**0.687)) * 1000000 # $ ; the correlation takes daily capacity
+        total_plant_cost = 1000000 * (h2_plant_capacity_kgpd**0.5)  # 2020$ ; the correlation takes daily capacity
         energy_demand_NG = 0.51 # 2.01-1.50 # kWh/kgH2
         NG_consumption = 176 # MJ/kgH2 XXX Using same value as SMR only case for now as a placeholder
         total_energy_demand = energy_demand_process_ccs + energy_demand_NG 
+        CO2_captured = capacity_factor * h2_plant_capacity_kgpy * ccs_perc_capture * CO2_per_H2/1000 #tonnes CO2 per year
 
     elif CCS_option == 'woCCS':
         energy_demand_process = 0.13 # kWh/kgH2
-        total_plant_cost = model_year_CEPCI/year2018_CEPCI*13301 * (h2_plant_capacity_kgpd**0.746) # $
+        total_plant_cost = 973218 * (h2_plant_capacity_kgpd**0.44) # 2020$
         energy_demand_NG = 0.51 # 0.64-0.13 kWh/kgH2
         NG_consumption = 176 # MJ/kgH2
-        total_energy_demand = energy_demand_process + energy_demand_NG        
+        total_energy_demand = energy_demand_process + energy_demand_NG    
+        CO2_captured = 0
     
     if atb_year == 2020: 
         electricity_prices = electricity_prices.iloc[1]
@@ -146,34 +152,74 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
     
     
     # Indirect capital cost as a percentage of installed capital cost
-    if site_name == 'IN': # Indiana
-        land_cost = 6696 # $2019/acre 
-        water_cost = 0.00634
+    if site_location == 'Site 1': # Indiana
+        land_cost = 7072 # $2020/acre 
+        water_cost = 0.0045 #$/gal
         electricity_cost = electricity_prices['IN'] #$/MWh
-    elif site_name == 'TX': # Texas
-        land_cost = 2086 # $2019/acre
-        water_cost = 0.00811
+        CO2_transport_capex = 10.37 #2020$/tonne CO2
+        CO2_storage_capex = 31.84 #2020$/tonneCO2
+    elif site_location == 'Site 2': # Texas
+        land_cost = 2343 # $2020/acre
+        water_cost = 0.00478 #2020$/gal
         electricity_cost = electricity_prices['TX'] #$/MWh
-    elif site_name == 'IA': # Iowa
-        land_cost = 7398 # $2019/acre
-        water_cost = 0.00612
+        CO2_transport_capex = 15.02 #2020$/tonne CO2
+        CO2_storage_capex = 50.49 #2020$/tonneCO2
+    elif site_location == 'Site 3': # Iowa
+        land_cost = 8310 # $2020/acre
+        water_cost = 0.00291 #2020$/gal
         electricity_cost = electricity_prices['IA'] #$/MWh
-    elif site_name == 'MS': # Mississippi
-        land_cost = 2788 # $2019/acre
-        water_cost = 0.00844 
+        CO2_transport_capex = 17.06 #2020$/tonne CO2
+        CO2_storage_capex = 33.99 #2020$/tonneCO2
+    elif site_location == 'Site 4': # Mississippi
+        land_cost = 2652 # $2020/acre
+        water_cost = 0.00409 #2020$/gal
         electricity_cost = electricity_prices['MS'] #$/MWh
-    elif site_name == 'WY': # Wyoming
-        land_cost =7392 #$/MW
-        water_cost = 0.003033 # $/gal
-        electricity_cost = electricity_prices['WY'] #$/MWh
+        CO2_transport_capex = 2.80 #2020$/tonne CO2
+        CO2_storage_capex = 31.76 #2020$/tonneCO2
+    # elif site_name == 'WY': # Wyoming
+    #     land_cost =751 #$2020/acre
+    #     water_cost = 0.00376 # 2020$/gal
+    #     electricity_cost = electricity_prices['WY'] #$/MWh
+    elif site_location == 'Site 5': # Minnesota 
+        land_cost = 5437# $2020/acre
+        water_cost=0.00291 #$/gal
+        electricity_cost = electricity_prices['MN'] #$/MWh
+        CO2_transport_capex = 27.26#2020$/tonne CO2
+        CO2_storage_capex = 74.45 #2020$/tonneCO2
         
     if NG_price_case == 'default':
-        NG_cost = 0.00536 # $2019/MJ 
+        if site_location == 'Site 1' :
+          NG_cost = NG_costs_csv.at["Indiana","Default"]  
+        elif site_location == 'Site 2':
+           NG_cost = NG_costs_csv.at["Texas","Default"]  
+        elif site_location == 'Site 3':
+            NG_cost = NG_costs_csv.at["Iowa","Default"]  
+        elif site_location == 'Site 4':
+            NG_cost = NG_costs_csv.at["Mississippi","Default"]  
+        elif site_location == 'Site 5':
+           NG_cost =  NG_costs_csv.at["Minnesota","Default"]      
     elif NG_price_case == 'min':
-        NG_cost = 0.0024 # $2019/MJ
+        if site_location == 'Site 1' :
+          NG_cost = NG_costs_csv.at["Indiana","Min"]  
+        elif site_location == 'Site 2':
+           NG_cost =  NG_costs_csv.at["Texas","Min"] 
+        elif site_location == 'Site 3':
+          NG_cost =   NG_costs_csv.at["Iowa","Min"]  
+        elif site_location == 'Site 4':
+           NG_cost =  NG_costs_csv.at["Mississippi","Min"] 
+        elif site_location == 'Site 5':
+           NG_cost =  NG_costs_csv.at["Minnesota","Min"]  
     elif NG_price_case == 'max':
-        NG_cost = 0.0109 # $2019/MJ
-    
+        if site_location == 'Site 1' :
+          NG_cost = NG_costs_csv.at["Indiana","Max"] 
+        elif site_location == 'Site 2':
+            NG_cost = NG_costs_csv.at["Texas","Max"] 
+        elif site_location == 'Site 3':
+           NG_cost =  NG_costs_csv.at["Iowa","Max"]  
+        elif site_location == 'Site 4':
+            NG_cost = NG_costs_csv.at["Mississippi","Max"] 
+        elif site_location == 'Site 5':
+            NG_cost = NG_costs_csv.at["Minnesota","Max"]     
     # Calculations
     #------------------------------------------------------------------------------
     # CAPEX
@@ -181,10 +227,14 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
     # Calculate storage capital costs. Storage duration arbitrarily chosen at 4 hours capacity
     if CCS_option == 'wCCS': 
         hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process_ccs * hydrogen_production_kgpy / (hrs_in_year  * lhv_h2)
+        CO2_TnS_unit_cost = (CO2_transport_capex + CO2_storage_capex)* CO2_captured/(h2_plant_capacity_kgpy * capacity_factor) #$2020/kgH2
+       
     elif CCS_option == 'woCCS': 
         hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process * hydrogen_production_kgpy / (hrs_in_year  * lhv_h2)
+        CO2_TnS_unit_cost = 0 #$2020/kgH2
     capex_storage_installed = hydrogen_storage_capacity_kg * hydrogen_storage_cost_USDprkg
     capex_compressor_installed = compressor_capex_USDprkWe * h2_plant_capacity_kgpy * lhv_h2 / hrs_in_year 
+ 
     
     # Fixed and variable costs
     #------------------------------------------------------------------------------
@@ -330,6 +380,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
     price_breakdown_SMR_FOM = price_breakdown.loc[price_breakdown['Name']=='SMR FOM Cost','NPV'].tolist()[0]
     price_breakdown_SMR_VOM = price_breakdown.loc[price_breakdown['Name']=='SMR VOM Cost','NPV'].tolist()[0]
     price_breakdown_water_charges = price_breakdown.loc[price_breakdown['Name']=='Water Charges','NPV'].tolist()[0] 
+
     #    price_breakdown_natural_gas = price_breakdown.loc[price_breakdown['Name']=='Natural Gas','NPV'].tolist()[0]
     #    price_breakdown_electricity = price_breakdown.loc[price_breakdown['Name']=='Electricity','NPV'].tolist()[0]
     
@@ -351,7 +402,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
         
     lcoh_check = price_breakdown_SMR_plant + price_breakdown_H2_storage + price_breakdown_compression \
                         + price_breakdown_SMR_FOM + price_breakdown_SMR_VOM +  price_breakdown_water_charges \
-                        + price_breakdown_taxes + remaining_financial\
+                        + price_breakdown_taxes + remaining_financial + CO2_TnS_unit_cost\
                   
 
                        # + price_breakdown_desalination + price_breakdown_desalination_FOM
@@ -359,6 +410,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
     lcoh_breakdown = {'LCOH: Hydrogen Storage ($/kg)':price_breakdown_H2_storage,\
                       'LCOH: Compression ($/kg)':price_breakdown_compression,\
                       'LCOH: SMR Plant CAPEX ($/kg)':price_breakdown_SMR_plant,\
+                      'LCOH: CO2 Transportation and Storage CAPEX ($/kg)': CO2_TnS_unit_cost,\
                       'LCOH: SMR Plant FOM ($/kg)':price_breakdown_SMR_FOM,
                       'LCOH: SMR Plant VOM ($/kg)':price_breakdown_SMR_VOM,\
                       'LCOH: Taxes ($/kg)':price_breakdown_taxes,\
@@ -376,7 +428,8 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,policy_case,NG_price_case,CC
     price_breakdown = price_breakdown.drop(columns=['index','Amount'])
 
     return(hydrogen_annual_production, hydrogen_storage_duration_hr, lcoh, lcoh_breakdown, price_breakdown,lcoe,  plant_life, natural_gas_cost,  price_breakdown_storage,price_breakdown_compression,
-                         price_breakdown_SMR_plant,
+                         price_breakdown_SMR_plant,\
+                         CO2_TnS_unit_cost,\
                          price_breakdown_SMR_FOM, price_breakdown_SMR_VOM,\
                          price_breakdown_taxes,\
                          price_breakdown_water_charges,\
