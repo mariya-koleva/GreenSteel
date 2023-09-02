@@ -15,9 +15,11 @@ from lcoe.lcoe import lcoe as lcoe_calc
 import warnings
 warnings.filterwarnings("ignore")
 
-import hopp.to_organize.hopp_tools_steel as hopp_tools_steel
+#import hopp.to_organize.hopp_tools_steel as hopp_tools_steel
+import hopp_tools_steel
 import copy
-import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
+#import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
+import run_profast_for_hydrogen
 import hopp.to_organize.distributed_pipe_cost_analysis
 #import hopp_tools_run_wind_solar
 #from hybrid.PEM_Model_2Push import run_PEM_master
@@ -62,7 +64,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
      electrolyzer_size_mw,n_pem_clusters,pem_control_type,
      electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg, time_between_replacement,
      user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
-     electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw] = arg_list
+     electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw] = arg_list
 
     electrolyzer_installation_factor = 12/100
     electrolyzer_direct_cost_kw = electrolyzer_capex_kw*(1+electrolyzer_installation_factor)
@@ -445,18 +447,21 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 cabling_material_cost =0
                 pipeline_material_cost=0
                 if grid_connection_scenario == 'hybrid-grid' or grid_connection_scenario == 'grid-only':
-                    if site_name == 'TX':
-                        transmission_cost = 83409258
-                    if site_name == 'IA':
-                        transmission_cost = 68034484
-                    if site_name == 'IN':
-                        transmission_cost = 81060771
-                    if site_name == 'WY':
-                        transmission_cost = 68034484
-                    if site_name == 'MS':
-                        transmission_cost = 77274704
-                    if site_name == 'MN':
-                        transmission_cost = 68034484
+
+                    # Upload the right transmission cost CSV. Note, only works up to 1049 MW (files only go up to 1000 MW)
+                    plant_step_size = 100
+                    nearest_interconnect_size = int(np.round(interconnection_size_mw/plant_step_size))*plant_step_size
+                    transmission_cost_df = pd.read_csv(os.path.join(project_path,'H2_Analysis','Transmission_costs',str(nearest_interconnect_size)+'MW_plant_transmission_costs.csv'),index_col = None,header = 0)
+
+                    # Find the closest lat-lon in the transmission cost df
+                    lat_lon = (site_df['Lat'],site_df['Lon'])
+                    transmission_cost_lat_lons = [(x,y) for x,y in zip(transmission_cost_df['latitude'],transmission_cost_df['longitude'])]
+                    transmission_cost_lat,transmission_cost_lon = transmission_cost_lat_lons[cdist([lat_lon],transmission_cost_lat_lons).argmin()]
+
+                    trans_cap_cost_per_mw = transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'trans_cap_cost_per_mw'].tolist()[0]
+                    reinforcement_cost_per_mw = transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'reinforcement_cost_per_mw'].tolist()[0]
+                    transmission_cost = (trans_cap_cost_per_mw + reinforcement_cost_per_mw)*interconnection_size_mw
+
                 else:
                     transmission_cost = 0
 
@@ -522,18 +527,21 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             # Run ProFAST to get LCOH
 
             # Municipal water rates and wastewater treatment rates combined ($/gal)
-            if site_location == 'Site 1': # Site 1 - Indiana
-                water_cost = 0.00612
-            elif site_location == 'Site 2': # Site 2 - Texas
-                water_cost = 0.00811
-            elif site_location == 'Site 3': # Site 3 - Iowa
-                water_cost = 0.00634
-            elif site_location == 'Site 4': # Site 4 - Mississippi
-                water_cost = 0.00844
-            elif site_location =='Site 5': # Site 5 - Wyoming
-                water_cost=0.00533 #Commercial water cost for Cheyenne https://www.cheyennebopu.org/Residential/Billing-Rates/Water-Sewer-Rates
-            elif site_location == 'Site 7': # Site 7 - MN
-                water_cost = 0.00634
+        if site_location == 'Site 1': # Site 1 - Indiana
+            #water_cost = 0.00612
+            water_cost = 0.0045
+        elif site_location == 'Site 2': # Site 2 - Texas
+            #water_cost = 0.00811
+            water_cost = 0.00478
+        elif site_location == 'Site 3': # Site 3 - Iowa
+            #water_cost = 0.00634
+            water_cost = 0.00291
+        elif site_location == 'Site 4': # Site 4 - Mississippi
+            #water_cost = 0.00844
+            water_cost = 0.00409
+        elif site_location =='Site 5': # Site 5 - MN, assuming same as IA for now
+            #water_cost=0.00634 
+            water_cost = 0.00291
 
 
             electrolyzer_efficiency_while_running = []

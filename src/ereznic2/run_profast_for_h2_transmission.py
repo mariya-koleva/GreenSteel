@@ -18,18 +18,18 @@ import ProFAST
 
 import os.path
 
-dir0 = os.path.join(os.path.split(__file__)[0], 'H2_Analysis')
+def run_profast_for_h2_transmission(project_dir, max_hydrogen_production_rate_kg_hr,max_hydrogen_delivery_rate_kg_hr,pipeline_length_km,electrolyzer_capacity_factor,enduse_capacity_factor,before_after_storage,plant_life,elec_price):
 
-def run_profast_for_h2_transmission(max_hydrogen_production_rate_kg_hr,max_hydrogen_delivery_rate_kg_hr,pipeline_length_km,electrolyzer_capacity_factor,enduse_capacity_factor,before_after_storage,plant_life,elec_price):
+    dir0 = os.path.join(project_dir, "H2_Analysis")
 
-# max_hydrogen_production_rate_kg_hr = 14852.8
-# max_hydrogen_delivery_rate_kg_hr = 6023.84
-# pipeline_length_km = 50
-# electrolyzer_capacity_factor = 0.33
-# enduse_capacity_factor = 0.9
-# before_after_storage = 'before'
-# plant_life = 30
-# lcoe = 4.7
+    # max_hydrogen_production_rate_kg_hr = 14852.8
+    # max_hydrogen_delivery_rate_kg_hr = 6023.84
+    # pipeline_length_km = 50
+    # electrolyzer_capacity_factor = 0.33
+    # enduse_capacity_factor = 0.9
+    # before_after_storage = 'before'
+    # plant_life = 30
+    # lcoe = 4.7
 
     # Nameplate capacity of transmission
     if before_after_storage == 'before':
@@ -40,7 +40,7 @@ def run_profast_for_h2_transmission(max_hydrogen_production_rate_kg_hr,max_hydro
         transmission_capacity_factor = enduse_capacity_factor
 
     # Read in compressor and pipeline scaling csv
-    pipeline_compressor_cost_data = pd.read_csv(os.path.join(dir0, 'Pipeline and compressor sv 01.csv'),index_col = None,header = 0)
+    pipeline_compressor_cost_data = pd.read_csv(os.path.join(dir0, "Pipeline and compressor sv 01.csv"),index_col = None,header = 0)
     compressor_cost_data = pipeline_compressor_cost_data.loc[pipeline_compressor_cost_data['Technology'] == 'GH2 Pipeline Compressor'].drop(labels = ['Index'],axis=1)
     pipeline_cost_data = pipeline_compressor_cost_data.loc[pipeline_compressor_cost_data['Technology'] == 'GH2 Pipeline (transmission)'].drop(labels = ['Index'],axis=1)
 
@@ -81,7 +81,7 @@ def run_profast_for_h2_transmission(max_hydrogen_production_rate_kg_hr,max_hydro
     pf.set_params('capital gains tax rate',0.15)
     pf.set_params('sell undepreciated cap',True)
     pf.set_params('tax losses monetized',True)
-    pf.set_params('operating incentives taxable',True)
+    #pf.set_params('operating incentives taxable',True)
     pf.set_params('general inflation rate',gen_inflation)
     pf.set_params('leverage after tax nominal discount rate',0.0824)
     pf.set_params('debt equity ratio of initial financing',1.38)

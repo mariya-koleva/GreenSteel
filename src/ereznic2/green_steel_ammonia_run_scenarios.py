@@ -4,6 +4,7 @@ sys.path.append('')
 from dotenv import load_dotenv
 import pandas as pd
 import hopp
+from scipy.spatial.distance import cdist
 
 from hopp.simulation.technologies.sites import SiteInfo
 from hopp.utilities.keys import set_developer_nrel_gov_key
@@ -16,12 +17,14 @@ from lcoe.lcoe import lcoe as lcoe_calc
 import warnings
 warnings.filterwarnings("ignore")
 
-import hopp.to_organize.hopp_tools_steel as hopp_tools_steel
+#import hopp.to_organize.hopp_tools_steel as hopp_tools_steel
+import hopp_tools_steel
 import hopp.to_organize.inputs_py as inputs_py
 import copy
 from hopp.to_organize.hopp_tools_steel import hoppDict
 import hopp.to_organize.run_RODeO as run_RODeO
-import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
+#import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
+import run_profast_for_hydrogen
 import hopp.to_organize.distributed_pipe_cost_analysis as distributed_pipe_cost_analysis
 import hopp.to_organize.H2_Analysis.LCA_single_scenario as LCA_single_scenario
 from green_steel_ammonia_solar_parametric_sweep import solar_storage_param_sweep
@@ -485,7 +488,7 @@ def batch_generator_kernel(arg_list):
             electrolyzer_size_mw,n_pem_clusters,pem_control_type,\
             electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg,time_between_replacement,\
             user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
-            electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw]
+            electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw]
             #if solar and battery size lists are set to 'None' then defaults will be used
             #
             lcoh,hopp_dict,best_result_data,param_sweep_tracker,combined_pv_wind_power_production_hopp,combined_pv_wind_storage_power_production_hopp,\
@@ -748,7 +751,6 @@ def batch_generator_kernel(arg_list):
         # Eventually replace with calculations
         if site_name == 'TX':
             cabling_material_cost = 44553030
-
         if site_name == 'IA':
             cabling_material_cost = 44514220
         if site_name == 'IN':
@@ -768,18 +770,21 @@ def batch_generator_kernel(arg_list):
     elif electrolysis_scale == 'Centralized':
         cabling_vs_pipeline_cost_difference = 0
         if grid_connection_scenario == 'hybrid-grid' or grid_connection_scenario == 'grid-only':
-            if site_name == 'TX':
-                transmission_cost = 83409258
-            if site_name == 'IA':
-                transmission_cost = 68034484
-            if site_name == 'IN':
-                transmission_cost = 81060771
-            if site_name == 'WY':
-                transmission_cost = 68034484
-            if site_name == 'MS':
-                transmission_cost = 77274704
-            if site_name == 'MN':
-                transmission_cost = 68034484
+
+            # Upload the right transmission cost CSV. Note, only works up to 1049 MW (files only go up to 1000 MW)
+            plant_step_size = 100
+            nearest_interconnect_size = int(np.round(interconnection_size_mw/plant_step_size))*plant_step_size
+            transmission_cost_df = pd.read_csv(os.path.join(project_path,'H2_Analysis','Transmission_costs',str(nearest_interconnect_size)+'MW_plant_transmission_costs.csv'),index_col = None,header = 0)
+
+            # Find the closest lat-lon in the transmission cost df
+            lat_lon = (site_df['Lat'],site_df['Lon'])
+            transmission_cost_lat_lons = [(x,y) for x,y in zip(transmission_cost_df['latitude'],transmission_cost_df['longitude'])]
+            transmission_cost_lat,transmission_cost_lon = transmission_cost_lat_lons[cdist([lat_lon],transmission_cost_lat_lons).argmin()]
+
+            trans_cap_cost_per_mw = transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'trans_cap_cost_per_mw'].tolist()[0]
+            reinforcement_cost_per_mw = transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'reinforcement_cost_per_mw'].tolist()[0]
+            transmission_cost = (trans_cap_cost_per_mw + reinforcement_cost_per_mw)*interconnection_size_mw
+
         else:
             transmission_cost = 0
 
@@ -888,15 +893,20 @@ def batch_generator_kernel(arg_list):
 
         # Municipal water rates and wastewater treatment rates combined ($/gal)
         if site_location == 'Site 1': # Site 1 - Indiana
-            water_cost = 0.00612
+            #water_cost = 0.00612
+            water_cost = 0.0045
         elif site_location == 'Site 2': # Site 2 - Texas
-            water_cost = 0.00811
+            #water_cost = 0.00811
+            water_cost = 0.00478
         elif site_location == 'Site 3': # Site 3 - Iowa
-            water_cost = 0.00634
+            #water_cost = 0.00634
+            water_cost = 0.00291
         elif site_location == 'Site 4': # Site 4 - Mississippi
-            water_cost = 0.00844
+            #water_cost = 0.00844
+            water_cost = 0.00409
         elif site_location =='Site 5': # Site 5 - MN, assuming same as IA for now
-            water_cost=0.00634 
+            #water_cost=0.00634 
+            water_cost = 0.00291
 
         electrolyzer_efficiency_while_running = []
         water_consumption_while_running = []
@@ -986,7 +996,7 @@ def batch_generator_kernel(arg_list):
 
 
     # Calculate break-even price of ammonia
-    cooling_water_cost = 0.000113349938601175 # $/Gal
+    cooling_water_cost = water_cost#0.000113349938601175 # $/Gal
     iron_based_catalyst_cost = 23.19977341 # $/kg
     oxygen_cost = 0.0285210891617726       # $/kg
     hopp_dict,ammonia_economics_from_profast, ammonia_economics_summary, profast_ammonia_price_breakdown,ammonia_breakeven_price, ammonia_annual_production_kgpy,ammonia_production_capacity_margin_pc,ammonia_price_breakdown = hopp_tools_steel.levelized_cost_of_ammonia(hopp_dict,lcoh,hydrogen_annual_production,ammonia_production_target_kgpy,

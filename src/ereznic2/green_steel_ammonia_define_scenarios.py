@@ -43,7 +43,7 @@ rodeo_output_dir = os.path.join("examples", "H2_Analysis", "RODeO_files", "Outpu
 direct_coupling = True
 
 # Electrolzyer cost case ('Mid', 'High', or 'Low')
-electrolyzer_cost_case = 'Mid'
+electrolyzer_cost_case = 'Low'
 
 # Degradation penalties for capital costs to estimate cost of plant oversizing
 electrolyzer_degradation_power_increase = 0.13
