@@ -132,7 +132,7 @@ def batch_generator_kernel(arg_list):
     #storage_sizes_mw=[0]
     #storage_sizes_mwh = [0]
     if grid_connection_scenario == 'off-grid':
-        solar_sizes_mw=[100,250,500,750]
+        solar_sizes_mw=[0,100,250,500,750]
         storage_sizes_mw=[100,100,200]
         storage_sizes_mwh = [100,400,400]
         #storage_sizes_mw=[0,100,100,200]
@@ -951,6 +951,8 @@ def batch_generator_kernel(arg_list):
 
         lcoh = h2_solution['price']
 
+        electrolysis_total_EI_policy_grid_firstyear = electrolysis_total_EI_policy_grid[atb_year+5]
+        electrolysis_total_EI_policy_offgrid_firstyear = electrolysis_total_EI_policy_offgrid[atb_year+5]
         H2_PTC_firstyear = H2_PTC[atb_year+5]
         Ren_PTC_firstyear = Ren_PTC[atb_year+5]
 
@@ -1113,8 +1115,8 @@ def batch_generator_kernel(arg_list):
                             H2_Results,
                             elec_cf,
                             ren_frac,
-                            electrolysis_total_EI_policy_grid,
-                            electrolysis_total_EI_policy_offgrid,
+                            electrolysis_total_EI_policy_grid_firstyear,
+                            electrolysis_total_EI_policy_offgrid_firstyear,
                             H2_PTC_firstyear,
                             Ren_PTC_firstyear,
                             run_pv_battery_sweep,

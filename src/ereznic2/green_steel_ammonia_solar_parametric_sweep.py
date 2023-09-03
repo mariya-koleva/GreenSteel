@@ -3,6 +3,7 @@ import sys
 sys.path.append('')
 from dotenv import load_dotenv
 import pandas as pd
+from scipy.spatial.distance import cdist
 from hopp.utilities.keys import set_developer_nrel_gov_key
 # from plot_reopt_results import plot_reopt_results
 # from run_reopt import run_reopt
@@ -21,6 +22,7 @@ import copy
 #import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
 import run_profast_for_hydrogen
 import hopp.to_organize.distributed_pipe_cost_analysis
+from grid_price_profiles import grid_price_interpolation
 #import hopp_tools_run_wind_solar
 #from hybrid.PEM_Model_2Push import run_PEM_master
 
@@ -306,7 +308,10 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             else: 
                 solar_power_norm = np.zeros(8760)
 
-            wind_size_mw_calc = (electricity_production_target_MWhpyr/8760-solar_size_mw*solar_cf_est)/wind_cf_est
+            if grid_connection_scenario == 'off-grid':
+                wind_size_mw_calc = (electricity_production_target_MWhpyr/8760-solar_size_mw*solar_cf_est)/wind_cf_est
+            else:
+                wind_size_mw_calc = wind_size_mw
 
             n_turbines = int(np.ceil(np.ceil(wind_size_mw_calc)/turbine_rating))
             wind_size_mw = turbine_rating*n_turbines
@@ -527,21 +532,21 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             # Run ProFAST to get LCOH
 
             # Municipal water rates and wastewater treatment rates combined ($/gal)
-        if site_location == 'Site 1': # Site 1 - Indiana
-            #water_cost = 0.00612
-            water_cost = 0.0045
-        elif site_location == 'Site 2': # Site 2 - Texas
-            #water_cost = 0.00811
-            water_cost = 0.00478
-        elif site_location == 'Site 3': # Site 3 - Iowa
-            #water_cost = 0.00634
-            water_cost = 0.00291
-        elif site_location == 'Site 4': # Site 4 - Mississippi
-            #water_cost = 0.00844
-            water_cost = 0.00409
-        elif site_location =='Site 5': # Site 5 - MN, assuming same as IA for now
-            #water_cost=0.00634 
-            water_cost = 0.00291
+            if site_location == 'Site 1': # Site 1 - Indiana
+                #water_cost = 0.00612
+                water_cost = 0.0045
+            elif site_location == 'Site 2': # Site 2 - Texas
+                #water_cost = 0.00811
+                water_cost = 0.00478
+            elif site_location == 'Site 3': # Site 3 - Iowa
+                #water_cost = 0.00634
+                water_cost = 0.00291
+            elif site_location == 'Site 4': # Site 4 - Mississippi
+                #water_cost = 0.00844
+                water_cost = 0.00409
+            elif site_location =='Site 5': # Site 5 - MN, assuming same as IA for now
+                #water_cost=0.00634 
+                water_cost = 0.00291
 
 
             electrolyzer_efficiency_while_running = []
@@ -565,16 +570,16 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 grid_year = 2040
 
             # Read in csv for grid prices
-            #TODO: check, this has probably changed with grid stuff!
-            grid_prices = pd.read_csv('H2_Analysis/annual_average_retail_prices.csv',index_col = None,header = 0)
+            grid_prices = pd.read_csv(os.path.join(project_path, "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
             elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
+            grid_prices_interpolated_USDperkwh = grid_price_interpolation(grid_prices,site_name,atb_year,useful_life)
 
 
             h2_solution,h2_summary,h2_price_breakdown,lcoh_breakdown,electrolyzer_installed_cost_kw,elec_cf,ren_frac,electrolyzer_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,h2_production_capex = run_profast_for_hydrogen. run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
                                             electrolyzer_capex_kw,time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,\
                                             desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
                                             grid_connection_scenario, atb_year, site_name, policy_option, electrical_generation_timeseries, combined_pv_wind_power_production_hopp,combined_pv_wind_curtailment_hopp,\
-                                            energy_shortfall_hopp,elec_price, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency)
+                                            energy_shortfall_hopp,elec_price, grid_prices_interpolated_USDperkwh,grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency)
 
             lcoh_init = h2_solution['price']
             if save_param_sweep_summary:
@@ -625,7 +630,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 h2_performance=H2_Results
                 h2_ts=hopp_dict.main_dict['Models']['run_H2_PEM_sim']['output_dict']['H2_TimeSeries']
                 h2_agg=hopp_dict.main_dict['Models']['run_H2_PEM_sim']['output_dict']['H2_AggData']
-                h2_agg=h2_agg.drop('IV curve coeff',axis=0)
+                #h2_agg=h2_agg.drop('IV curve coeff',axis=0)
                 hydrogen_storage_data=pd.Series({'H2 Storage Output [kg/hr]':hydrogen_production_storage_system_output_kgprhr,
                 'H2 Storage Capacity [kg]':hydrogen_storage_capacity_kg,
                 'H2 Storage Capacity [MWh HHV]':hydrogen_storage_capacity_MWh_HHV,

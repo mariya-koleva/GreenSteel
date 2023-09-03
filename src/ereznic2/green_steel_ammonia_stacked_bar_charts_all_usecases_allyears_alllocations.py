@@ -12,11 +12,11 @@ import sqlite3
 
 # Initialization and Global Settings
 #Specify directory name
-electrolysis_directory = 'examples/H2_Analysis/Phase1B/Fin_sum'
+electrolysis_directory = 'Results_main/Fin_sum'
 #electrolysis_directory = 'examples/H2_Analysis/Phase1B/Fin_sum_mid'
-sensitivity_directory = 'examples/H2_Analysis/Financial_summary_distributed_sensitivity'
-smr_directory = 'examples/H2_Analysis/Phase1B/SMR_fin_summary'
-plot_directory = 'examples/H2_Analysis/Phase1B/Plots'
+sensitivity_directory = 'Results_sensitivity/Fin_sum'
+smr_directory = 'Results_SMR'
+plot_directory = 'Plots'
 
 
 # Retail price of interest ['retail-flat','wholesale']
@@ -42,7 +42,7 @@ conn.close()
 # Open distributed case sensitivity
 # Read in the summary data from the electrolysis case database
 conn = sqlite3.connect(sensitivity_directory+'/Default_summary.db')
-financial_summary_electrolysis_distributed_sensitivity  = pd.read_sql_query("SELECT * From Summary",conn)
+financial_summary_electrolysis_sensitivity  = pd.read_sql_query("SELECT * From Summary",conn)
 
 conn.commit()
 conn.close()
@@ -69,6 +69,22 @@ financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=
 financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Label']='Wind+PV+bat, DE'
 financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Order']=8
 
+# Add labels to sensitivity cases
+financial_summary_electrolysis_sensitivity.loc[financial_summary_electrolysis_sensitivity['Grid case']=='grid-only-'+retail_string,'Label']='Grid Only'
+financial_summary_electrolysis_sensitivity.loc[financial_summary_electrolysis_sensitivity['Grid case']=='grid-only-'+retail_string,'Order']= 2
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind'),'Label']='Grid + Wind'
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind'),'Order']=3
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind+PV+bat'),'Label']='Grid + Wind + PV'
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind+PV+bat'),'Order']=4
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='off-grid') & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind') & (financial_summary_electrolysis_sensitivity['Electrolysis case']=='Centralized'),'Label']='Wind, CE'
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='off-grid') & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind') & (financial_summary_electrolysis_sensitivity['Electrolysis case']=='Centralized'),'Order']=5
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='off-grid') & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis_sensitivity['Electrolysis case']=='Centralized'),'Label']='Wind+PV+bat, CE'
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='off-grid') & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis_sensitivity['Electrolysis case']=='Centralized'),'Order']=6
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='off-grid') & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind') & (financial_summary_electrolysis_sensitivity['Electrolysis case']=='Distributed'),'Label']='Wind, DE'
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='off-grid') & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind') & (financial_summary_electrolysis_sensitivity['Electrolysis case']=='Distributed'),'Order']=7
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='off-grid') & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis_sensitivity['Electrolysis case']=='Distributed'),'Label']='Wind+PV+bat, DE'
+financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Grid case']=='off-grid') & (financial_summary_electrolysis_sensitivity['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis_sensitivity['Electrolysis case']=='Distributed'),'Order']=8
+
 financial_summary_smr.loc[financial_summary_smr['CCS Case']=='woCCS','Label']= 'SMR'
 financial_summary_smr.loc[financial_summary_smr['CCS Case']=='woCCS','Order']= 0
 financial_summary_smr.loc[financial_summary_smr['CCS Case']=='wCCS','Label']= 'SMR + CCS'
@@ -86,7 +102,7 @@ locations = [
             'TX',
             'IA',
             'MS',
-            'WY'
+            'MN'
              ]
 years = [
     #'2020',
@@ -100,7 +116,7 @@ location_strings = {
                     'TX':'Texas',
                     'IA':'Iowa',
                     'MS':'Mississippi',
-                    'WY':'Wyoming'
+                    'MN':'Minnesota'
                     }
 
 # Global Plot Settings
@@ -144,6 +160,9 @@ for axi1,site in enumerate(locations):
         site_year_smr['Electrolysis case']=  'NA'
         site_year_smr['Grid Case'] = 'NA'
 
+        site_year_electrolysis_sensitivity = financial_summary_electrolysis_sensitivity.loc[(financial_summary_electrolysis_sensitivity['Site']==site) & (financial_summary_electrolysis_sensitivity['Year']==atb_year) & (financial_summary_electrolysis_sensitivity['Policy Option']=='no-policy')]
+        site_year_electrolysis_sensitivity['CCS Case'] = 'NA'
+
         # Calculate SMR error bars
         site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='default'),'LCOH NG price sensitivity low ($/kg)'] = \
             site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='default'),'LCOH ($/kg)'].values - site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') &(site_year_smr['NG price case']=='min'),'LCOH ($/kg)'].values
@@ -151,6 +170,20 @@ for axi1,site in enumerate(locations):
         site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='default'),'LCOH NG price sensitivity high ($/kg)'] = \
             site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='max'),'LCOH ($/kg)'].values - site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') &(site_year_smr['NG price case']=='default'),'LCOH ($/kg)'].values
         
+        site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='default'),'LCOS NG price sensitivity low ($/kg)'] = \
+            site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='default'),'Steel price: Total ($/tonne)'].values - site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') &(site_year_smr['NG price case']=='min'),'Steel price: Total ($/tonne)'].values
+        
+        site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='default'),'LCOS NG price sensitivity high ($/kg)'] = \
+            site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='max'),'Steel price: Total ($/tonne)'].values - site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') &(site_year_smr['NG price case']=='default'),'Steel price: Total ($/tonne)'].values
+        
+        site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='default'),'LCOA NG price sensitivity low ($/kg)'] = \
+            site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='default'),'Ammonia price: Total ($/kg)'].values - site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') &(site_year_smr['NG price case']=='min'),'Ammonia price: Total ($/kg)'].values
+        
+        site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='default'),'LCOA NG price sensitivity high ($/kg)'] = \
+            site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='max'),'Ammonia price: Total ($/kg)'].values - site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') &(site_year_smr['NG price case']=='default'),'Ammonia price: Total ($/kg)'].values
+        
+
+
         site_year_smr = site_year_smr.loc[site_year_smr['NG price case']=='default']
         site_year_smr_sensitivity = site_year_smr.loc[site_year_smr['Policy Option']=='no-policy']
 
@@ -221,10 +254,11 @@ for axi1,site in enumerate(locations):
         
         site_year_combined = site_year_combined.loc[site_year_combined['Policy Option']=='no-policy']
         site_year_combined = site_year_combined.sort_values(by='Order',ignore_index=True)
+
+        site_year_electrolysis_sensitivity = site_year_electrolysis_sensitivity.sort_values(by='Order',ignore_index=True)
                
         #steel_price = site_year_combined['Steel price: Total ($/tonne)'].values 
     
-        
         #site_year_combined['Steel price: Integration Savings ($/tonne)']=site_year_combined['Steel price: O2 Sales & Thermal Integration Savings ($/tonne)'] + site_year_combined['Steel price: Labor savings ($/tonne)']
         
         #site_year_combined['Steel price: Total Savings ($/tonne)']=site_year_combined['Steel price: Policy savings ($/tonne)']+site_year_combined['Steel price: O2 Sales & Thermal Integration Savings ($/tonne)'] + site_year_combined['Steel price: Labor savings ($/tonne)']
@@ -234,9 +268,15 @@ for axi1,site in enumerate(locations):
         ngprice_error_low = site_year_smr_sensitivity['LCOH NG price sensitivity low ($/kg)'].values.tolist()
         ngprice_error_high = site_year_smr_sensitivity['LCOH NG price sensitivity high ($/kg)'].values.tolist()
 
+        elec_error_low = (site_year_combined.loc[(site_year_combined['Order']>1)&(site_year_combined['Policy Option']=='no-policy'),'LCOH ($/kg)'].values-site_year_electrolysis_sensitivity.loc[site_year_electrolysis_sensitivity['Electrolysis cost case']=='EC-cost-Low','LCOH ($/kg)'].values).tolist()
+        elec_error_high = (site_year_electrolysis_sensitivity.loc[site_year_electrolysis_sensitivity['Electrolysis cost case']=='EC-cost-High','LCOH ($/kg)'].values-site_year_combined.loc[(site_year_combined['Order']>1)&(site_year_combined['Policy Option']=='no-policy'),'LCOH ($/kg)'].values).tolist()
+
+        error_lcoh_low = ngprice_error_low
+        error_lcoh_high = ngprice_error_high
         for j in range(len(labels)-2):
-            ngprice_error_low.append(0)
-            ngprice_error_high.append(0)
+            []
+            error_lcoh_low.append(max(0,elec_error_low[j]))
+            error_lcoh_high.append(max(0,elec_error_high[j]))
 
         # error_low = []
         # error_high = []
@@ -286,7 +326,7 @@ for axi1,site in enumerate(locations):
         ax[axi1,axi2].plot([0,1,2,3,4,5,6,7], lcoh_nopolicy-lcoh_max_policy_savings, color='dimgray', marker='s', linestyle='none', markersize=3,label='Max Policy')
         
         # Plot NG error bars
-        ax[axi1,axi2].errorbar(labels,lcoh_nopolicy,yerr=[ngprice_error_low,ngprice_error_high], fmt='none',elinewidth=1.25,ecolor='dimgray',capsize=10,markeredgewidth=1.25)
+        ax[axi1,axi2].errorbar(labels,lcoh_nopolicy,yerr=[error_lcoh_low,error_lcoh_high], fmt='none',elinewidth=1.25,ecolor='dimgray',capsize=10,markeredgewidth=1.25)
 
         arrow_top = np.zeros(len(labels))
         ax[axi1,axi2].errorbar(labels,lcoh_nopolicy,yerr=[arrow_top,arrow_top], fmt='none',elinewidth=1,ecolor='black',capsize=10,markeredgewidth=1.25) 
@@ -380,6 +420,19 @@ for axi1,site in enumerate(locations):
         steel_price_base_policy = np.array(site_year_combined['Steel price: Total ($/tonne)'].values.tolist())-np.array(site_year_combined['Steel price: Base policy savings ($/tonne)'].values.tolist())
         steel_price_max_policy = np.array(site_year_combined['Steel price: Total ($/tonne)'].values.tolist())-np.array(site_year_combined['Steel price: Max policy savings ($/tonne)'].values.tolist())
 
+        ngprice_error_low = site_year_smr_sensitivity['LCOS NG price sensitivity low ($/kg)'].values.tolist()
+        ngprice_error_high = site_year_smr_sensitivity['LCOS NG price sensitivity high ($/kg)'].values.tolist()
+
+        elec_error_low = (site_year_combined.loc[(site_year_combined['Order']>1)&(site_year_combined['Policy Option']=='no-policy'),'Steel price: Total ($/tonne)'].values-site_year_electrolysis_sensitivity.loc[site_year_electrolysis_sensitivity['Electrolysis cost case']=='EC-cost-Low','Steel price: Total ($/tonne)'].values).tolist()
+        elec_error_high = (site_year_electrolysis_sensitivity.loc[site_year_electrolysis_sensitivity['Electrolysis cost case']=='EC-cost-High','Steel price: Total ($/tonne)'].values-site_year_combined.loc[(site_year_combined['Order']>1)&(site_year_combined['Policy Option']=='no-policy'),'Steel price: Total ($/tonne)'].values).tolist()
+
+        error_lcos_low = ngprice_error_low
+        error_lcos_high = ngprice_error_high
+        for j in range(len(labels)-2):
+            []
+            error_lcos_low.append(max(0,elec_error_low[j]))
+            error_lcos_high.append(max(0,elec_error_high[j]))
+
         width = 0.5
         ax1[axi1,axi2].bar(labels,total_cap_cost,width,label='Total CAPEX',edgecolor='dimgray',color='dimgrey')
         barbottom=total_cap_cost
@@ -402,8 +455,12 @@ for axi1,site in enumerate(locations):
 
         ax1[axi1,axi2].plot([0,1,2,3,4,5,6,7], steel_price_base_policy, color='black', marker='o', linestyle='none', markersize=3,label='Base Policy')
         ax1[axi1,axi2].plot([0,1,2,3,4,5,6,7], steel_price_max_policy, color='dimgray', marker='s', linestyle='none', markersize=3,label='Max Policy')
+
+        # Plot NG error bars
+        ax1[axi1,axi2].errorbar(labels,steel_price_no_policy,yerr=[error_lcos_low,error_lcos_high], fmt='none',elinewidth=1,ecolor='dimgray',capsize=6,markeredgewidth=1.25)
+
         arrow_top = np.zeros(len(labels))
-        ax1[axi1,axi2].errorbar(labels,steel_price_no_policy,yerr=[arrow_top,arrow_top],fmt='none',elinewidth=1,ecolor='black',capsize=10,markeredgewidth=1.25)
+        ax1[axi1,axi2].errorbar(labels,steel_price_no_policy,yerr=[arrow_top,arrow_top],fmt='none',elinewidth=1,ecolor='black',capsize=6,markeredgewidth=1.25)
         for j in range(len(labels)):
             ax1[axi1,axi2].arrow(j,barbottom[j],0,-1*steel_price_base_policy_savings[j],head_width=0.1,head_length=35,length_includes_head=True,color='black')
             ax1[axi1,axi2].arrow(j,barbottom[j]-steel_price_base_policy_savings[j],0,-1*(steel_price_max_policy_savings[j]-steel_price_base_policy_savings[j]),head_width=0.1,head_length=35,length_includes_head=True,color='dimgray')
@@ -487,6 +544,19 @@ for axi1,site in enumerate(locations):
         ammonia_price_base_policy = np.array(site_year_combined['Ammonia price: Total ($/kg)'].values.tolist())- np.array(site_year_combined['Ammonia price: Base policy savings ($/kg)'].values.tolist())
         ammonia_price_max_policy = np.array(site_year_combined['Ammonia price: Total ($/kg)'].values.tolist())- np.array(site_year_combined['Ammonia price: Max policy savings ($/kg)'].values.tolist())
 
+        ngprice_error_low = site_year_smr_sensitivity['LCOA NG price sensitivity low ($/kg)'].values.tolist()
+        ngprice_error_high = site_year_smr_sensitivity['LCOA NG price sensitivity high ($/kg)'].values.tolist()
+
+        elec_error_low = (site_year_combined.loc[(site_year_combined['Order']>1)&(site_year_combined['Policy Option']=='no-policy'),'Ammonia price: Total ($/kg)'].values-site_year_electrolysis_sensitivity.loc[site_year_electrolysis_sensitivity['Electrolysis cost case']=='EC-cost-Low','Ammonia price: Total ($/kg)'].values).tolist()
+        elec_error_high = (site_year_electrolysis_sensitivity.loc[site_year_electrolysis_sensitivity['Electrolysis cost case']=='EC-cost-High','Ammonia price: Total ($/kg)'].values-site_year_combined.loc[(site_year_combined['Order']>1)&(site_year_combined['Policy Option']=='no-policy'),'Ammonia price: Total ($/kg)'].values).tolist()
+
+        error_lcoa_low = ngprice_error_low
+        error_lcoa_high = ngprice_error_high
+        for j in range(len(labels)-2):
+            []
+            error_lcoa_low.append(max(0,elec_error_low[j]))
+            error_lcoa_high.append(max(0,elec_error_high[j]))
+
         width = 0.5
         #fig, ax = plt.subplots()
         #fig, ax = plt.subplots(1,1,figsize=(9,6), dpi= resolution)
@@ -507,8 +577,12 @@ for axi1,site in enumerate(locations):
 
         ax2[axi1,axi2].plot([0,1,2,3,4,5,6,7], ammonia_price_base_policy, color='black', marker='o', linestyle='none', markersize=3,label='Base Policy')
         ax2[axi1,axi2].plot([0,1,2,3,4,5,6,7], ammonia_price_max_policy, color='dimgray', marker='s', linestyle='none', markersize=3,label='Max Policy')
+
+        # Plot NG error bars
+        ax2[axi1,axi2].errorbar(labels,ammonia_price_no_policy,yerr=[error_lcoa_low,error_lcoa_high], fmt='none',elinewidth=1,ecolor='dimgray',capsize=6,markeredgewidth=1.25)
+
         arrow_top = np.zeros(len(labels))
-        ax2[axi1,axi2].errorbar(labels,barbottom,yerr=[arrow_top,arrow_top],fmt='none',elinewidth=1,ecolor='black',capsize=10,markeredgewidth=1.25)
+        ax2[axi1,axi2].errorbar(labels,barbottom,yerr=[arrow_top,arrow_top],fmt='none',elinewidth=1,ecolor='black',capsize=6,markeredgewidth=1.25)
         for j in range(len(labels)):
             ax2[axi1,axi2].arrow(j,barbottom[j],0,-1*ammonia_price_base_policy_savings[j],head_width=0.1,head_length=0.08,length_includes_head=True,color='black')
             ax2[axi1,axi2].arrow(j,barbottom[j]-ammonia_price_base_policy_savings[j],0,-1*(ammonia_price_max_policy_savings[j]-ammonia_price_base_policy_savings[j]),head_width=0.1,head_length=0.08,length_includes_head=True,color='dimgray')

@@ -43,7 +43,7 @@ rodeo_output_dir = os.path.join("examples", "H2_Analysis", "RODeO_files", "Outpu
 direct_coupling = True
 
 # Electrolzyer cost case ('Mid', 'High', or 'Low')
-electrolyzer_cost_case = 'Low'
+electrolyzer_cost_case = 'Mid'
 
 # Degradation penalties for capital costs to estimate cost of plant oversizing
 electrolyzer_degradation_power_increase = 0.13
@@ -68,9 +68,9 @@ if __name__ == '__main__':
 #-------------------- Define scenarios to run----------------------------------
 
     atb_years = [
-                2020,
+                #2020,
                 #2025,
-                #2030,
+                2030,
                 #2035
                 ]
 
@@ -88,9 +88,9 @@ if __name__ == '__main__':
 
     site_selection = [
                     #'Site 1',
-                    'Site 2',
+                    #'Site 2',
                     #'Site 3',
-                    #'Site 4',
+                    'Site 4',
                     #'Site 5'
                     ]
 
@@ -100,9 +100,9 @@ if __name__ == '__main__':
                           ]
 
     grid_connection_cases = [
-                            'off-grid',
+                            #'off-grid',
                             #'grid-only',
-                            #'hybrid-grid'
+                            'hybrid-grid'
                             ]
 
     storage_capacity_cases = [

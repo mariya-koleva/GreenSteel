@@ -12,17 +12,17 @@ import sqlite3
 
 # Initialization and Global Settings
 #Specify directory name
-electrolysis_directory = 'examples/H2_Analysis/Phase1B/Fin_sum'
+electrolysis_directory = 'Results_main/Fin_sum'
 #electrolysis_directory = 'examples/H2_Analysis/Phase1B/Fin_sum_mid'
-sensitivity_directory = 'examples/H2_Analysis/Financial_summary_distributed_sensitivity'
-smr_directory = 'examples/H2_Analysis/Phase1B/SMR_fin_summary'
-plot_directory = 'examples/H2_Analysis/Phase1B/Plots'
+sensitivity_directory = 'Results_sensitivity/Fin_sum'
+smr_directory = 'Results_SMR'
+plot_directory = 'Plots'
 
 
 # Retail price of interest ['retail-flat','wholesale']
 retail_string = 'retail-flat'
 
-plot_subdirectory = 'Stacked_plots_alltech_alllocations_allyears'
+plot_subdirectory = 'Regionalsensitivity_alltech_alllocations_allyears'
 #plot_subdirectory = 'Stacked_Plots_all_technologies_mid'
 
 # Read in the summary data from the electrolysis case database
@@ -86,7 +86,7 @@ locations = [
             'TX',
             'IA',
             'MS',
-            'WY'
+            'MN'
              ]
 years = [
     #'2020',
@@ -151,7 +151,7 @@ for axi1,policy in enumerate(policy_cases):
         ax[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='TX','LCOH ($/kg)'],label='Texas',marker='v',ms = marker_size,color='darkred',linestyle='')
         ax[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='IA','LCOH ($/kg)'],label='Iowa',marker='^',ms = marker_size,color='goldenrod',linestyle='')
         ax[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MS','LCOH ($/kg)'],label='Mississippi',marker='s',ms = marker_size,color='forestgreen',linestyle='')
-        ax[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='WY','LCOH ($/kg)'],label='Wyoming',marker='p',ms = marker_size,color='deepskyblue',linestyle='')
+        ax[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MN','LCOH ($/kg)'],label='Minnesota',marker='p',ms = marker_size,color='deepskyblue',linestyle='')
         
         if axi1==0:
             ax[axi1,axi2].set_title(str(atb_year),fontsize=title_size)
@@ -169,7 +169,7 @@ for axi1,policy in enumerate(policy_cases):
         ax1[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='TX','Steel price: Total ($/tonne)'],label='Texas',marker='v',ms = marker_size,color='darkred',linestyle='')
         ax1[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='IA','Steel price: Total ($/tonne)'],label='Iowa',marker='^',ms = marker_size,color='goldenrod',linestyle='')
         ax1[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MS','Steel price: Total ($/tonne)'],label='Mississippi',marker='s',ms = marker_size,color='forestgreen',linestyle='')
-        ax1[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='WY','Steel price: Total ($/tonne)'],label='Wyoming',marker='p',ms = marker_size,color='deepskyblue',linestyle='')
+        ax1[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MN','Steel price: Total ($/tonne)'],label='Minnesota',marker='p',ms = marker_size,color='deepskyblue',linestyle='')
         
         if axi1==0:
             ax1[axi1,axi2].set_title(str(atb_year),fontsize=title_size)
@@ -186,7 +186,7 @@ for axi1,policy in enumerate(policy_cases):
         ax2[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='TX','Ammonia price: Total ($/kg)'],label='Texas',marker='v',ms = marker_size,color='darkred',linestyle='')
         ax2[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='IA','Ammonia price: Total ($/kg)'],label='Iowa',marker='^',ms = marker_size,color='goldenrod',linestyle='')
         ax2[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MS','Ammonia price: Total ($/kg)'],label='Mississippi',marker='s',ms = marker_size,color='forestgreen',linestyle='')
-        ax2[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='WY','Ammonia price: Total ($/kg)'],label='Wyoming',marker='p',ms = marker_size,color='deepskyblue',linestyle='')
+        ax2[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MN','Ammonia price: Total ($/kg)'],label='Minnesota',marker='p',ms = marker_size,color='deepskyblue',linestyle='')
         
         if axi1==0:
             ax2[axi1,axi2].set_title(str(atb_year),fontsize=title_size)

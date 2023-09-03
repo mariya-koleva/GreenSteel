@@ -127,29 +127,30 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     Ren_PTC = {}
     electrolysis_total_EI_policy = {}
     for year in range(start_year,endofincentives_year):
-
-        if grid_connection_scenario == 'grid-only':
-            Ren_PTC[year] = 0
-            electrolysis_total_EI_policy[year] = electrolysis_total_EI_policy_grid[year]
-        elif grid_connection_scenario == 'off-grid':
-            electrolysis_total_EI_policy[year] = electrolysis_total_EI_policy_offgrid[year]
-            if policy_option == 'no-policy':
+        if atb_year < 2035:
+            if grid_connection_scenario == 'grid-only':
                 Ren_PTC[year] = 0
-            elif policy_option == 'base':
-                Ren_PTC[year] = 0.0051 * ren_electricity_useage_kWhpkg#np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output'])
-            elif policy_option == 'max':
-                Ren_PTC[year] = 0.03072 * ren_electricity_useage_kWhpkg#np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output'])
-        elif grid_connection_scenario == 'hybrid-grid':
-            electrolysis_total_EI_policy[year] = 0 # Basically this is not used for hybrid-grid
-            if policy_option == 'no-policy':
-                Ren_PTC[year] = 0
-            elif policy_option == 'base':
-                Ren_PTC[year] = 0.0051  * ren_electricity_useage_kWhpkg#energy_from_renewables / (H2_Results['hydrogen_annual_output'])
-                #Ren_PTC = 0.0051  * np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output']) # We will need to fix this by introducing ren_frac multiplier to denominator when HOPP changes to dealing with grid cases are changed
-            elif policy_option == 'max':
-                Ren_PTC[year] = 0.03072 * ren_electricity_useage_kWhpkg#energy_from_renewables/ (H2_Results['hydrogen_annual_output'])
-                # Ren_PTC = 0.03072 * np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output']) # We will need to fix this by introducing ren_frac multiplier to denominator when HOPP changes to dealing with grid cases are changed
-
+                electrolysis_total_EI_policy[year] = electrolysis_total_EI_policy_grid[year]
+            elif grid_connection_scenario == 'off-grid':
+                electrolysis_total_EI_policy[year] = electrolysis_total_EI_policy_offgrid[year]
+                if policy_option == 'no-policy':
+                    Ren_PTC[year] = 0
+                elif policy_option == 'base':
+                    Ren_PTC[year] = 0.0051 * ren_electricity_useage_kWhpkg#np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output'])
+                elif policy_option == 'max':
+                    Ren_PTC[year] = 0.03072 * ren_electricity_useage_kWhpkg#np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output'])
+            elif grid_connection_scenario == 'hybrid-grid':
+                electrolysis_total_EI_policy[year] = 0 # Basically this is not used for hybrid-grid
+                if policy_option == 'no-policy':
+                    Ren_PTC[year] = 0
+                elif policy_option == 'base':
+                    Ren_PTC[year] = 0.0051  * ren_electricity_useage_kWhpkg#energy_from_renewables / (H2_Results['hydrogen_annual_output'])
+                    #Ren_PTC = 0.0051  * np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output']) # We will need to fix this by introducing ren_frac multiplier to denominator when HOPP changes to dealing with grid cases are changed
+                elif policy_option == 'max':
+                    Ren_PTC[year] = 0.03072 * ren_electricity_useage_kWhpkg#energy_from_renewables/ (H2_Results['hydrogen_annual_output'])
+                    # Ren_PTC = 0.03072 * np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output']) # We will need to fix this by introducing ren_frac multiplier to denominator when HOPP changes to dealing with grid cases are changed
+        elif atb_year == 2035:
+                Ren_PTC[year]=0
     # add in electrolzyer replacement schedule
     if user_defined_stack_replacement_time:
         refturb_period = round(user_defined_time_between_replacement/(24*365))
@@ -222,113 +223,116 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     endofincentives_year = cambium_year + H2_PTC_duration
     H2_PTC = {}
     for year in range(cambium_year,endofincentives_year):
+        
+        if atb_year < 2035:
+        
+            if grid_connection_scenario == 'grid-only' or grid_connection_scenario == 'off-grid':
 
-        if grid_connection_scenario == 'grid-only' or grid_connection_scenario == 'off-grid':
+                if policy_option == 'no-policy':
+                    ITC = 0
+                    H2_PTC[year] = 0 # $/kg H2
+                    Ren_PTC[year] = 0 # $/kWh
 
-            if policy_option == 'no-policy':
-                ITC = 0
-                H2_PTC[year] = 0 # $/kg H2
-                Ren_PTC[year] = 0 # $/kWh
+                elif policy_option == 'max':
 
-            elif policy_option == 'max':
+                    ITC = 0.5
 
-                ITC = 0.5
+                    if electrolysis_total_EI_policy[year] <= 0.45: # kg CO2e/kg H2
+                        H2_PTC[year] = 3 # $/kg H2
+                    elif electrolysis_total_EI_policy[year] > 0.45 and electrolysis_total_EI_policy[year] <= 1.5: # kg CO2e/kg H2
+                        H2_PTC[year] = 1 # $/kg H2
+                    elif electrolysis_total_EI_policy[year] > 1.5 and electrolysis_total_EI_policy[year] <= 2.5: # kg CO2e/kg H2
+                        H2_PTC[year] = 0.75 # $/kg H2
+                    elif electrolysis_total_EI_policy[year] > 2.5 and electrolysis_total_EI_policy[year] <= 4: # kg CO2e/kg H2
+                        H2_PTC[year] = 0.6 # $/kg H2
+                    elif electrolysis_total_EI_policy[year] > 4:
+                        H2_PTC[year] = 0
 
-                if electrolysis_total_EI_policy[year] <= 0.45: # kg CO2e/kg H2
-                    H2_PTC[year] = 3 # $/kg H2
-                elif electrolysis_total_EI_policy[year] > 0.45 and electrolysis_total_EI_policy[year] <= 1.5: # kg CO2e/kg H2
-                    H2_PTC[year] = 1 # $/kg H2
-                elif electrolysis_total_EI_policy[year] > 1.5 and electrolysis_total_EI_policy[year] <= 2.5: # kg CO2e/kg H2
-                    H2_PTC[year] = 0.75 # $/kg H2
-                elif electrolysis_total_EI_policy[year] > 2.5 and electrolysis_total_EI_policy[year] <= 4: # kg CO2e/kg H2
-                    H2_PTC[year] = 0.6 # $/kg H2
-                elif electrolysis_total_EI_policy[year] > 4:
-                    H2_PTC[year] = 0
+                elif policy_option == 'base':
 
-            elif policy_option == 'base':
+                    ITC = 0.06
 
-                ITC = 0.06
-
-                if electrolysis_total_EI_policy[year] <= 0.45: # kg CO2e/kg H2
-                    H2_PTC[year] = 0.6 # $/kg H2
-                elif electrolysis_total_EI_policy[year] > 0.45 and electrolysis_total_EI_policy[year] <= 1.5: # kg CO2e/kg H2
-                    H2_PTC[year] = 0.2 # $/kg H2
-                elif electrolysis_total_EI_policy[year] > 1.5 and electrolysis_total_EI_policy[year] <= 2.5: # kg CO2e/kg H2
-                    H2_PTC[year] = 0.15 # $/kg H2
-                elif electrolysis_total_EI_policy[year] > 2.5 and electrolysis_total_EI_policy[year] <= 4: # kg CO2e/kg H2
-                    H2_PTC[year] = 0.12 # $/kg H2
-                elif electrolysis_total_EI_policy[year] > 4:
-                    H2_PTC[year] = 0
+                    if electrolysis_total_EI_policy[year] <= 0.45: # kg CO2e/kg H2
+                        H2_PTC[year] = 0.6 # $/kg H2
+                    elif electrolysis_total_EI_policy[year] > 0.45 and electrolysis_total_EI_policy[year] <= 1.5: # kg CO2e/kg H2
+                        H2_PTC[year] = 0.2 # $/kg H2
+                    elif electrolysis_total_EI_policy[year] > 1.5 and electrolysis_total_EI_policy[year] <= 2.5: # kg CO2e/kg H2
+                        H2_PTC[year] = 0.15 # $/kg H2
+                    elif electrolysis_total_EI_policy[year] > 2.5 and electrolysis_total_EI_policy[year] <= 4: # kg CO2e/kg H2
+                        H2_PTC[year] = 0.12 # $/kg H2
+                    elif electrolysis_total_EI_policy[year] > 4:
+                        H2_PTC[year] = 0
 
 
-        if grid_connection_scenario == 'hybrid-grid':
+            if grid_connection_scenario == 'hybrid-grid':
 
-            if policy_option == 'no-policy':
-                H2_PTC_grid = 0
-                H2_PTC_offgrid = 0
-                ITC = 0.0
-
-            elif policy_option == 'max':
-
-                if electrolysis_total_EI_policy_grid[year] <= 0.45: # kg CO2e/kg H2
-                    H2_PTC_grid = 3 # $/kg H2
-                elif electrolysis_total_EI_policy_grid[year] > 0.45 and electrolysis_total_EI_policy_grid[year] <= 1.5: # kg CO2e/kg H2
-                    H2_PTC_grid = 1 # $/kg H2
-                elif electrolysis_total_EI_policy_grid[year] > 1.5 and electrolysis_total_EI_policy_grid[year] <= 2.5: # kg CO2e/kg H2
-                    H2_PTC_grid = 0.75 # $/kg H2
-                elif electrolysis_total_EI_policy_grid[year] > 2.5 and electrolysis_total_EI_policy_grid[year] <= 4: # kg CO2e/kg H2
-                    H2_PTC_grid = 0.6 # $/kg H2
-                elif electrolysis_total_EI_policy_grid[year] > 4:
+                if policy_option == 'no-policy':
                     H2_PTC_grid = 0
-
-                if electrolysis_total_EI_policy_offgrid[year] <= 0.45: # kg CO2e/kg H2
-                    H2_PTC_offgrid = 3 # $/kg H2
-                elif electrolysis_total_EI_policy_offgrid[year] > 0.45 and electrolysis_total_EI_policy_offgrid[year] <= 1.5: # kg CO2e/kg H2
-                    H2_PTC_offgrid = 1 # $/kg H2
-                elif electrolysis_total_EI_policy_offgrid[year] > 1.5 and electrolysis_total_EI_policy_offgrid[year] <= 2.5: # kg CO2e/kg H2
-                    H2_PTC_offgrid = 0.75 # $/kg H2
-                elif electrolysis_total_EI_policy_offgrid[year] > 2.5 and electrolysis_total_EI_policy_offgrid[year] <= 4: # kg CO2e/kg H2
-                    H2_PTC_offgrid = 0.6 # $/kg H2
-                elif electrolysis_total_EI_policy_offgrid[year] > 4:
                     H2_PTC_offgrid = 0
+                    ITC = 0.0
 
-                ITC = 0.5
+                elif policy_option == 'max':
 
-            elif policy_option == 'base':
+                    if electrolysis_total_EI_policy_grid[year] <= 0.45: # kg CO2e/kg H2
+                        H2_PTC_grid = 3 # $/kg H2
+                    elif electrolysis_total_EI_policy_grid[year] > 0.45 and electrolysis_total_EI_policy_grid[year] <= 1.5: # kg CO2e/kg H2
+                        H2_PTC_grid = 1 # $/kg H2
+                    elif electrolysis_total_EI_policy_grid[year] > 1.5 and electrolysis_total_EI_policy_grid[year] <= 2.5: # kg CO2e/kg H2
+                        H2_PTC_grid = 0.75 # $/kg H2
+                    elif electrolysis_total_EI_policy_grid[year] > 2.5 and electrolysis_total_EI_policy_grid[year] <= 4: # kg CO2e/kg H2
+                        H2_PTC_grid = 0.6 # $/kg H2
+                    elif electrolysis_total_EI_policy_grid[year] > 4:
+                        H2_PTC_grid = 0
 
-                if electrolysis_total_EI_policy_grid[year] <= 0.45: # kg CO2e/kg H2
-                    H2_PTC_grid = 0.6 # $/kg H2
-                elif electrolysis_total_EI_policy_grid[year] > 0.45 and electrolysis_total_EI_policy_grid[year] <= 1.5: # kg CO2e/kg H2
-                    H2_PTC_grid = 0.2 # $/kg H2
-                elif electrolysis_total_EI_policy_grid[year] > 1.5 and electrolysis_total_EI_policy_grid[year] <= 2.5: # kg CO2e/kg H2
-                    H2_PTC_grid = 0.15 # $/kg H2
-                elif electrolysis_total_EI_policy_grid[year] > 2.5 and electrolysis_total_EI_policy_grid[year] <= 4: # kg CO2e/kg H2
-                    H2_PTC_grid = 0.12 # $/kg H2
-                elif electrolysis_total_EI_policy_grid[year] > 4:
-                    H2_PTC_grid = 0
+                    if electrolysis_total_EI_policy_offgrid[year] <= 0.45: # kg CO2e/kg H2
+                        H2_PTC_offgrid = 3 # $/kg H2
+                    elif electrolysis_total_EI_policy_offgrid[year] > 0.45 and electrolysis_total_EI_policy_offgrid[year] <= 1.5: # kg CO2e/kg H2
+                        H2_PTC_offgrid = 1 # $/kg H2
+                    elif electrolysis_total_EI_policy_offgrid[year] > 1.5 and electrolysis_total_EI_policy_offgrid[year] <= 2.5: # kg CO2e/kg H2
+                        H2_PTC_offgrid = 0.75 # $/kg H2
+                    elif electrolysis_total_EI_policy_offgrid[year] > 2.5 and electrolysis_total_EI_policy_offgrid[year] <= 4: # kg CO2e/kg H2
+                        H2_PTC_offgrid = 0.6 # $/kg H2
+                    elif electrolysis_total_EI_policy_offgrid[year] > 4:
+                        H2_PTC_offgrid = 0
+
+                    ITC = 0.5
+
+                elif policy_option == 'base':
+
+                    if electrolysis_total_EI_policy_grid[year] <= 0.45: # kg CO2e/kg H2
+                        H2_PTC_grid = 0.6 # $/kg H2
+                    elif electrolysis_total_EI_policy_grid[year] > 0.45 and electrolysis_total_EI_policy_grid[year] <= 1.5: # kg CO2e/kg H2
+                        H2_PTC_grid = 0.2 # $/kg H2
+                    elif electrolysis_total_EI_policy_grid[year] > 1.5 and electrolysis_total_EI_policy_grid[year] <= 2.5: # kg CO2e/kg H2
+                        H2_PTC_grid = 0.15 # $/kg H2
+                    elif electrolysis_total_EI_policy_grid[year] > 2.5 and electrolysis_total_EI_policy_grid[year] <= 4: # kg CO2e/kg H2
+                        H2_PTC_grid = 0.12 # $/kg H2
+                    elif electrolysis_total_EI_policy_grid[year] > 4:
+                        H2_PTC_grid = 0
 
 
-                if electrolysis_total_EI_policy_offgrid[year] <= 0.45: # kg CO2e/kg H2
-                    H2_PTC_offgrid = 0.6 # $/kg H2
-                elif electrolysis_total_EI_policy_offgrid[year] > 0.45 and electrolysis_total_EI_policy_offgrid[year] <= 1.5: # kg CO2e/kg H2
-                    H2_PTC_offgrid = 0.2 # $/kg H2
-                elif electrolysis_total_EI_policy_offgrid[year] > 1.5 and electrolysis_total_EI_policy_offgrid[year] <= 2.5: # kg CO2e/kg H2
-                    H2_PTC_offgrid = 0.15 # $/kg H2
-                elif electrolysis_total_EI_policy_offgrid[year] > 2.5 and electrolysis_total_EI_policy_offgrid[year] <= 4: # kg CO2e/kg H2
-                    H2_PTC_offgrid = 0.12 # $/kg H2
-                elif electrolysis_total_EI_policy_offgrid[year] > 4:
-                    H2_PTC_offgrid = 0
-                
-                ITC = 0.06
+                    if electrolysis_total_EI_policy_offgrid[year] <= 0.45: # kg CO2e/kg H2
+                        H2_PTC_offgrid = 0.6 # $/kg H2
+                    elif electrolysis_total_EI_policy_offgrid[year] > 0.45 and electrolysis_total_EI_policy_offgrid[year] <= 1.5: # kg CO2e/kg H2
+                        H2_PTC_offgrid = 0.2 # $/kg H2
+                    elif electrolysis_total_EI_policy_offgrid[year] > 1.5 and electrolysis_total_EI_policy_offgrid[year] <= 2.5: # kg CO2e/kg H2
+                        H2_PTC_offgrid = 0.15 # $/kg H2
+                    elif electrolysis_total_EI_policy_offgrid[year] > 2.5 and electrolysis_total_EI_policy_offgrid[year] <= 4: # kg CO2e/kg H2
+                        H2_PTC_offgrid = 0.12 # $/kg H2
+                    elif electrolysis_total_EI_policy_offgrid[year] > 4:
+                        H2_PTC_offgrid = 0
+                    
+                    ITC = 0.06
 
-            #H2_PTC =  ren_frac * H2_PTC_offgrid + (elec_cf - ren_frac) * H2_PTC_grid
-            H2_PTC[year] =  ren_frac * H2_PTC_offgrid + (1 - ren_frac) * H2_PTC_grid
+                #H2_PTC =  ren_frac * H2_PTC_offgrid + (elec_cf - ren_frac) * H2_PTC_grid
+                H2_PTC[year] =  ren_frac * H2_PTC_offgrid + (1 - ren_frac) * H2_PTC_grid
             #combined_PTC[year] = H2_PTC[year]+Ren_PTC[year]
-
+        elif atb_year == 2035:
+            H2_PTC[year]=0
     # Reassign PTC values to zero for atb year 2035
     if atb_year == 2035: # need to clarify with Matt when exactly the H2 PTC would end
-        H2_PTC = 0
-        Ren_PTC = 0
+        #H2_PTC = 0
+        #Ren_PTC = 0
         ITC = 0.0
     if grid_price_scenario == 'retail-flat':
         elec_price_perkWh = mwh_to_kwh*elec_price # convert $/MWh to $/kWh
@@ -343,7 +347,7 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     pf.set_params('commodity',{"name":'Hydrogen',"unit":"kg","initial price":100,"escalation":gen_inflation})
     pf.set_params('capacity',electrolysis_plant_capacity_kgperday) #units/day
     pf.set_params('maintenance',{"value":0,"escalation":gen_inflation})
-    pf.set_params('analysis start year',2022)
+    pf.set_params('analysis start year',analysis_start)
     pf.set_params('operating life',plant_life)
     pf.set_params('installation months',install_years*12)
     pf.set_params('installation cost',{"value":0,"depr type":"Straight line","depr period":4,"depreciable":False})
