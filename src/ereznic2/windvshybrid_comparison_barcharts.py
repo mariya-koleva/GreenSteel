@@ -15,10 +15,10 @@ parent_path = os.path.abspath('')
 
 # Initialization and Global Settings
 #Specify directory name
-main_directory = 'examples/H2_Analysis/Phase1B/Fin_sum'
-plot_directory = 'examples/H2_Analysis/Phase1B/Plots/'
+main_directory = 'Results_main/Fin_sum'
+plot_directory = 'Plots/'
 
-smr_directory = 'examples/H2_Analysis/Phase1B/SMR_fin_summary'
+smr_directory = 'Results_SMR'
 
 retail_string = 'retail-flat'
 plot_subdirectory = 'Wind_vs_hybrid_barcharts/'
@@ -45,7 +45,7 @@ financial_summary.loc[financial_summary['Site']=='IN','Order']= 0
 financial_summary.loc[financial_summary['Site']=='TX','Order']= 1
 financial_summary.loc[financial_summary['Site']=='IA','Order']= 2
 financial_summary.loc[financial_summary['Site']=='MS','Order']= 3
-financial_summary.loc[financial_summary['Site']=='WY','Order']= 4
+financial_summary.loc[financial_summary['Site']=='MN','Order']= 4
 
 # Narrow down to retail price of interest
 if retail_string == 'retail-flat':
@@ -74,7 +74,7 @@ locations = [
             'TX',
             'IA',
             'MS',
-            'WY'
+            'MN'
              ]
 
 
