@@ -83,6 +83,15 @@ if storage_size_mw != 0:
     battery_EI = 20             # Electricity generation capacity from battery (g CO2e/kWh)
 else:
     battery_EI = 0  # Electricity generation capacity from battery (g CO2e/kWh)
+
+# Other grid infrastructure imbedded emission intensities
+nuclear_capex_EI = 10
+coal_capex_EI = 10
+gas_capex_EI = 10
+hydro_capex_EI = 10
+bio_capex_EI = 10
+geothermal_capex_EI = 10
+
 #------------------------------------------------------------------------------
 # Steam methane reforming (SMR) - Incumbent H2 production process
 #------------------------------------------------------------------------------
@@ -227,7 +236,9 @@ for i0 in range(len(files2load_results)):
     years = list(range(cambium_year,2055,5))
     for year in years:
         cambiumdata_filepath = dircambium + site_name + '_'+str(year) + '.csv'
-        cambium_data = pd.read_csv(cambiumdata_filepath,index_col = None,header = 5,usecols = ['lrmer_co2_c','lrmer_ch4_c','lrmer_n2o_c','lrmer_co2_p','lrmer_ch4_p','lrmer_n2o_p','lrmer_co2e_c','lrmer_co2e_p','lrmer_co2e'])
+        cambium_data = pd.read_csv(cambiumdata_filepath,index_col = None,header = 5,usecols = ['lrmer_co2_c','lrmer_ch4_c','lrmer_n2o_c','lrmer_co2_p','lrmer_ch4_p','lrmer_n2o_p','lrmer_co2e_c','lrmer_co2e_p','lrmer_co2e',\
+                                                                                               'generation','nuclear_MWh','coal_MWh','coal-ccs_MWh','o-g-s_MWh','gas-cc_MWh','gas-cc-ccs_MWh','gas-ct_MWh','hydro_MWh','geothermal_MWh',\
+                                                                                                'biomass_MWh','beccs_MWh','wind-ons_MWh','wind-ofs_MWh','csp_MWh','upv_MWh','distpv_MWh','phs_MWh','battery_MWh','canada_MWh'])
 
         cambium_data = cambium_data.reset_index().rename(columns = {'index':'Interval','lrmer_co2_c':'LRMER CO2 combustion (kg-CO2/MWh)','lrmer_ch4_c':'LRMER CH4 combustion (g-CH4/MWh)','lrmer_n2o_c':'LRMER N2O combustion (g-N2O/MWh)',\
                                                     'lrmer_co2_p':'LRMER CO2 production (kg-CO2/MWh)','lrmer_ch4_p':'LRMER CH4 production (g-CH4/MWh)','lrmer_n2o_p':'LRMER N2O production (g-N2O/MWh)','lrmer_co2e_c':'LRMER CO2 equiv. combustion (kg-CO2e/MWh)',\
@@ -260,10 +271,10 @@ for i0 in range(len(files2load_results)):
         total_grid_emissions_annual_sum = combined_data['Total grid emissions (kg-CO2e)'].sum()*kg_to_MT_conv
         scope2_grid_emissions_annual_sum = combined_data['Scope 2 (combustion) grid emissions (kg-CO2e)'].sum()*kg_to_MT_conv
         scope3_grid_emissions_annual_sum = combined_data['Scope 3 (production) grid emissions (kg-CO2e)'].sum()*kg_to_MT_conv
-        scope3_ren_annual_sum= combined_data['Energy from renewables (kWh)'].sum()/1000 # MWh
-
+        ren_annual_sum_MWh= combined_data['Energy from renewables (kWh)'].sum()/1000 # MWh
+        grid_annual_sum_MWh = combined_data['Energy from grid (kWh)'].sum()/1000 # MWh
         grid_emission_intensity_annual_average = combined_data['LRMER CO2 equiv. total (kg-CO2e/MWh)'].mean()
-    
+
         # Read in financial summary to determine if there is any solar or batteries
         if grid_case != 'grid-only-retail-flat':
             hopp_finsum_filepath =electrolysis_directory+'Fin_sum'
@@ -288,9 +299,26 @@ for i0 in range(len(files2load_results)):
             solar_pv_capex_EI=0
             battery_EI=0    
         
+        # Calculate annual percentages of solar, wind, and fossil
+        generation_annual_total_MWh = cambium_data['generation'].sum()
+        generation_annual_nuclear_fraction = cambium_data['nuclear_MWh'].sum()/generation_annual_total_MWh
+        generation_annual_coal_oil_fraction = (cambium_data['coal_MWh'].sum() + cambium_data['coal-ccs_MWh'].sum() + cambium_data['o-g-s_MWh'].sum())/generation_annual_total_MWh
+        generation_annual_gas_fraction = (cambium_data['gas-cc_MWh'].sum() + cambium_data['gas-cc-ccs_MWh'].sum() + cambium_data['gas-ct_MWh'].sum())/generation_annual_total_MWh
+        generation_annual_bio_fraction = (cambium_data['biomass_MWh'].sum() + cambium_data['beccs_MWh'].sum())/generation_annual_total_MWh
+        generation_annual_geothermal_fraction = cambium_data['geothermal_MWh'].sum()/generation_annual_total_MWh
+        generation_annual_hydro_fraction = (cambium_data['hydro_MWh'].sum() + cambium_data['phs_MWh'].sum())/generation_annual_total_MWh
+        generation_annual_wind_fraction = (cambium_data['wind-ons_MWh'].sum() + cambium_data['wind-ofs_MWh'].sum())/generation_annual_total_MWh
+        generation_annual_solar_fraction = (cambium_data['upv_MWh'].sum() + cambium_data['distpv_MWh'].sum() + cambium_data['csp_MWh'].sum())/generation_annual_total_MWh
+        generation_annual_battery_fraction = (cambium_data['battery_MWh'].sum())/generation_annual_total_MWh
+
+        grid_imbedded_EI = generation_annual_nuclear_fraction*nuclear_capex_EI + generation_annual_coal_oil_fraction*coal_capex_EI + generation_annual_gas_fraction*gas_capex_EI + generation_annual_bio_fraction*bio_capex_EI\
+                         + generation_annual_geothermal_fraction*geothermal_capex_EI + generation_annual_hydro_fraction*hydro_capex_EI+generation_annual_wind_fraction*wind_capex_EI + generation_annual_solar_fraction*solar_pv_capex_EI\
+                         + generation_annual_battery_fraction*battery_EI
+
         if 'hybrid-grid' in grid_case:
             # Calculate grid-connected electrolysis emissions/ future cases should reflect targeted electrolyzer electricity usage
-            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (wind_capex_EI + solar_pv_capex_EI + battery_EI ) * (scope3_ren_annual_sum/h2prod_annual_sum) * g_to_kg_conv + ely_stack_capex_EI # kg CO2e/kg H2
+            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (wind_capex_EI + solar_pv_capex_EI + battery_EI ) * (ren_annual_sum_MWh/h2prod_annual_sum) * g_to_kg_conv\
+                                   + grid_imbedded_EI*grid_annual_sum_MWh/h2prod_annual_sum * g_to_kg_conv + ely_stack_capex_EI # kg CO2e/kg H2
             electrolysis_Scope2_EI = scope2_grid_emissions_annual_sum/h2prod_annual_sum 
             electrolysis_Scope1_EI = 0
             electrolysis_total_EI  = electrolysis_Scope1_EI + electrolysis_Scope2_EI + electrolysis_Scope3_EI 
@@ -345,7 +373,7 @@ for i0 in range(len(files2load_results)):
             steel_smr_ccs_Scope1_EI = steel_smr_Scope1_EI 
             steel_smr_ccs_total_EI  = steel_smr_Scope1_EI + steel_smr_Scope2_EI + steel_smr_ccs_Scope3_EI        
             # Calculate grid-connected electrolysis emissions
-            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum  + ely_stack_capex_EI # kg CO2e/kg H2
+            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (grid_imbedded_EI*grid_annual_sum_MWh/h2prod_annual_sum) * g_to_kg_conv + ely_stack_capex_EI# kg CO2e/kg H2
             electrolysis_Scope2_EI = scope2_grid_emissions_annual_sum/h2prod_annual_sum 
             electrolysis_Scope1_EI = 0
             electrolysis_total_EI = electrolysis_Scope1_EI + electrolysis_Scope2_EI + electrolysis_Scope3_EI
@@ -361,7 +389,7 @@ for i0 in range(len(files2load_results)):
             steel_electrolysis_total_EI  = steel_electrolysis_Scope1_EI + steel_electrolysis_Scope2_EI + steel_electrolysis_Scope3_EI
         if 'off-grid' in grid_case:
             # Calculate renewable only electrolysis emissions        
-            electrolysis_Scope3_EI = (wind_capex_EI + solar_pv_capex_EI + battery_EI) * (scope3_ren_annual_sum/h2prod_annual_sum) * g_to_kg_conv + ely_stack_capex_EI # kg CO2e/kg H2
+            electrolysis_Scope3_EI = (wind_capex_EI + solar_pv_capex_EI + battery_EI) * (ren_annual_sum_MWh/h2prod_annual_sum) * g_to_kg_conv + ely_stack_capex_EI # kg CO2e/kg H2
             electrolysis_Scope2_EI = 0
             electrolysis_Scope1_EI = 0
             electrolysis_total_EI = electrolysis_Scope1_EI + electrolysis_Scope2_EI + electrolysis_Scope3_EI
