@@ -157,25 +157,25 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
         water_cost = 0.0045 #$/gal
         electricity_cost = electricity_prices['IN'] #$/MWh
         CO2_transport_capex = 10.37 #2020$/tonne CO2
-        CO2_storage_capex = 31.84 #2020$/tonneCO2
+        CO2_storage_capex = 12.95 #2020$/tonneCO2
     elif site_location == 'Site 2': # Texas
         land_cost = 2343 # $2020/acre
         water_cost = 0.00478 #2020$/gal
         electricity_cost = electricity_prices['TX'] #$/MWh
         CO2_transport_capex = 15.02 #2020$/tonne CO2
-        CO2_storage_capex = 50.49 #2020$/tonneCO2
+        CO2_storage_capex = 18.06 #2020$/tonneCO2
     elif site_location == 'Site 3': # Iowa
         land_cost = 8310 # $2020/acre
         water_cost = 0.00291 #2020$/gal
         electricity_cost = electricity_prices['IA'] #$/MWh
         CO2_transport_capex = 17.06 #2020$/tonne CO2
-        CO2_storage_capex = 33.99 #2020$/tonneCO2
+        CO2_storage_capex = 13.32 #2020$/tonneCO2
     elif site_location == 'Site 4': # Mississippi
         land_cost = 2652 # $2020/acre
         water_cost = 0.00409 #2020$/gal
         electricity_cost = electricity_prices['MS'] #$/MWh
         CO2_transport_capex = 2.80 #2020$/tonne CO2
-        CO2_storage_capex = 31.76 #2020$/tonneCO2
+        CO2_storage_capex = 12.99 #2020$/tonneCO2
     # elif site_name == 'WY': # Wyoming
     #     land_cost =751 #$2020/acre
     #     water_cost = 0.00376 # 2020$/gal
@@ -185,7 +185,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
         water_cost=0.00291 #$/gal
         electricity_cost = electricity_prices['MN'] #$/MWh
         CO2_transport_capex = 27.26#2020$/tonne CO2
-        CO2_storage_capex = 74.45 #2020$/tonneCO2
+        CO2_storage_capex = 25.76 #2020$/tonneCO2
         
     if NG_price_case == 'default':
         if site_location == 'Site 1' :
