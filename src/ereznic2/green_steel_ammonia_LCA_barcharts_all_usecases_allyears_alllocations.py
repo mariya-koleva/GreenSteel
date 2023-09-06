@@ -141,15 +141,27 @@ for axi1,site in enumerate(locations):
             ammonia_scope_3.append(ammonia_electrolysis_scope_3[j])
 
             labels.append(site_year_lca['Label'].values.tolist()[j])
-    
+
+        # convert to arrays for plotting
+        hydrogen_scope_1 = np.array(hydrogen_scope_1)
+        hydrogen_scope_2 = np.array(hydrogen_scope_2)
+        hydrogen_scope_3 = np.array(hydrogen_scope_3)
+
+        steel_scope_1 = np.array(steel_scope_1)
+        steel_scope_2 = np.array(steel_scope_2)
+        steel_scope_3 = np.array(steel_scope_3)
+
+        ammonia_scope_1 = np.array(ammonia_scope_1)
+        ammonia_scope_2 = np.array(ammonia_scope_2)
+        ammonia_scope_3 = np.array(ammonia_scope_3)
 
         width = 0.5
         # Plot hydrogen emissions
         ax[axi1,axi2].bar(labels,hydrogen_scope_1,label='GHG Scope 1 Emissions',edgecolor='steelblue',color='deepskyblue')
         barbottom=hydrogen_scope_1
-        ax[axi1,axi2].bar(labels,hydrogen_scope_2,label = 'GHG Scope 2 Emissions',edgecolor='dimgray',color='dimgrey')
+        ax[axi1,axi2].bar(labels,hydrogen_scope_2,bottom=barbottom,label = 'GHG Scope 2 Emissions',edgecolor='dimgray',color='dimgrey')
         barbottom = barbottom+hydrogen_scope_2
-        ax[axi1,axi2].bar(labels,hydrogen_scope_3,label = 'GHG Scope 3 Emissions',edgecolor='black',color = 'navy')
+        ax[axi1,axi2].bar(labels,hydrogen_scope_3,bottom=barbottom,label = 'GHG Scope 3 Emissions',edgecolor='black',color = 'navy')
         barbottom=barbottom+hydrogen_scope_3
 
         # Decorations
@@ -165,9 +177,9 @@ for axi1,site in enumerate(locations):
         # Plot steel emissions
         ax1[axi1,axi2].bar(labels,steel_scope_1,label='GHG Scope 1 Emissions',edgecolor='steelblue',color='deepskyblue')
         barbottom=steel_scope_1
-        ax1[axi1,axi2].bar(labels,steel_scope_2,label = 'GHG Scope 2 Emissions',edgecolor='dimgray',color='dimgrey')
+        ax1[axi1,axi2].bar(labels,steel_scope_2,bottom=barbottom,label = 'GHG Scope 2 Emissions',edgecolor='dimgray',color='dimgrey')
         barbottom = barbottom+steel_scope_2
-        ax1[axi1,axi2].bar(labels,steel_scope_3,label = 'GHG Scope 3 Emissions',edgecolor='black',color = 'navy')
+        ax1[axi1,axi2].bar(labels,steel_scope_3,bottom=barbottom,label = 'GHG Scope 3 Emissions',edgecolor='black',color = 'navy')
         barbottom=barbottom+steel_scope_3
 
         # Decorations
@@ -183,9 +195,9 @@ for axi1,site in enumerate(locations):
         # Plot ammonia emissions
         ax2[axi1,axi2].bar(labels,ammonia_scope_1,label='GHG Scope 1 Emissions',edgecolor='steelblue',color='deepskyblue')
         barbottom=ammonia_scope_1
-        ax2[axi1,axi2].bar(labels,ammonia_scope_2,label = 'GHG Scope 2 Emissions',edgecolor='dimgray',color='dimgrey')
+        ax2[axi1,axi2].bar(labels,ammonia_scope_2,bottom=barbottom,label = 'GHG Scope 2 Emissions',edgecolor='dimgray',color='dimgrey')
         barbottom = barbottom+ammonia_scope_2
-        ax2[axi1,axi2].bar(labels,ammonia_scope_3,label = 'GHG Scope 3 Emissions',edgecolor='black',color = 'navy')
+        ax2[axi1,axi2].bar(labels,ammonia_scope_3,bottom=barbottom,label = 'GHG Scope 3 Emissions',edgecolor='black',color = 'navy')
         barbottom=barbottom+ammonia_scope_3
 
         # Decorations

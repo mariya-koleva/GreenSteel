@@ -185,6 +185,7 @@ steel_electrolysis_total_EI  = 'NA'
     
 # Loop through all scenarios in output folder
 for i0 in range(len(files2load_results)):
+    #i0=1
     # Read in applicable Cambium file
     filecase = files2load_results_title[i0+1]
     # Extract year and site location to identify which cambium file to import
@@ -231,8 +232,42 @@ for i0 in range(len(files2load_results)):
     steel_smr_ccs_Scope2_emission_intensity = []
     steel_smr_ccs_emission_intensity = []
 
-    # Read in HOPP data and combine with cambium data
+    # Read in financial summary to determine if there is any solar or batteries
+    if grid_case != 'grid-only-retail-flat':
+        hopp_finsum_filepath =electrolysis_directory+'Fin_sum'
+        for j in range(len(filecase)):
+            hopp_finsum_filepath = hopp_finsum_filepath + '_' +filecase[j]
+        hopp_finsum_filepath = hopp_finsum_filepath + '.csv'
+        hopp_finsum = pd.read_csv(hopp_finsum_filepath,index_col=None,header=0).set_index(['Unnamed: 0']).T
+
+        solar_size_mw = hopp_finsum['Solar capacity (MW)'].values.tolist()[0]
+        storage_size_mw = hopp_finsum['Battery storage capacity (MW)'].values.tolist()[0]
+
+        if solar_size_mw != 0:
+            solar_pv_capex_EI = 37     # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
+        else:
+            solar_pv_capex_EI = 0   # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
+
+        if storage_size_mw != 0:
+            battery_EI = 20             # Electricity generation capacity from battery (g CO2e/kWh)
+        else:
+            battery_EI = 0  # Electricity generation capacity from battery (g CO2e/kWh)
+    else:
+        solar_pv_capex_EI=0
+        battery_EI=0    
+
+    # Read in HOPP data
+    hopp_profiles_filepath =dirprofiles + 'Energy'
+    for j in range(len(filecase)):
+        hopp_profiles_filepath = hopp_profiles_filepath + '_' + filecase[j]
     
+    hopp_profiles_filepath = hopp_profiles_filepath + '.csv'
+    hopp_profiles_data = pd.read_csv(hopp_profiles_filepath,index_col=None,header=0,usecols=['Energy to electrolyzer (kWh)','Energy from grid (kWh)','Energy from renewables (kWh)','Hydrogen Hourly production (kg)'])
+    hopp_profiles_data=hopp_profiles_data.reset_index().rename(columns={'index':'Interval'})
+    hopp_profiles_data['Interval'] = hopp_profiles_data['Interval']+1
+    hopp_profiles_data = hopp_profiles_data.set_index('Interval')
+
+    # Read in cambium data and combine with hopp data
     years = list(range(cambium_year,2055,5))
     for year in years:
         cambiumdata_filepath = dircambium + site_name + '_'+str(year) + '.csv'
@@ -246,12 +281,12 @@ for i0 in range(len(files2load_results)):
 
         cambium_data['Interval']=cambium_data['Interval']+1
         cambium_data = cambium_data.set_index('Interval')
-        
-        hopp_profiles_filepath =dirprofiles+files2load_results[i0+1] 
-        hopp_profiles_data = pd.read_csv(hopp_profiles_filepath,index_col=None,header=0,usecols=['Energy to electrolyzer (kWh)','Energy from grid (kWh)','Energy from renewables (kWh)','Hydrogen Hourly production (kg)'])
-        hopp_profiles_data=hopp_profiles_data.reset_index().rename(columns={'index':'Interval'})
-        hopp_profiles_data['Interval'] = hopp_profiles_data['Interval']+1
-        hopp_profiles_data = hopp_profiles_data.set_index('Interval')
+
+        #hopp_profiles_filepath =dirprofiles+files2load_results[i0+1] 
+        #hopp_profiles_data = pd.read_csv(hopp_profiles_filepath,index_col=None,header=0,usecols=['Energy to electrolyzer (kWh)','Energy from grid (kWh)','Energy from renewables (kWh)','Hydrogen Hourly production (kg)'])
+        # hopp_profiles_data=hopp_profiles_data.reset_index().rename(columns={'index':'Interval'})
+        # hopp_profiles_data['Interval'] = hopp_profiles_data['Interval']+1
+        # hopp_profiles_data = hopp_profiles_data.set_index('Interval')
         combined_data = pd.concat([hopp_profiles_data,cambium_data],axis=1)
 
         # Calculate hourly grid emissions factors of interest. If we want to use different GWPs, we can do that here. The Grid Import is an hourly data i.e., in MWh
@@ -265,39 +300,19 @@ for i0 in range(len(files2load_results)):
         #scope3_ren_sum            = combined_data['Energy from renewables (kWh)'].sum()/1000 # MWh
         #h2prod_sum = np.sum(hydrogen_production_while_running)*system_life*kg_to_MT_conv
     #    h2prod_grid_frac = cambium_data['Grid Import (MW)'].sum() / cambium_data['Electrolyzer Power (MW)'].sum()
-        h2prod_annual_sum = combined_data['Hydrogen Hourly production (kg)'].sum()*kg_to_MT_conv
-        h2prod_life_sum = combined_data['Hydrogen Hourly production (kg)'].sum()*system_life*kg_to_MT_conv
+        h2prod_annual_sum = combined_data['Hydrogen Hourly production (kg)'].sum()
+        h2prod_life_sum = combined_data['Hydrogen Hourly production (kg)'].sum()*system_life
         # Sum total emissions
-        total_grid_emissions_annual_sum = combined_data['Total grid emissions (kg-CO2e)'].sum()*kg_to_MT_conv
-        scope2_grid_emissions_annual_sum = combined_data['Scope 2 (combustion) grid emissions (kg-CO2e)'].sum()*kg_to_MT_conv
-        scope3_grid_emissions_annual_sum = combined_data['Scope 3 (production) grid emissions (kg-CO2e)'].sum()*kg_to_MT_conv
+        total_grid_emissions_annual_sum = combined_data['Total grid emissions (kg-CO2e)'].sum()
+        scope2_grid_emissions_annual_sum = combined_data['Scope 2 (combustion) grid emissions (kg-CO2e)'].sum()
+        scope3_grid_emissions_annual_sum = combined_data['Scope 3 (production) grid emissions (kg-CO2e)'].sum()
         ren_annual_sum_MWh= combined_data['Energy from renewables (kWh)'].sum()/1000 # MWh
         grid_annual_sum_MWh = combined_data['Energy from grid (kWh)'].sum()/1000 # MWh
         grid_emission_intensity_annual_average = combined_data['LRMER CO2 equiv. total (kg-CO2e/MWh)'].mean()
 
-        # Read in financial summary to determine if there is any solar or batteries
         if grid_case != 'grid-only-retail-flat':
-            hopp_finsum_filepath =electrolysis_directory+'Fin_sum'
-            for j in range(len(filecase)):
-                hopp_finsum_filepath = hopp_finsum_filepath + '_' +filecase[j]
-            hopp_finsum_filepath = hopp_finsum_filepath + '.csv'
-            hopp_finsum = pd.read_csv(hopp_finsum_filepath,index_col=None,header=0).set_index(['Unnamed: 0']).T
-
-            solar_size_mw = hopp_finsum['Solar capacity (MW)'].values.tolist()[0]
-            storage_size_mw = hopp_finsum['Battery storage capacity (MW)'].values.tolist()[0]
-
-            if solar_size_mw != 0:
-                solar_pv_capex_EI = 37     # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-            else:
-                solar_pv_capex_EI = 0   # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-
-            if storage_size_mw != 0:
-                battery_EI = 20             # Electricity generation capacity from battery (g CO2e/kWh)
-            else:
-                battery_EI = 0  # Electricity generation capacity from battery (g CO2e/kWh)
-        else:
-            solar_pv_capex_EI=0
-            battery_EI=0    
+            frac_ren_wind = hopp_finsum['Wind capacity (MW)'].values.tolist()[0]*hopp_finsum['Wind plant CF (-),'].values.tolist()[0]*8760/ren_annual_sum_MWh
+            frac_ren_solar = hopp_finsum['Solar capacity (MW)'].values.tolist()[0]*hopp_finsum['Solar plant CF (-)'].values.tolist()[0]*8760/ren_annual_sum_MWh
         
         # Calculate annual percentages of solar, wind, and fossil
         generation_annual_total_MWh = cambium_data['generation'].sum()
@@ -317,8 +332,8 @@ for i0 in range(len(files2load_results)):
 
         if 'hybrid-grid' in grid_case:
             # Calculate grid-connected electrolysis emissions/ future cases should reflect targeted electrolyzer electricity usage
-            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (wind_capex_EI + solar_pv_capex_EI + battery_EI ) * (ren_annual_sum_MWh/h2prod_annual_sum) * g_to_kg_conv\
-                                   + grid_imbedded_EI*grid_annual_sum_MWh/h2prod_annual_sum * g_to_kg_conv + ely_stack_capex_EI # kg CO2e/kg H2
+            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (wind_capex_EI + solar_pv_capex_EI + battery_EI ) * (ren_annual_sum_MWh/h2prod_annual_sum)\
+                                   + grid_imbedded_EI*grid_annual_sum_MWh/h2prod_annual_sum + ely_stack_capex_EI # kg CO2e/kg H2
             electrolysis_Scope2_EI = scope2_grid_emissions_annual_sum/h2prod_annual_sum 
             electrolysis_Scope1_EI = 0
             electrolysis_total_EI  = electrolysis_Scope1_EI + electrolysis_Scope2_EI + electrolysis_Scope3_EI 
@@ -373,7 +388,7 @@ for i0 in range(len(files2load_results)):
             steel_smr_ccs_Scope1_EI = steel_smr_Scope1_EI 
             steel_smr_ccs_total_EI  = steel_smr_Scope1_EI + steel_smr_Scope2_EI + steel_smr_ccs_Scope3_EI        
             # Calculate grid-connected electrolysis emissions
-            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (grid_imbedded_EI*grid_annual_sum_MWh/h2prod_annual_sum) * g_to_kg_conv + ely_stack_capex_EI# kg CO2e/kg H2
+            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (grid_imbedded_EI*grid_annual_sum_MWh/h2prod_annual_sum) + ely_stack_capex_EI# kg CO2e/kg H2
             electrolysis_Scope2_EI = scope2_grid_emissions_annual_sum/h2prod_annual_sum 
             electrolysis_Scope1_EI = 0
             electrolysis_total_EI = electrolysis_Scope1_EI + electrolysis_Scope2_EI + electrolysis_Scope3_EI
@@ -389,7 +404,7 @@ for i0 in range(len(files2load_results)):
             steel_electrolysis_total_EI  = steel_electrolysis_Scope1_EI + steel_electrolysis_Scope2_EI + steel_electrolysis_Scope3_EI
         if 'off-grid' in grid_case:
             # Calculate renewable only electrolysis emissions        
-            electrolysis_Scope3_EI = (wind_capex_EI + solar_pv_capex_EI + battery_EI) * (ren_annual_sum_MWh/h2prod_annual_sum) * g_to_kg_conv + ely_stack_capex_EI # kg CO2e/kg H2
+            electrolysis_Scope3_EI = (wind_capex_EI + solar_pv_capex_EI + battery_EI) * (ren_annual_sum_MWh/h2prod_annual_sum) + ely_stack_capex_EI # kg CO2e/kg H2
             electrolysis_Scope2_EI = 0
             electrolysis_Scope1_EI = 0
             electrolysis_total_EI = electrolysis_Scope1_EI + electrolysis_Scope2_EI + electrolysis_Scope3_EI
