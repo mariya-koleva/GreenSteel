@@ -74,25 +74,25 @@ kWh_to_MWh_conv = 0.001 # Conversion from kWh to MWh
 system_life        = 30
 ely_stack_capex_EI = 0.019 # PEM electrolyzer CAPEX emissions (kg CO2e/kg H2)
 wind_capex_EI      = 10    # Electricity generation from wind, nominal value taken (g CO2e/kWh)
-wind_capex_EI_perMW = 34882
+#wind_capex_EI_perMW = 34882
 if solar_size_mw != 0:
     solar_pv_capex_EI = 37     # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-    solar_pv_capex_EI_perMW = 61777
+    #solar_pv_capex_EI_perMW = 61777
 else:
     solar_pv_capex_EI = 0   # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-    solar_pv_capex_EI_perMW = 0
+    #solar_pv_capex_EI_perMW = 0
 if storage_size_mw != 0:
     battery_EI = 20             # Electricity generation capacity from battery (g CO2e/kWh)
 else:
     battery_EI = 0  # Electricity generation capacity from battery (g CO2e/kWh)
 
 # Other grid infrastructure imbedded emission intensities
-nuclear_capex_EI = 10
-coal_capex_EI = 10
-gas_capex_EI = 10
-hydro_capex_EI = 10
-bio_capex_EI = 10
-geothermal_capex_EI = 10
+nuclear_capex_EI = 0.3 # g CO2e/kWh
+coal_capex_EI = 0.8  # g CO2e/kWh
+gas_capex_EI = 0.42  # g CO2e/kWh
+hydro_capex_EI = 7.22 # g CO2e/kWh
+bio_capex_EI = 0.81 # g CO2e/kWh
+geothermal_capex_EI = 20.71 # g CO2e/kWh
 
 #------------------------------------------------------------------------------
 # Steam methane reforming (SMR) - Incumbent H2 production process
@@ -247,10 +247,10 @@ for i0 in range(len(files2load_results)):
 
         if solar_size_mw != 0:
             solar_pv_capex_EI = 37     # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-            solar_pv_capex_EI_perMW = 61777
+            #solar_pv_capex_EI_perMW = 61777
         else:
             solar_pv_capex_EI = 0   # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-            solar_pv_capex_EI_perMW = 0
+            #solar_pv_capex_EI_perMW = 0
 
         if storage_size_mw != 0:
             battery_EI = 20             # Electricity generation capacity from battery (g CO2e/kWh)
@@ -336,7 +336,7 @@ for i0 in range(len(files2load_results)):
 
         if 'hybrid-grid' in grid_case:
             # Calculate grid-connected electrolysis emissions/ future cases should reflect targeted electrolyzer electricity usage
-            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (wind_capex_EI_perMW*hopp_finsum['Wind capacity (MW)'].values.tolist()[0] + solar_pv_capex_EI_perMW*hopp_finsum['Solar capacity (MW)'].values.tolist()[0])/h2prod_annual_sum\
+            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (wind_capex_EI*hopp_finsum['Wind annual energy (MWh)'].values.tolist()[0] + solar_pv_capex_EI*hopp_finsum['Solar annual energy (MWh)'].values.tolist()[0])/h2prod_annual_sum\
                                    + grid_imbedded_EI*grid_annual_sum_MWh/h2prod_annual_sum + ely_stack_capex_EI # kg CO2e/kg H2
             electrolysis_Scope2_EI = scope2_grid_emissions_annual_sum/h2prod_annual_sum 
             electrolysis_Scope1_EI = 0
@@ -408,7 +408,7 @@ for i0 in range(len(files2load_results)):
             steel_electrolysis_total_EI  = steel_electrolysis_Scope1_EI + steel_electrolysis_Scope2_EI + steel_electrolysis_Scope3_EI
         if 'off-grid' in grid_case:
             # Calculate renewable only electrolysis emissions        
-            electrolysis_Scope3_EI = (wind_capex_EI_perMW*hopp_finsum['Wind capacity (MW)'].values.tolist()[0] + solar_pv_capex_EI*hopp_finsum['Solar capacity (MW)'].values.tolist()[0])/h2prod_annual_sum + ely_stack_capex_EI # kg CO2e/kg H2
+            electrolysis_Scope3_EI = (wind_capex_EI*hopp_finsum['Wind annual energy (MWh)'].values.tolist()[0] + solar_pv_capex_EI*hopp_finsum['Solar annual energy (MWh)'].values.tolist()[0])/h2prod_annual_sum + ely_stack_capex_EI # kg CO2e/kg H2
             electrolysis_Scope2_EI = 0
             electrolysis_Scope1_EI = 0
             electrolysis_total_EI = electrolysis_Scope1_EI + electrolysis_Scope2_EI + electrolysis_Scope3_EI

@@ -11,6 +11,9 @@ src/cfrontin/01-openmdao-unification/data
 src/cfrontin/01-openmdao-unification/input
 src/cfrontin/01-openmdao-unification/speed_dir_data.csv
 
+src/ereznic2/Results_main/Fin_sum/Default_summary.db
+src/ereznic2/Results_sensitivity/Fin_sum/Default_summary.db
+
 ### DEFAULTS: PYTHON
 
 # Byte-compiled / optimized / DLL files

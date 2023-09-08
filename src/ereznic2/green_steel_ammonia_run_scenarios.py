@@ -25,7 +25,8 @@ from hopp.to_organize.hopp_tools_steel import hoppDict
 import hopp.to_organize.run_RODeO as run_RODeO
 #import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
 import run_profast_for_hydrogen
-import hopp.to_organize.distributed_pipe_cost_analysis as distributed_pipe_cost_analysis
+#import hopp.to_organize.distributed_pipe_cost_analysis as distributed_pipe_cost_analysis
+import distributed_pipe_cost_analysis
 import hopp.to_organize.H2_Analysis.LCA_single_scenario as LCA_single_scenario
 from green_steel_ammonia_solar_parametric_sweep import solar_storage_param_sweep
 from grid_price_profiles import grid_price_interpolation
@@ -133,8 +134,8 @@ def batch_generator_kernel(arg_list):
     #storage_sizes_mwh = [0]
     if grid_connection_scenario == 'off-grid':
         solar_sizes_mw=[0,100,250,500,750]
-        storage_sizes_mw=[100,100,200]
-        storage_sizes_mwh = [100,400,400]
+        storage_sizes_mw=[0,100,100,200]
+        storage_sizes_mwh = [0,100,400,400]
         #storage_sizes_mw=[0,100,100,200]
         #storage_sizes_mwh = [0,100,400,400]
     else:
@@ -720,13 +721,17 @@ def batch_generator_kernel(arg_list):
     cf_electricity = sum(energy_to_electrolyzer)/(electrolyzer_size_mw*8760*1000)
     if solar_size_mw > 0:
         cf_solar = hybrid_plant.pv.capacity_factor/100
+        solar_annual_energy_MWh = hybrid_plant.annual_energies['pv']/1000
     else:
         cf_solar = 0
+        solar_annual_energy_MWh = 0
 
     if wind_size_mw > 0:
         cf_wind = hybrid_plant.wind.capacity_factor/100
+        wind_annual_energy_MWh = hybrid_plant.annual_energies['wind']/1000
     else:
         cf_wind = 0
+        wind_annual_energy_MWh = 0
 
 
     # Step #: Calculate hydrogen pipe costs for distributed case
@@ -749,18 +754,19 @@ def batch_generator_kernel(arg_list):
         pipeline_material_cost = pipe_network_costs_USD['Total material cost ($)'].sum()
 
         # Eventually replace with calculations
+
         if site_name == 'TX':
-            cabling_material_cost = 44553030
+            cabling_material_cost = 50196586
         if site_name == 'IA':
-            cabling_material_cost = 44514220
+            cabling_material_cost = 55183961
         if site_name == 'IN':
-            cabling_material_cost = 44553030
+            cabling_material_cost = 66955046
         if site_name == 'WY':
-            cabling_material_cost = 44514220
+            cabling_material_cost = 50196586
         if site_name == 'MS':
-            cabling_material_cost = 62751510
+            cabling_material_cost = 108416091
         if site_name == 'MN':
-            cabling_material_cost = 44514220
+            cabling_material_cost = 66955046
         transmission_cost = 0
 
         cabling_vs_pipeline_cost_difference = cabling_material_cost - pipeline_material_cost
@@ -1105,6 +1111,8 @@ def batch_generator_kernel(arg_list):
                             cf_electricity,
                             cf_wind,
                             cf_solar,
+                            wind_annual_energy_MWh,
+                            solar_annual_energy_MWh,
                             run_RODeO_selector,
                             grid_connection_scenario,
                             grid_price_scenario,

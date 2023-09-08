@@ -21,7 +21,8 @@ import hopp_tools_steel
 import copy
 #import hopp.to_organize.run_profast_for_hydrogen as run_profast_for_hydrogen
 import run_profast_for_hydrogen
-import hopp.to_organize.distributed_pipe_cost_analysis
+#import hopp.to_organize.distributed_pipe_cost_analysis
+import distributed_pipe_cost_analysis
 from grid_price_profiles import grid_price_interpolation
 #import hopp_tools_run_wind_solar
 #from hybrid.PEM_Model_2Push import run_PEM_master
