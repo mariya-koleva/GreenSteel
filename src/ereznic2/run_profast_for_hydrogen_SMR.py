@@ -290,6 +290,10 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
 
     policy_credit = max(H2_PTC,CCS_credit_45Q) # $/kgH2
     
+    financial_assumptions = pd.read_csv('H2_Analysis/financial_inputs.csv',index_col=None,header=0)
+    financial_assumptions.set_index(["Parameter"], inplace = True)
+    financial_assumptions = financial_assumptions['Value']
+
     # Set up ProFAST
     pf = ProFAST.ProFAST('blank')
     
@@ -312,17 +316,16 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     pf.set_params('rent',{'value':0,'escalation':gen_inflation})
     pf.set_params('property tax and insurance percent',0)
     pf.set_params('admin expense percent',0)
-    pf.set_params('total income tax rate',0.27)
-    pf.set_params('capital gains tax rate',0.15)
+    pf.set_params('total income tax rate',financial_assumptions['total income tax rate'])
+    pf.set_params('capital gains tax rate',financial_assumptions['capital gains tax rate'])
     pf.set_params('sell undepreciated cap',True)
     pf.set_params('tax losses monetized',True)
-    pf.set_params('operating incentives taxable',True)
     pf.set_params('general inflation rate',gen_inflation)
-    pf.set_params('leverage after tax nominal discount rate',0.0824)
-    pf.set_params('debt equity ratio of initial financing',1.38)
+    pf.set_params('leverage after tax nominal discount rate',financial_assumptions['leverage after tax nominal discount rate'])
+    pf.set_params('debt equity ratio of initial financing',financial_assumptions['debt equity ratio of initial financing'])
     pf.set_params('debt type','Revolving debt')
-    pf.set_params('debt interest rate',0.0489)
-    pf.set_params('cash onhand percent',1)
+    pf.set_params('debt interest rate',financial_assumptions['debt interest rate'])
+    pf.set_params('cash onhand',financial_assumptions['cash onhand'])
     
     #----------------------------------- Add capital items to ProFAST ----------------
     pf.add_capital_item(name="SMR Plant Cost",cost=total_plant_cost,depr_type="MACRS",depr_period=7,refurb=[0])

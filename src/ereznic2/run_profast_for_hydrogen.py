@@ -317,6 +317,11 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     # if grid_price_scenario == 'retail-flat':
     #     elec_price_perkWh = mwh_to_kwh*elec_price # convert $/MWh to $/kWh
     # Set up ProFAST
+
+    financial_assumptions = pd.read_csv('H2_Analysis/financial_inputs.csv',index_col=None,header=0)
+    financial_assumptions.set_index(["Parameter"], inplace = True)
+    financial_assumptions = financial_assumptions['Value']
+
     pf = ProFAST.ProFAST('blank')
 
     # Fill these in - can have most of them as 0 also
@@ -351,16 +356,16 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     pf.set_params('rent',{'value':0,'escalation':gen_inflation})
     pf.set_params('property tax and insurance',property_tax_insurance)
     pf.set_params('admin expense',0)
-    pf.set_params('total income tax rate',0.27)
-    pf.set_params('capital gains tax rate',0.15)
+    pf.set_params('total income tax rate',financial_assumptions['total income tax rate'])
+    pf.set_params('capital gains tax rate',financial_assumptions['capital gains tax rate'])
     pf.set_params('sell undepreciated cap',True)
     pf.set_params('tax losses monetized',True)
     pf.set_params('general inflation rate',gen_inflation)
-    pf.set_params('leverage after tax nominal discount rate',0.0824)
-    pf.set_params('debt equity ratio of initial financing',1.38)
+    pf.set_params('leverage after tax nominal discount rate',financial_assumptions['leverage after tax nominal discount rate'])
+    pf.set_params('debt equity ratio of initial financing',financial_assumptions['debt equity ratio of initial financing'])
     pf.set_params('debt type','Revolving debt')
-    pf.set_params('debt interest rate',0.0489)
-    pf.set_params('cash onhand',1)
+    pf.set_params('debt interest rate',financial_assumptions['debt interest rate'])
+    pf.set_params('cash onhand',financial_assumptions['cash onhand'])
     pf.set_params('one time cap inct',{'value':ITC*(capex_storage_installed+capex_battery_installed),'depr type':'MACRS','depr period':7,'depreciable':True})
     #pf.set_params('one time cap inct',{'value':ITC*capex_solar_installed,'depr type':'MACRS','depr period':7,'depreciable':True})
     #pf.set_params('one time cap inct',{'value':ITC*capex_battery_installed,'depr type':'MACRS','depr period':7,'depreciable':True})

@@ -4,9 +4,12 @@ sys.path.append('')
 import pandas as pd
 import numpy as np
 
-def grid_price_interpolation(grid_prices,site_name,technology_year,project_life):
+def grid_price_interpolation(grid_prices,site_name,technology_year,project_life,price_units):
 
-    mwh_to_kwh = 0.001
+    if price_units == 'kWh':
+        mwh_to_kwh = 0.001
+    else:
+        mwh_to_kwh = 1
 
     operational_year = technology_year + 5
     EOL_year = operational_year + project_life

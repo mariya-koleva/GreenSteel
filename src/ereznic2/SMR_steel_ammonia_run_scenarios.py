@@ -109,7 +109,7 @@ for atb_year in atb_years:
                                                                                                                             lime_unit_cost,
                                                                                                                             carbon_unit_cost,
                                                                                                                             iron_ore_pellets_unit_cost,
-                                                                                                                            lcoe, scenario, natural_gas_cost, o2_heat_integration)
+                                                                                                                            lcoe, scenario, natural_gas_cost, o2_heat_integration,atb_year,site_name)
                     
                     cooling_water_cost = 0.000113349938601175 # $/Gal
                     iron_based_catalyst_cost = 23.19977341 # $/kg
@@ -119,7 +119,7 @@ for atb_year in atb_years:
                                                                                                                             cooling_water_cost,
                                                                                                                             iron_based_catalyst_cost,
                                                                                                                             oxygen_cost, 
-                                                                                                                            lcoe, scenario)
+                                                                                                                            lcoe, scenario,atb_year,site_name)
 
 
                     atb_year, lcoh = hopp_tools_steel.write_outputs_ProFAST_SMR(fin_sum_dir,price_breakdown_dir,atb_year,

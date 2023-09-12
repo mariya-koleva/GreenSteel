@@ -4,6 +4,7 @@ Written by Abhineet Gupta
 """
 
 import ProFAST
+import pandas as pd
 
 # # Add location of PyFAST code 
 # import sys
@@ -12,7 +13,7 @@ import ProFAST
 # import src.PyFAST as PyFAST
 
 # Implement equations from Ammonia model received
-def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life,levelized_cost_of_hydrogen, electricity_cost,cooling_water_cost,iron_based_catalyst_cost,oxygen_price):
+def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life,levelized_cost_of_hydrogen, electricity_cost,grid_prices_interpolated_USDperMWh,cooling_water_cost,iron_based_catalyst_cost,oxygen_price):
     # Inputs:
     # plant_capacity_kgpy = 462323016 ##KgNH3/year
     # plant_capacity_factor = 0.9
@@ -83,17 +84,24 @@ def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life
     credits_byproduct = oxygen_price*oxygen_byproduct * \
         plant_capacity_kgpy * plant_capacity_factor
 
+    financial_assumptions = pd.read_csv('H2_Analysis/financial_inputs.csv',index_col=None,header=0)
+    financial_assumptions.set_index(["Parameter"], inplace = True)
+    financial_assumptions = financial_assumptions['Value']
+
      # Set up ProFAST
     pf = ProFAST.ProFAST('blank')
+
+    install_years = 3
+    analysis_start = list(grid_prices_interpolated_USDperMWh.keys())[0] - install_years
     
     # Fill these in - can have most of them as 0 also
     gen_inflation = 0.00
     pf.set_params('commodity',{"name":'Ammonia',"unit":"kg","initial price":1000,"escalation":gen_inflation})
     pf.set_params('capacity',plant_capacity_kgpy/365) #units/day
     pf.set_params('maintenance',{"value":0,"escalation":gen_inflation})
-    pf.set_params('analysis start year',2022)
+    pf.set_params('analysis start year',analysis_start)
     pf.set_params('operating life',plant_life)
-    pf.set_params('installation months',36)
+    pf.set_params('installation months',12*install_years)
     pf.set_params('installation cost',{"value":fixed_O_and_M_cost,"depr type":"Straight line","depr period":4,"depreciable":False})
     pf.set_params('non depr assets',land_cost)
     pf.set_params('end of proj sale non depr assets',land_cost*(1+gen_inflation)**plant_life)
@@ -105,17 +113,16 @@ def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life
     pf.set_params('rent',{'value':0,'escalation':gen_inflation})
     pf.set_params('property tax and insurance',0)
     pf.set_params('admin expense',0)
-    pf.set_params('total income tax rate',0.27)
-    pf.set_params('capital gains tax rate',0.15)
+    pf.set_params('total income tax rate',financial_assumptions['total income tax rate'])
+    pf.set_params('capital gains tax rate',financial_assumptions['capital gains tax rate'])
     pf.set_params('sell undepreciated cap',True)
     pf.set_params('tax losses monetized',True)
-   # pf.set_params('operating incentives taxable',True)
     pf.set_params('general inflation rate',gen_inflation)
-    pf.set_params('leverage after tax nominal discount rate',0.0824)
-    pf.set_params('debt equity ratio of initial financing',1.38)
+    pf.set_params('leverage after tax nominal discount rate',financial_assumptions['leverage after tax nominal discount rate'])
+    pf.set_params('debt equity ratio of initial financing',financial_assumptions['debt equity ratio of initial financing'])
     pf.set_params('debt type','Revolving debt')
-    pf.set_params('debt interest rate',0.0489)
-    pf.set_params('cash onhand',1)
+    pf.set_params('debt interest rate',financial_assumptions['debt interest rate'])
+    pf.set_params('cash onhand',financial_assumptions['cash onhand'])
     
     #----------------------------------- Add capital items to ProFAST ----------------
     pf.add_capital_item(name="Air Separation by Cryogenic",cost=capex_air_separation_crygenic,depr_type="MACRS",depr_period=7,refurb=[0])
@@ -138,7 +145,7 @@ def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life
     
     #---------------------- Add feedstocks, note the various cost options-------------------
     pf.add_feedstock(name='Hydrogen',usage=H2_consumption,unit='kilogram of hydrogen per kilogram of ammonia',cost=levelized_cost_of_hydrogen,escalation=gen_inflation)
-    pf.add_feedstock(name='Electricity',usage=electricity_usage,unit='MWh per kilogram of ammonia',cost=electricity_cost,escalation=gen_inflation)
+    pf.add_feedstock(name='Electricity',usage=electricity_usage,unit='MWh per kilogram of ammonia',cost=grid_prices_interpolated_USDperMWh,escalation=gen_inflation)
     pf.add_feedstock(name='Cooling water',usage=cooling_water_usage,unit='Gallon per kilogram of ammonia',cost=cooling_water_cost,escalation=gen_inflation)
     pf.add_feedstock(name='Iron based catalyst',usage=iron_based_catalyst_usage,unit='kilogram of catalyst per kilogram of ammonia',cost=iron_based_catalyst_cost,escalation=gen_inflation)
     pf.add_coproduct(name='Oxygen byproduct',usage=oxygen_byproduct,unit='kilogram of oxygen per kilogram of ammonia',cost=oxygen_price,escalation=gen_inflation)

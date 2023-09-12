@@ -24,6 +24,7 @@ from lcoe.lcoe import lcoe as lcoe_calc
 import numpy_financial as npf
 import inspect
 from datetime import datetime
+from grid_price_profiles import grid_price_interpolation
 
 from hopp.to_organize.H2_Analysis import LCA_single_scenario
 
@@ -964,6 +965,12 @@ def desal_model(
     # Power = [(est_const_desal_power_mw_hr) * 1000 for x in range(0, 8760)]
     Power = copy.deepcopy(electrical_generation_timeseries)
     fresh_water_flowrate, feed_water_flowrate, operational_flags, desal_capex, desal_opex, desal_annuals = RO_desal(Power, desal_system_size_m3_hr, useful_life, plant_life=30)
+
+    # Correct desal capex and opex to 2020
+    desal_ref_CEPCI = 567.3
+    model_year_CEPCI = 596.2
+    desal_capex = model_year_CEPCI/desal_ref_CEPCI*desal_capex
+    desal_opex = model_year_CEPCI/desal_ref_CEPCI*desal_opex
     #print("For {}MW Electrolyzer, implementing {}m^3/hr desal system".format(electrolyzer_size, desal_system_size_m3_hr))
     #print("Estimated constant desal power usage {0:.3f}MW".format(est_const_desal_power_mw_hr))
     #print("Desal System CAPEX ($): {0:,.02f}".format(desal_capex))
@@ -2001,6 +2008,7 @@ def steel_LCOS(
     # Read in csv for grid prices
     grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
+    grid_prices_interpolated_USDperMWh = grid_price_interpolation(grid_prices,site_name,atb_year,steel_plant_life,'MWh')
     # if site_name=='WY':
     #     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,'TX'].tolist()[0]
     # else:
@@ -2013,7 +2021,7 @@ def steel_LCOS(
     steel_economics_from_profast,steel_economics_summary,profast_steel_price_breakdown,steel_annual_capacity,steel_price_breakdown,steel_plant_capex=\
         run_profast_for_steel(max_steel_production_capacity_mtpy,\
             steel_capacity_factor,steel_plant_life,levelized_cost_hydrogen,\
-            elec_price,natural_gas_cost,lime_unitcost,
+            elec_price,grid_prices_interpolated_USDperMWh,natural_gas_cost,lime_unitcost,
                 carbon_unitcost,
                 iron_ore_pellet_unitcost,
                 o2_heat_integration)
@@ -2044,7 +2052,7 @@ def steel_LCOS_SMR(
     hydrogen_annual_production,
     lime_unitcost,
     carbon_unitcost,
-    iron_ore_pellet_unitcost, lcoe, policy_option, natural_gas_cost, o2_heat_integration
+    iron_ore_pellet_unitcost, lcoe, policy_option, natural_gas_cost, o2_heat_integration, atb_year, site_name
 ):
     # if hopp_dict.save_model_input_yaml:
     #     input_dict = {
@@ -2081,7 +2089,20 @@ def steel_LCOS_SMR(
     steel_plant_life = 30
 
     # Should connect these to something (AEO, Cambium, etc.)
-    electricity_cost = lcoe                    # $/MWh
+    #electricity_cost = lcoe                    # $/MWh
+     # Specify grid cost year for ATB year
+    if atb_year == 2020:
+        grid_year = 2025
+    elif atb_year == 2025:
+        grid_year = 2030
+    elif atb_year == 2030:
+        grid_year = 2035
+    elif atb_year == 2035:
+        grid_year = 2040
+
+    grid_prices = pd.read_csv(os.path.join("H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
+    elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
+    grid_prices_interpolated_USDperMWh = grid_price_interpolation(grid_prices,site_name,atb_year,steel_plant_life,'MWh')
     # print('==============================================================')
     # print('==============================================================')
     # print(lcoe, policy_option['Wind PTC']*100 / 3)
@@ -2092,7 +2113,7 @@ def steel_LCOS_SMR(
     steel_economics_from_profast,steel_economics_summary,profast_steel_price_breakdown,steel_annual_capacity,steel_price_breakdown,steel_plant_capex=\
         run_profast_for_steel(max_steel_production_capacity_mtpy,\
             steel_capacity_factor,steel_plant_life,levelized_cost_hydrogen,\
-            electricity_cost,natural_gas_cost,lime_unitcost,
+            elec_price,grid_prices_interpolated_USDperMWh,natural_gas_cost,lime_unitcost,
                 carbon_unitcost,
                 iron_ore_pellet_unitcost, o2_heat_integration)
 
@@ -2172,6 +2193,7 @@ def levelized_cost_of_ammonia(
     # Read in csv for grid prices
     grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
+    grid_prices_interpolated_USDperMWh = grid_price_interpolation(grid_prices,site_name,atb_year,ammonia_plant_life,'MWh')
     # if site_name=='WY':
     #     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,'TX'].tolist()[0]
     # else:
@@ -2179,7 +2201,7 @@ def levelized_cost_of_ammonia(
 
     ammonia_economics_from_profast,ammonia_economics_summary,profast_ammonia_price_breakdown,ammonia_annual_capacity,ammonia_price_breakdown,ammonia_total_capex=\
         run_profast_for_ammonia(max_ammonia_production_capacity_kgpy,ammonia_capacity_factor,ammonia_plant_life,\
-                               levelized_cost_hydrogen, elec_price,
+                               levelized_cost_hydrogen, elec_price,grid_prices_interpolated_USDperMWh,
                                cooling_water_unitcost,iron_based_catalyst_unitcost,oxygen_unitcost)
 
     ammonia_breakeven_price = ammonia_economics_from_profast.get('price')
@@ -2320,6 +2342,7 @@ def levelized_cost_of_h2_transmission(
     # Read in csv for grid prices
     grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]/1000
+    grid_prices_interpolated_USDperkWh = grid_price_interpolation(grid_prices,site_name,atb_year,plant_life,'kWh')
     # if site_name=='WY':
     #     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,'TX'].tolist()[0]
     # else:
@@ -2328,7 +2351,7 @@ def levelized_cost_of_h2_transmission(
     h2_transmission_economics_from_profast,h2_transmission_economics_summary,h2_transmission_price_breakdown,h2_transmission_capex=\
     run_profast_for_h2_transmission(hopp_dict.main_dict['Configuration']['parent_path'], max_hydrogen_production_rate_kg_hr,
                                     max_hydrogen_delivery_rate_kg_hr,pipeline_length_km,electrolyzer_capacity_factor,
-                                    enduse_capacity_factor,before_after_storage,plant_life,elec_price)
+                                    enduse_capacity_factor,before_after_storage,plant_life,elec_price,grid_prices_interpolated_USDperkWh,site_name,atb_year)
 
     h2_transmission_price = h2_transmission_economics_from_profast['price']
 

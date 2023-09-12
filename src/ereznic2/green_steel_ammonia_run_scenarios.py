@@ -937,7 +937,7 @@ def batch_generator_kernel(arg_list):
         # Read in csv for grid prices
         grid_prices = pd.read_csv(os.path.join(project_path, "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
         elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
-        grid_prices_interpolated_USDperkwh = grid_price_interpolation(grid_prices,site_name,atb_year,useful_life)
+        grid_prices_interpolated_USDperkwh = grid_price_interpolation(grid_prices,site_name,atb_year,useful_life,'kWh')
 
 
         # if site_name =='WY':
