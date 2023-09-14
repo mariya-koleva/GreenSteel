@@ -1,65 +1,68 @@
 ,0
 ATB Year,2030.0
 LCOE First Year ($/MWh),0.16501218460000003
-LCOH ($/kg),1.7835530575182126
+LCOH ($/kg),1.841451437803365
 Hydrogen storage duration (hr),4.0
-Hydrogen annual production (kg),62087400.0
-Hydrogen production total CAPEX ($),214301857.36468995
+Hydrogen annual production (kg),65959843.5
+Hydrogen production total CAPEX ($),220837396.93978152
 Hydrogen transmission total CAPEX ($),0.0
-Steel Plant Total CAPEX ($),412559000.36354655
-Ammonia Plant Total CAPEX ($),68583140.0999875
-LCOH: Hydrogen Storage ($/kg),0.00010965418385570923
-LCOH: Compression ($/kg),0.018427994786862245
-LCOH: SMR plant CAPEX ($/kg),0.37110690544844144
-LCOH: SMR plant FOM ($/kg),0.09862194035423219
-LCOH: SMR plant VOM ($/kg),1.1903658479701331
-LCOH: Taxes ($/kg),0.05992071477468808
+Steel Plant Total CAPEX ($),428750341.3304222
+Ammonia Plant Total CAPEX ($),71189690.86394492
+LCOH: Hydrogen Storage ($/kg),0.00010990297138606129
+LCOH: Compression ($/kg),0.018469804913490855
+LCOH: SMR plant CAPEX ($/kg),0.36023198827461245
+LCOH: CO2 transportation and storage ($/kg),0.0
+LCOH: SMR plant FOM ($/kg),0.12735379457475773
+LCOH: SMR plant VOM ($/kg),0.041499999999999995
+LCOH: Natural gas charges ($/kg),1.0920734879999998
+LCOH: Electricity charges ($/kg),0.09829235997013336
+LCOH: Taxes ($/kg),0.05842009909898499
 LCOH: Water charges ($/kg),0.045
-LCOH: Financial ($/kg),-1.5612511283791264e-17
-Steel annual production (tonne steel/year),847159.793814433
-Ammonia annual production (kgNH3/year),283239116.4749096
-Steel price: EAF and Casting CAPEX ($/tonne),6.776521764874175
-Steel price: Shaft Furnace CAPEX ($/tonne),3.5584806628645778
-Steel price: Oxygen Supply CAPEX ($/tonne),0.4487461064956498
-Steel price: H2 Pre-heating CAPEX ($/tonne),0.2461141627457223
-Steel price: Cooling Tower CAPEX ($/tonne),0.5537033685398499
-Steel price: Piping CAPEX ($/tonne),1.6439512962211758
-Steel price: Electrical & Instrumentation ($/tonne),1.095967531741667
-"Steel price: Buildings, Storage, Water Service CAPEX ($/tonne)",2.397282628330778
-Steel price: Miscellaneous CAPEX ($/tonne),1.0959679686176198
-Steel price: Annual Operating Labor Cost ($/tonne),85.22619096474395
-Steel price: Maintenance Labor Cost ($/tonne),4.612752818472641
-Steel price: Administrative & Support Labor Cost ($/tonne),22.459735945804148
-Steel price: Installation Cost ($/tonne),7.1848433965274285
-Steel price: Maintenance Materials ($/tonne),7.720000000000001
-Steel price: Raw Water Withdrawal ($/tonne),0.47648790630000004
-Steel price: Lime ($/tonne),2.089236
-Steel price: Carbon ($/tonne),11.722482000000003
-Steel price: Iron Ore ($/tonne),360.9158904000002
-Steel price: Hydrogen ($/tonne),117.64315967390135
-Steel price: Natural gas ($/tonne),0.004214270113672183
-Steel price: Electricity ($/tonne),83.8323997069249
-Steel price: Slag Disposal ($/tonne),6.560037900000003
-Steel price: Taxes ($/tonne),27.46804354460719
-Steel price: Equipment Financing ($/tonne),94.19166857512845
-Steel price: Remaining Financial ($/tonne),10.690041294258734
+LCOH: Financial ($/kg),0.0
+Steel annual production (tonne steel/year),899997.8646149181
+Ammonia annual production (kgNH3/year),300904979.04185563
+Steel price: EAF and Casting CAPEX ($/tonne),6.557112210606703
+Steel price: Shaft Furnace CAPEX ($/tonne),3.5343225303367887
+Steel price: Oxygen Supply CAPEX ($/tonne),0.43923011297456444
+Steel price: H2 Pre-heating CAPEX ($/tonne),0.24412156391256717
+Steel price: Cooling Tower CAPEX ($/tonne),0.5415522819405139
+Steel price: Piping CAPEX ($/tonne),1.6046267313730436
+Steel price: Electrical & Instrumentation ($/tonne),1.0697511551540577
+"Steel price: Buildings, Storage, Water Service CAPEX ($/tonne)",2.368448848681997
+Steel price: Miscellaneous CAPEX ($/tonne),1.0697515815796057
+Steel price: Annual Operating Labor Cost ($/tonne),81.45721542150804
+Steel price: Maintenance Labor Cost ($/tonne),4.512346615587342
+Steel price: Administrative & Support Labor Cost ($/tonne),21.492390509273847
+Steel price: Installation Cost ($/tonne),7.0497983971742215
+Steel price: Maintenance Materials ($/tonne),7.719999999999997
+Steel price: Raw Water Withdrawal ($/tonne),0.4764879062999999
+Steel price: Lime ($/tonne),2.0892359999999996
+Steel price: Carbon ($/tonne),11.722481999999994
+Steel price: Iron Ore ($/tonne),360.91589039999997
+Steel price: Hydrogen ($/tonne),121.46213683750992
+Steel price: Natural gas ($/tonne),0.00421427011367218
+Steel price: Electricity ($/tonne),83.83239970692487
+Steel price: Slag Disposal ($/tonne),6.560037899999999
+Steel price: Taxes ($/tonne),26.833189145450525
+Steel price: Equipment Financing ($/tonne),92.03290612554473
+Steel price: Remaining Financial ($/tonne),10.457350209935905
 Steel price: Oxygen sales ($/tonne),0.0
-Steel price: Total ($/tonne),860.613919887214
-(-) Steel price: BOS savings ($/tonne),6.737920783741244
-Ammonia price: Air Separation by Cryogenic ($/kg),0.002314397858386328
-Ammonia price: Haber Bosch ($/kg),0.0019171183098948565
-Ammonia price: Boiler and Steam Turbine ($/kg),0.000726945579230466
-Ammonia price: Cooling Tower ($/kg),0.0004935221207569354
-Ammonia price: Depreciable Nonequipment ($/kg),0.0026193047957111804
-Ammonia price: Labor Cost ($/kg),0.019010619335310223
-Ammonia price: Maintenance Cost ($/kg),0.0006492694153353944
-Ammonia price: Administrative Expense ($/kg),0.003802123867062044
-Ammonia price: Hydrogen ($/kg),0.35186720017130513
-Ammonia price: Electricity ($/kg),0.08149745818967946
-Ammonia price: Cooling water ($/kg),6.803051972079997e-06
-Ammonia price: Iron based catalyst ($/kg),0.0025818782607014363
+Steel price: Total ($/tonne),856.0469984618829
+(-) Steel price: BOS savings ($/tonne),6.447717152782154
+Ammonia price: Air Separation by Cryogenic ($/kg),0.002259058937527576
+Ammonia price: Haber Bosch ($/kg),0.0018712786293733294
+Ammonia price: Boiler and Steam Turbine ($/kg),0.0007095637864968247
+Ammonia price: Cooling Tower ($/kg),0.0004817216511515697
+Ammonia price: Depreciable Nonequipment ($/kg),0.002564553232949081
+Ammonia price: Labor Cost ($/kg),0.01816724857229333
+Ammonia price: Maintenance Cost ($/kg),0.000657173698877296
+Ammonia price: Administrative Expense ($/kg),0.0036334497144586662
+Ammonia price: Hydrogen ($/kg),0.3632896475605284
+Ammonia price: Electricity ($/kg),0.08149745818967949
+Ammonia price: Cooling water ($/kg),6.803051972079998e-06
+Ammonia price: Iron based catalyst ($/kg),0.002581878260701437
 Ammonia price: Oxygen byproduct ($/kg),-0.010221204852150396
-Ammonia price: Taxes ($/kg),0.0069161536924567685
-Ammonia price: Equipment Financing ($/kg),0.027158799800601766
-Ammonia price: Remaining Financial ($/kg),0.00484277319838786
-Ammonia price: Total ($/kg),0.5178026501963132
+Ammonia price: Taxes ($/kg),0.006806536840758324
+Ammonia price: Equipment Financing ($/kg),0.02667892079783098
+Ammonia price: Remaining Financial ($/kg),0.0047317057424990285
+Ammonia price: Total ($/kg),0.5272925224318852

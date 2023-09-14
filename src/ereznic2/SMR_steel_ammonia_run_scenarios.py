@@ -76,7 +76,9 @@ NG_price_cases = ['default',
                   'min',
                   'max',
                   ]
-CCS_options = ['wCCS','woCCS']
+CCS_options = ['wCCS',
+               'woCCS'
+             ]
 
 o2_heat_integration = 0 # should always be set to zero in this scenario
 
