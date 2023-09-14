@@ -75,16 +75,18 @@ system_life        = 30
 ely_stack_capex_EI = 0.019 # PEM electrolyzer CAPEX emissions (kg CO2e/kg H2)
 wind_capex_EI      = 10    # Electricity generation from wind, nominal value taken (g CO2e/kWh)
 #wind_capex_EI_perMW = 34882
-if solar_size_mw != 0:
-    solar_pv_capex_EI = 37     # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-    #solar_pv_capex_EI_perMW = 61777
-else:
-    solar_pv_capex_EI = 0   # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-    #solar_pv_capex_EI_perMW = 0
-if storage_size_mw != 0:
-    battery_EI = 20             # Electricity generation capacity from battery (g CO2e/kWh)
-else:
-    battery_EI = 0  # Electricity generation capacity from battery (g CO2e/kWh)
+solar_pv_capex_EI = 37
+battery_EI = 20
+# if solar_size_mw != 0:
+#     solar_pv_capex_EI = 37     # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
+#     #solar_pv_capex_EI_perMW = 61777
+# else:
+#     solar_pv_capex_EI = 0   # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
+#     #solar_pv_capex_EI_perMW = 0
+# if storage_size_mw != 0:
+#     battery_EI = 20             # Electricity generation capacity from battery (g CO2e/kWh)
+# else:
+#     battery_EI = 0  # Electricity generation capacity from battery (g CO2e/kWh)
 
 # Other grid infrastructure imbedded emission intensities
 nuclear_capex_EI = 0.3 # g CO2e/kWh
@@ -187,7 +189,7 @@ steel_electrolysis_total_EI  = 'NA'
     
 # Loop through all scenarios in output folder
 for i0 in range(len(files2load_results)):
-    #i0=1
+    #i0=65
     # Read in applicable Cambium file
     filecase = files2load_results_title[i0+1]
     # Extract year and site location to identify which cambium file to import
@@ -249,20 +251,20 @@ for i0 in range(len(files2load_results)):
         solar_size_mw = hopp_finsum['Solar capacity (MW)'].values.tolist()[0]
         storage_size_mw = hopp_finsum['Battery storage capacity (MW)'].values.tolist()[0]
 
-        if solar_size_mw != 0:
-            solar_pv_capex_EI = 37     # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-            #solar_pv_capex_EI_perMW = 61777
-        else:
-            solar_pv_capex_EI = 0   # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
-            #solar_pv_capex_EI_perMW = 0
+    #     if solar_size_mw != 0:
+    #         solar_pv_capex_EI = 37     # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
+    #         #solar_pv_capex_EI_perMW = 61777
+    #     else:
+    #         solar_pv_capex_EI = 0   # Electricity generation capacity from solar pv, nominal value taken (g CO2e/kWh)
+    #         #solar_pv_capex_EI_perMW = 0
 
-        if storage_size_mw != 0:
-            battery_EI = 20             # Electricity generation capacity from battery (g CO2e/kWh)
-        else:
-            battery_EI = 0  # Electricity generation capacity from battery (g CO2e/kWh)
-    else:
-        solar_pv_capex_EI=0
-        battery_EI=0    
+    #     if storage_size_mw != 0:
+    #         battery_EI = 20             # Electricity generation capacity from battery (g CO2e/kWh)
+    #     else:
+    #         battery_EI = 0  # Electricity generation capacity from battery (g CO2e/kWh)
+    # #else:
+    #    solar_pv_capex_EI=0
+    #    battery_EI=0    
 
     # Read in HOPP data
     hopp_profiles_filepath =dirprofiles + 'Energy'
@@ -334,14 +336,17 @@ for i0 in range(len(files2load_results)):
         generation_annual_solar_fraction = (cambium_data['upv_MWh'].sum() + cambium_data['distpv_MWh'].sum() + cambium_data['csp_MWh'].sum())/generation_annual_total_MWh
         generation_annual_battery_fraction = (cambium_data['battery_MWh'].sum())/generation_annual_total_MWh
 
+        grid_generation_fraction = {'Nuclear':generation_annual_nuclear_fraction,'Coal & Oil':generation_annual_coal_oil_fraction,'Gas':generation_annual_gas_fraction,'Bio':generation_annual_bio_fraction,'Geothermal':generation_annual_geothermal_fraction,\
+                                    'Hydro':generation_annual_hydro_fraction,'Wind':generation_annual_wind_fraction,'Solar':generation_annual_solar_fraction,'Battery':generation_annual_battery_fraction}
+
         grid_imbedded_EI = generation_annual_nuclear_fraction*nuclear_capex_EI + generation_annual_coal_oil_fraction*coal_capex_EI + generation_annual_gas_fraction*gas_capex_EI + generation_annual_bio_fraction*bio_capex_EI\
                          + generation_annual_geothermal_fraction*geothermal_capex_EI + generation_annual_hydro_fraction*hydro_capex_EI+generation_annual_wind_fraction*wind_capex_EI + generation_annual_solar_fraction*solar_pv_capex_EI\
                          + generation_annual_battery_fraction*battery_EI
 
         if 'hybrid-grid' in grid_case:
             # Calculate grid-connected electrolysis emissions/ future cases should reflect targeted electrolyzer electricity usage
-            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (wind_capex_EI*hopp_finsum['Wind annual energy (MWh)'].values.tolist()[0] + solar_pv_capex_EI*hopp_finsum['Solar annual energy (MWh)'].values.tolist()[0])/h2prod_annual_sum\
-                                   + grid_imbedded_EI*grid_annual_sum_MWh/h2prod_annual_sum + ely_stack_capex_EI # kg CO2e/kg H2
+            electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (wind_capex_EI*hopp_finsum['Wind annual energy (MWh)'].values.tolist()[0] + solar_pv_capex_EI*hopp_finsum['Solar annual energy (MWh)'].values.tolist()[0]+ grid_imbedded_EI*grid_annual_sum_MWh)/h2prod_annual_sum\
+                                   +ely_stack_capex_EI # kg CO2e/kg H2
             electrolysis_Scope2_EI = scope2_grid_emissions_annual_sum/h2prod_annual_sum 
             electrolysis_Scope1_EI = 0
             electrolysis_total_EI  = electrolysis_Scope1_EI + electrolysis_Scope2_EI + electrolysis_Scope3_EI 
