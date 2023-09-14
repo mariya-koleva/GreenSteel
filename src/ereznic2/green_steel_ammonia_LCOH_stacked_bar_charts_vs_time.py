@@ -14,8 +14,8 @@ import plotly.express as px
 
 # Initialization and Global Settings
 #Specify directory name
-output_directory = 'examples/H2_Analysis/Phase1B/Fin_sum'
-plot_directory = 'examples/H2_Analysis/Phase1B/Plots'
+output_directory = 'Results_main/Fin_sum'
+plot_directory = 'Plots'
 #plot_subdirectory = 'Stacked_Plots'
 # Read in the summary data from the database
 conn = sqlite3.connect(output_directory+'/Default_summary.db')
@@ -59,19 +59,19 @@ locations = [
         'TX',
         'IA',
         'MS',
-        #'WY'
+        'MN'
         ]
 
 location_strings = [
         'Indiana',
         'Texas',
         'Iowa',
-        'Mississippi',
-        #'Wyoming'
+        #'Mississippi',
+        'Minnesota'
 ]
 
 # True if you want to plot quad of four locations. Must select four locations above
-plot_quad = True
+plot_quad = False
 
 for electrolysis_case in electrolysis_cases:
     for grid_case in grid_cases:
@@ -220,7 +220,7 @@ for electrolysis_case in electrolysis_cases:
                 ax.set_xlabel('Technology Year', fontname = font, fontsize = axis_label_size)
                 ax.legend(fontsize = legend_size, ncol = 2, prop = {'family':'Arial','size':7},loc='upper right')
                 max_y = np.max(barbottom)
-                ax.set_ylim([-2,16])
+                ax.set_ylim([-2,18])
                 ax.tick_params(axis = 'y',labelsize = 10,direction = 'in')
                 ax.tick_params(axis = 'x',labelsize = 10,direction = 'in',rotation = 45)
                 plt.tight_layout()
@@ -289,7 +289,7 @@ for electrolysis_case in electrolysis_cases:
                     if axi ==1:
                         ax[axi1,axi2].legend(fontsize = legend_size_quad, ncol = 2, prop = {'family':'Arial','size':legend_size_quad})
                     max_y = np.max(barbottom)
-                    ax[axi1,axi2].set_ylim([-2,16])
+                    ax[axi1,axi2].set_ylim([-2,18])
                     ax[axi1,axi2].tick_params(axis = 'y',labelsize = 12,direction = 'in')
                     ax[axi1,axi2].tick_params(axis = 'x',labelsize = 12,direction = 'in',rotation = 45) 
                 plt.tight_layout()
