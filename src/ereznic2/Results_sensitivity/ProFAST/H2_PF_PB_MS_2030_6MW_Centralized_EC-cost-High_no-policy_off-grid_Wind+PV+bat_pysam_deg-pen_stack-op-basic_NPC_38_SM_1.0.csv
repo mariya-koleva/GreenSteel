@@ -12,32 +12,32 @@
 10,Financing cash outflow,Battery Storage,0.0
 11,Operating Expenses,Road tax,0.0
 12,Operating Expenses,Credit card fees,0.0
-13,Operating Expenses,Non-depreciable assets,9.980848234971754e-05
-14,Financing cash outflow,Desalination,0.000996064343341279
-15,Operating Expenses,Desalination Fixed O&M Cost,0.004397714616144402
-16,Operating Expenses,Water,0.010791556728232192
-17,Operating Expenses,Cash on hand reserve,0.012295316990898827
-18,Financing cash outflow,Compression,0.023666587334765024
-19,Operating Expenses,Var O&M,0.06605059305407204
-20,Operating Expenses,Property insurance,0.06857149039714136
-21,Financing cash outflow,Hydrogen Storage,0.06933988300261582
-22,Operating Expenses,Solar Plant Fixed O&M Cost,0.1616897414065424
-23,Operating Expenses,Electrolyzer Fixed O&M Cost,0.23302485991153257
-24,Financing cash outflow,Solar Plant,0.2641830719314674
-25,Operating Expenses,Wind Plant Fixed O&M Cost,0.4379593011634172
-26,Financing cash outflow,Income taxes payable,0.5757286821383395
-27,Financing cash outflow,Wind Plant,0.7689820377080574
-28,Financing cash outflow,Repayment of debt,0.9134490358109815
-29,Financing cash outflow,Electrolysis system,0.9186074070603133
-30,Financing cash outflow,Interest expense,1.4740327090881804
-31,Financing cash outflow,Dividends paid,2.3478679609102997
+13,Operating Expenses,Non-depreciable assets,0.000101010644046949
+14,Financing cash outflow,Desalination,0.0010594153717400417
+15,Operating Expenses,Desalination Fixed O&M Cost,0.004677415165009006
+16,Operating Expenses,Water,0.010791556728232189
+17,Operating Expenses,Cash on hand reserve,0.011816561539383756
+18,Financing cash outflow,Compression,0.023951643916412548
+19,Operating Expenses,Property insurance,0.06939913532018875
+20,Financing cash outflow,Hydrogen Storage,0.07017506002839384
+21,Operating Expenses,Var O&M,0.07144993155746458
+22,Operating Expenses,Solar Plant Fixed O&M Cost,0.1636372433560574
+23,Operating Expenses,Electrolyzer Fixed O&M Cost,0.2358315708692928
+24,Financing cash outflow,Solar Plant,0.26736507372786933
+25,Operating Expenses,Wind Plant Fixed O&M Cost,0.44323438284395134
+26,Financing cash outflow,Repayment of debt,0.6102004786586458
+27,Financing cash outflow,Wind Plant,0.7782441838686661
+28,Financing cash outflow,Electrolysis system,0.9296717436133091
+29,Financing cash outflow,Income taxes payable,0.977610837565159
+30,Financing cash outflow,Interest expense,1.4095631057014715
+31,Financing cash outflow,Dividends paid,3.8787390129111254
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
-36,Operating Revenue,Cash on hand recovery,0.012295316990898825
-37,Operating Revenue,Sale of non-depreciable assets,0.012588388206626328
-38,Financing cash inflow,Monetized tax losses,0.2891588389826695
-39,Financing cash inflow,Inflow of debt,0.9134490358109815
-40,Financing cash inflow,Inflow of equity,1.5730680146005271
-41,Operating Revenue,Hydrogen sales,5.551174227486989
+36,Operating Revenue,Cash on hand recovery,0.011816561539383756
+37,Operating Revenue,Sale of non-depreciable assets,0.01274001137307085
+38,Financing cash inflow,Monetized tax losses,0.16504656047162555
+39,Financing cash inflow,Inflow of debt,0.6102004786586458
+40,Financing cash inflow,Inflow of equity,1.534487916680911
+41,Operating Revenue,Hydrogen sales,7.623227834662783

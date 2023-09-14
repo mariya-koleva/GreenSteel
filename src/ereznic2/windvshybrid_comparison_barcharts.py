@@ -18,7 +18,7 @@ parent_path = os.path.abspath('')
 main_directory = 'Results_main/Fin_sum'
 plot_directory = 'Plots/'
 
-smr_directory = 'Results_SMR'
+smr_directory = 'Results_SMR/Fin_sum'
 
 retail_string = 'retail-flat'
 plot_subdirectory = 'Wind_vs_hybrid_barcharts/'

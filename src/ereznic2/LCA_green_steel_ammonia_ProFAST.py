@@ -29,7 +29,7 @@ electrolysis_directory = 'Results_main/Fin_sum/'
 dirprofiles = 'Results_main/Profiles/' 
 dircambium = 'H2_Analysis/Cambium_data/Cambium22_MidCase100by2035_hourly_' 
 sensitivity_directory = 'Results_sensitivity/Fin_sum/'
-smr_directory = 'Results_SMR/'
+smr_directory = 'Results_SMR/Fin_sum/'
 plot_directory = 'Plots'
 plot_subdirectory = 'LCA_Plots'
 
@@ -241,6 +241,10 @@ for i0 in range(len(files2load_results)):
             hopp_finsum_filepath = hopp_finsum_filepath + '_' +filecase[j]
         hopp_finsum_filepath = hopp_finsum_filepath + '.csv'
         hopp_finsum = pd.read_csv(hopp_finsum_filepath,index_col=None,header=0).set_index(['Unnamed: 0']).T
+        hopp_finsum = hopp_finsum.drop(['Fraction of electricity from renewables (-)'],axis=1)
+        hopp_finsum = hopp_finsum.astype(float)
+
+        
 
         solar_size_mw = hopp_finsum['Solar capacity (MW)'].values.tolist()[0]
         storage_size_mw = hopp_finsum['Battery storage capacity (MW)'].values.tolist()[0]
@@ -315,8 +319,8 @@ for i0 in range(len(files2load_results)):
         grid_emission_intensity_annual_average = combined_data['LRMER CO2 equiv. total (kg-CO2e/MWh)'].mean()
 
         if grid_case != 'grid-only-retail-flat':
-            frac_ren_wind = hopp_finsum['Wind capacity (MW)'].values.tolist()[0]*hopp_finsum['Wind plant CF (-),'].values.tolist()[0]*8760/ren_annual_sum_MWh
-            frac_ren_solar = hopp_finsum['Solar capacity (MW)'].values.tolist()[0]*hopp_finsum['Solar plant CF (-)'].values.tolist()[0]*8760/ren_annual_sum_MWh
+            frac_ren_wind = hopp_finsum['Wind annual energy (MWh)'].values.tolist()[0]/ren_annual_sum_MWh
+            frac_ren_solar = hopp_finsum['Solar annual energy (MWh)'].values.tolist()[0]/ren_annual_sum_MWh
         
         # Calculate annual percentages of solar, wind, and fossil
         generation_annual_total_MWh = cambium_data['generation'].sum()

@@ -15,7 +15,7 @@ import sqlite3
 electrolysis_directory = 'Results_main/Fin_sum'
 #electrolysis_directory = 'examples/H2_Analysis/Phase1B/Fin_sum_mid'
 sensitivity_directory = 'Results_sensitivity/Fin_sum'
-smr_directory = 'Results_SMR'
+smr_directory = 'Results_SMR/Fin_sum'
 plot_directory = 'Plots'
 
 

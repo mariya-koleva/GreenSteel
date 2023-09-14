@@ -9,43 +9,43 @@
 7,Operating Expenses,Road tax,0.0
 8,Operating Expenses,Property insurance,0.0
 9,Financing cash outflow,Capital gains taxes payable,0.0
-10,Operating Expenses,Non-depreciable assets,0.0314675174013921
-11,Financing cash outflow,H2 Pre-heating,0.2404107671350578
-12,Financing cash outflow,Oxygen Supply,0.4226467940682507
-13,Operating Expenses,Raw Water Withdrawal,0.47648790630000004
-14,Financing cash outflow,Cooling Tower,0.5204204312173325
-15,Financing cash outflow,Electrical & Instrumentation,1.0243950291676431
-16,Financing cash outflow,Other Miscellaneous Costs,1.024395437513275
-17,Financing cash outflow,Piping,1.536592542451001
+10,Operating Expenses,Non-depreciable assets,0.0315040650406504
+11,Financing cash outflow,H2 Pre-heating,0.2406899898611148
+12,Financing cash outflow,Oxygen Supply,0.42313767303929395
+13,Operating Expenses,Raw Water Withdrawal,0.4764879063
+14,Financing cash outflow,Cooling Tower,0.5210248684196755
+15,Financing cash outflow,Electrical & Instrumentation,1.0255848027206835
+16,Financing cash outflow,Other Miscellaneous Costs,1.0255852115405844
+17,Financing cash outflow,Piping,1.538377202779051
 18,Operating Expenses,Lime,2.212452
-19,Financing cash outflow,"Buildings, Storage, Water Service",2.3163713842457856
+19,Financing cash outflow,"Buildings, Storage, Water Service",2.3190617110567566
 20,Operating Expenses,Natural Gas,2.716709262358007
-21,Operating Expenses,Cash on hand reserve,2.993175061440069
-22,Financing cash outflow,Shaft Furnace,3.4885914573058656
-23,Operating Expenses,Maintenance Labor Cost,4.338771601692345
-24,Financing cash outflow,EAF & Casting,6.1846605203270215
-25,Operating Expenses,Slag Disposal,6.5600379
-26,Operating Expenses,Installation cost,6.671497874169574
-27,Operating Expenses,Maintenance Materials,7.720000000000001
-28,Operating Expenses,Property tax and insurance,10.055090618058738
-29,Operating Expenses,Carbon,12.748986
-30,Financing cash outflow,Repayment of debt,13.603697757102111
-31,Financing cash outflow,Income taxes payable,18.69138594564439
-32,Operating Expenses,Administrative & Support Labor Cost,19.884669081148818
-33,Financing cash outflow,Interest expense,21.06532597687262
-34,Financing cash outflow,Dividends paid,52.57793933017335
-35,Operating Expenses,Electricity,63.7022803452
-36,Operating Expenses,Annual Operating Labor Cost,75.19990472290294
+21,Operating Expenses,Cash on hand reserve,3.072885381767471
+22,Financing cash outflow,Shaft Furnace,3.492643247616326
+23,Operating Expenses,Maintenance Labor Cost,4.34381082538769
+24,Financing cash outflow,EAF & Casting,6.1918436335910485
+25,Operating Expenses,Slag Disposal,6.560037899999999
+26,Operating Expenses,Installation cost,6.679246419900317
+27,Operating Expenses,Maintenance Materials,7.719999999999999
+28,Financing cash outflow,Repayment of debt,8.989502019660872
+29,Operating Expenses,Property tax and insurance,10.066769004374718
+30,Operating Expenses,Carbon,12.748985999999999
+31,Operating Expenses,Administrative & Support Labor Cost,19.90776393490161
+32,Financing cash outflow,Interest expense,20.765749665416617
+33,Financing cash outflow,Income taxes payable,30.28398995562654
+34,Operating Expenses,Electricity,55.696206714894444
+35,Operating Expenses,Annual Operating Labor Cost,75.28724491421873
+36,Financing cash outflow,Dividends paid,88.61949333856572
 37,Operating Expenses,Iron Ore,337.8291345
-38,Operating Expenses,Hydrogen,409.50121237886583
+38,Operating Expenses,Hydrogen,430.97009873423127
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
 41,Operating Revenue,Oxygen sales,0.0
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
-44,Operating Revenue,Sale of non-depreciable assets,0.03146751740138775
-45,Operating Revenue,Cash on hand recovery,2.9931750614400685
-46,Financing cash inflow,Monetized tax losses,5.217299304969286
-47,Financing cash inflow,Inflow of debt,13.603697757102111
-48,Financing cash inflow,Inflow of equity,22.819499249925045
-49,Operating Revenue,Steel sales,1040.6735712519235
+44,Operating Revenue,Sale of non-depreciable assets,0.03150406504064822
+45,Operating Revenue,Cash on hand recovery,3.072885381767471
+46,Financing cash inflow,Monetized tax losses,4.378033599515316
+47,Financing cash inflow,Inflow of debt,8.989502019660872
+48,Financing cash inflow,Inflow of equity,20.55995502634406
+49,Operating Revenue,Steel sales,1104.724140790941

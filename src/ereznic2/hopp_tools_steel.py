@@ -1864,7 +1864,7 @@ def write_outputs_ProFAST_SMR(fin_sum_dir,
                      price_breakdown_dir,
                      atb_year,
                      site_name,
-                     lcoe,
+                     lcoe_first_year,
                      lcoh,
                      NG_price_case,
                      hydrogen_storage_duration_hr,
@@ -1892,7 +1892,7 @@ def write_outputs_ProFAST_SMR(fin_sum_dir,
     h2_transmission_capex = 0
 
     financial_summary_SMR_df = pd.DataFrame([atb_year,
-                                            lcoe,
+                                            lcoe_first_year,
                                             lcoh,
                                             hydrogen_storage_duration_hr,
                                             hydrogen_annual_production,
@@ -1911,7 +1911,7 @@ def write_outputs_ProFAST_SMR(fin_sum_dir,
                                             steel_annual_production_mtpy,
                                             ammonia_annual_production_kgpy],
                                             ['ATB Year',
-                                            'LCOE ($/MWh)',
+                                            'LCOE First Year ($/MWh)',
                                             'LCOH ($/kg)',
                                             'Hydrogen storage duration (hr)',
                                             'Hydrogen annual production (kg)',
@@ -2230,7 +2230,7 @@ def levelized_cost_of_ammonia_SMR(
     hydrogen_annual_production,
     cooling_water_unitcost,
     iron_based_catalyst_unitcost,
-    oxygen_unitcost, lcoe, policy_option
+    oxygen_unitcost, lcoe, policy_option,atb_year,site_name
 ):
     # if hopp_dict.save_model_input_yaml:
     #     input_dict = {
@@ -2268,14 +2268,29 @@ def levelized_cost_of_ammonia_SMR(
 
     # Should connect these to something (AEO, Cambium, etc.)
     # electricity_cost = 48.92                    # $/MWh
-    electricity_cost = lcoe
+    #electricity_cost = lcoe
+    # Read in csv for grid prices
+
+     # Specify grid cost year for ATB year
+    if atb_year == 2020:
+        grid_year = 2025
+    elif atb_year == 2025:
+        grid_year = 2030
+    elif atb_year == 2030:
+        grid_year = 2035
+    elif atb_year == 2035:
+        grid_year = 2040
+
+    grid_prices = pd.read_csv('H2_Analysis/annual_average_retail_prices.csv',index_col = None,header = 0)
+    electricity_cost = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
+    grid_prices_interpolated_USDperMWh = grid_price_interpolation(grid_prices,site_name,atb_year,ammonia_plant_life,'MWh')
     # cooling_water_cost = 0.000113349938601175 # $/Gal
     # iron_based_catalyist_cost = 23.19977341 # $/kg
     # oxygen_price = 0.0285210891617726       # $/kg
 
     ammonia_economics_from_profast,ammonia_economics_summary,profast_ammonia_price_breakdown,ammonia_annual_capacity,ammonia_price_breakdown,ammonia_plant_capex=\
         run_profast_for_ammonia(max_ammonia_production_capacity_kgpy,ammonia_capacity_factor,ammonia_plant_life,\
-                               levelized_cost_hydrogen, electricity_cost,
+                               levelized_cost_hydrogen, electricity_cost,grid_prices_interpolated_USDperMWh,
                                cooling_water_unitcost,iron_based_catalyst_unitcost,oxygen_unitcost)
 
     ammonia_breakeven_price = ammonia_economics_from_profast.get('price')

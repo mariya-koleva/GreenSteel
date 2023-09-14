@@ -15,7 +15,7 @@ import sqlite3
 electrolysis_directory = 'Results_main/Fin_sum'
 #electrolysis_directory = 'examples/H2_Analysis/Phase1B/Fin_sum_mid'
 sensitivity_directory = 'Results_sensitivity/Fin_sum'
-smr_directory = 'Results_SMR'
+smr_directory = 'Results_SMR/Fin_sum'
 plot_directory = 'Plots'
 
 
@@ -177,7 +177,7 @@ for axi1,policy in enumerate(policy_cases):
         if axi2==0:
             ax1[axi1,axi2].set_ylabel('Break-even steel price ($/tonne) \n' + policy_strings[policy], fontname = font, fontsize = axis_label_size)
             #ax[axi1,axi2].text(1,1350,policy_strings[policy],fontname=font,fontsize=axis_label_size,bbox={'facecolor':'none','edgecolor':'black','pad': 10})
-        ax1[axi1,axi2].set_ylim([600,1400])
+        ax1[axi1,axi2].set_ylim([600,1600])
         ax1[axi1,axi2].tick_params(axis = 'y',labelsize = tickfontsize,direction = 'in',width=1.5)
         ax1[axi1,axi2].tick_params(axis = 'x',labelsize = tickfontsize,direction = 'in',width=1.5,rotation=90)
         steel_handles,steel_labels = ax1[axi1,axi2].get_legend_handles_labels()

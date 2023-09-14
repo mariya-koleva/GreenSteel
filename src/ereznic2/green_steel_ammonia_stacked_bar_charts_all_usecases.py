@@ -15,7 +15,7 @@ import sqlite3
 electrolysis_directory = 'Results_main/Fin_sum'
 #electrolysis_directory = 'examples/H2_Analysis/Phase1B/Fin_sum_mid'
 sensitivity_directory = 'Results_sensitivity/Fin_sum'
-smr_directory = 'Results_SMR'
+smr_directory = 'Results_SMR/Fin_sum'
 plot_directory = 'Plots'
 
 
@@ -570,7 +570,7 @@ for site in locations:
         min_y = np.min(oxygenbyproduct_revenue)
         max_y = np.max(barbottom+taxes_financial_costs_ammonia)
         #ax.set_ylim([-0.25,1.4*max_y])
-        ax.set_ylim([-0.5,3.5])
+        ax.set_ylim([-0.5,4.0])
         ax.tick_params(axis = 'y',labelsize = tickfontsize,direction = 'in',width=1.5)
         ax.tick_params(axis = 'x',labelsize = tickfontsize,direction = 'in',width=1.5,rotation = 45)
         plt.tight_layout()

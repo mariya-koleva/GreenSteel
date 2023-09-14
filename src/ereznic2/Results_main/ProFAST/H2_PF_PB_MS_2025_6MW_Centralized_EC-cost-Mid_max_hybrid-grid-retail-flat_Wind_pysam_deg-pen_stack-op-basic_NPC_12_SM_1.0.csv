@@ -15,29 +15,29 @@
 13,Operating Expenses,Credit card fees,0.0
 14,Operating Expenses,Road tax,0.0
 15,Operating Expenses,Sales tax,0.0
-16,Operating Expenses,Non-depreciable assets,0.00011370738844397688
-17,Financing cash outflow,Desalination,0.0003583490655106063
-18,Operating Expenses,Desalination Fixed O&M Cost,0.0015821436974556256
-19,Financing cash outflow,Compression,0.008514409246684989
-20,Operating Expenses,Water,0.010791556728232192
-21,Operating Expenses,Cash on hand reserve,0.016794785736466058
-22,Operating Expenses,Property insurance,0.019891635797211593
-23,Operating Expenses,Var O&M,0.07110411790168084
-24,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383418335197526
-25,Operating Expenses,Wind Plant Fixed O&M Cost,0.22154230878051367
-26,Financing cash outflow,Wind Plant,0.29012978839073755
-27,Financing cash outflow,Electrolysis system,0.292358758565595
-28,Financing cash outflow,Repayment of debt,0.3550490532944262
-29,Financing cash outflow,Interest expense,0.5065156495743067
-30,Financing cash outflow,Dividends paid,0.7081515000314279
-31,Operating Expenses,Grid Electricity Cost,3.509357278693032
+16,Operating Expenses,Non-depreciable assets,0.00011370520891750185
+17,Financing cash outflow,Desalination,0.0003765972460594557
+18,Operating Expenses,Desalination Fixed O&M Cost,0.0016627110733025703
+19,Financing cash outflow,Compression,0.008514246043742539
+20,Operating Expenses,Water,0.010791556728232189
+21,Operating Expenses,Cash on hand reserve,0.019865964415574266
+22,Operating Expenses,Property insurance,0.01989186698329882
+23,Operating Expenses,Var O&M,0.0752748738237094
+24,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
+25,Operating Expenses,Wind Plant Fixed O&M Cost,0.22153806229016743
+26,Financing cash outflow,Repayment of debt,0.2251995670596748
+27,Financing cash outflow,Wind Plant,0.2901242272256836
+28,Financing cash outflow,Electrolysis system,0.292353154675969
+29,Financing cash outflow,Interest expense,0.470950793759776
+30,Financing cash outflow,Dividends paid,0.8358591851054904
+31,Operating Expenses,Grid Electricity Cost,3.8266844217066027
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
-36,Operating Revenue,Sale of non-depreciable assets,0.0001137073884443022
-37,Operating Revenue,Cash on hand recovery,0.016794785736466058
-38,Financing cash inflow,Inflow of debt,0.3550490532944262
-39,Financing cash inflow,Inflow of equity,1.1366966297685985
-40,Financing cash inflow,Monetized tax losses,1.4360220710006621
-41,Operating Revenue,Hydrogen sales,3.1514129790551024
+36,Operating Revenue,Sale of non-depreciable assets,0.00011370520891782717
+37,Operating Revenue,Cash on hand recovery,0.01986596441557427
+38,Financing cash inflow,Inflow of debt,0.2251995670596748
+39,Financing cash inflow,Inflow of equity,0.8553987265957882
+40,Financing cash inflow,Monetized tax losses,1.257830495384413
+41,Operating Revenue,Hydrogen sales,4.024625051112529

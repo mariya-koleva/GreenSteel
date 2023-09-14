@@ -322,10 +322,10 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             electrolyzer_capacity_BOL_MW = max(max(combined_vre_power_mWh),wind_size_mw_calc/(1+electrolyzer_degradation_power_increase))
             n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
             electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
-            print('Solar size: ' +str(solar_size_mw) + ' MW')
-            print('Wind size: ' +str(wind_size_mw) + ' MW')
-            print('Electrolyzer size: ' +str(electrolyzer_size_mw)+ ' MW')
-            print('Battery size: ' + str(storage_size_mw) + ' MW, ' + str(storage_size_mwh) + ' MWh')
+            #print('Solar size: ' +str(solar_size_mw) + ' MW')
+            #print('Wind size: ' +str(wind_size_mw) + ' MW')
+            #print('Electrolyzer size: ' +str(electrolyzer_size_mw)+ ' MW')
+            #print('Battery size: ' + str(storage_size_mw) + ' MW, ' + str(storage_size_mwh) + ' MWh')
 
             # Run HOPP
             hopp_dict, plant_power_production, plant_shortfall_hopp, plant_curtailment_hopp, hybrid_plant, wind_size_mw, solar_size_mw, lcoe = \
@@ -573,7 +573,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             # Read in csv for grid prices
             grid_prices = pd.read_csv(os.path.join(project_path, "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
             elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
-            grid_prices_interpolated_USDperkwh = grid_price_interpolation(grid_prices,site_name,atb_year,useful_life)
+            grid_prices_interpolated_USDperkwh = grid_price_interpolation(grid_prices,site_name,atb_year,useful_life,'kWh')
 
 
             h2_solution,h2_summary,h2_price_breakdown,lcoh_breakdown,electrolyzer_installed_cost_kw,elec_cf,ren_frac,electrolyzer_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,h2_production_capex = run_profast_for_hydrogen. run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
