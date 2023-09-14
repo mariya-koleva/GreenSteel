@@ -98,6 +98,7 @@ for atb_year in atb_years:
                     price_breakdown_SMR_plant,\
                     CO2_TnS_unit_cost,\
                     price_breakdown_SMR_FOM, price_breakdown_SMR_VOM,\
+                    price_breakdown_SMR_NG, price_breakdown_SMR_E,\
                     price_breakdown_taxes,\
                     price_breakdown_water_charges,\
                     remaining_financial,\
@@ -134,7 +135,9 @@ for atb_year in atb_years:
                                 hydrogen_annual_production,
                                 price_breakdown_storage,price_breakdown_compression,
                                 price_breakdown_SMR_plant,
+                                CO2_TnS_unit_cost,
                                 price_breakdown_SMR_FOM, price_breakdown_SMR_VOM,
+                                price_breakdown_SMR_NG, price_breakdown_SMR_E,
                                 price_breakdown_taxes,
                                 price_breakdown_water_charges,
                                 remaining_financial,

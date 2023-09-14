@@ -218,7 +218,10 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     
     grid_cost_pr_yr_USDprkg = grid_price_per_yr*total_energy_demand
     grid_prices_interpolated_USDperkg = dict(zip(grid_cost_keys,grid_cost_pr_yr_USDprkg))
-    vom_SMR_NG_perkg = NG_cost * NG_consumption   # $/kgH2
+    
+    vom_SMR_NG_perMJ = NG_cost    # $/MJ
+    other_vom_costs = 0.08938 # $/kgH2
+    
     smr_total_EI_all = []
     smr_ccs_total_EI_all = []
     smr_Scope3_emission_intensity = []
@@ -457,8 +460,9 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     #pf.add_feedstock(name='Electricity',usage=total_energy_demand,unit='kWh',cost=electricity_cost,escalation=gen_inflation)
     #pf.add_feedstock(name='Natural Gas',usage=NG_consumption,unit='MJ/kg-H2',cost=NG_cost,escalation=gen_inflation)
     pf.add_feedstock(name='Water Charges',usage=water_consumption,unit='gallons of water per kg-H2',cost=water_cost,escalation=gen_inflation)
-    pf.add_feedstock(name='SMR NG Cost',usage=1.0,unit='$/kg-H2',cost=vom_SMR_NG_perkg,escalation=gen_inflation)
+    pf.add_feedstock(name='SMR NG Cost',usage=NG_consumption,unit='$/MJ',cost=vom_SMR_NG_perMJ,escalation=gen_inflation)
     pf.add_feedstock(name='SMR Electricity Cost',usage=1.0,unit='$/kg-H2',cost=grid_prices_interpolated_USDperkg,escalation=gen_inflation)
+    pf.add_feedstock(name='SMR VOM Cost',usage=1.0,unit='$/kg-H2',cost=other_vom_costs,escalation=gen_inflation)
     
     pf.add_incentive(name ='Policy credit', value=policy_credit, decay = 0, sunset_years = policy_credit_duration, tax_credit = True)
 
@@ -492,7 +496,8 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     price_breakdown_SMR_NG = price_breakdown.loc[price_breakdown['Name']=='SMR NG Cost','NPV'].tolist()[0]
     price_breakdown_SMR_E = price_breakdown.loc[price_breakdown['Name']=='SMR Electricity Cost','NPV'].tolist()[0]
     price_breakdown_water_charges = price_breakdown.loc[price_breakdown['Name']=='Water Charges','NPV'].tolist()[0] 
-    price_breakdown_SMR_VOM = price_breakdown_SMR_NG + price_breakdown_SMR_E
+    price_breakdown_SMR_VOM = price_breakdown.loc[price_breakdown['Name']=='SMR VOM Cost','NPV'].tolist()[0]
+    
 
     #    price_breakdown_natural_gas = price_breakdown.loc[price_breakdown['Name']=='Natural Gas','NPV'].tolist()[0]
     #    price_breakdown_electricity = price_breakdown.loc[price_breakdown['Name']=='Electricity','NPV'].tolist()[0]
@@ -514,7 +519,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     #     - price_breakdown.loc[price_breakdown['Name']=='Inflow of equity','NPV'].tolist()[0]
         
     lcoh_check = price_breakdown_SMR_plant + price_breakdown_H2_storage + price_breakdown_compression \
-                        + price_breakdown_SMR_FOM + price_breakdown_SMR_VOM +  price_breakdown_water_charges \
+                        + price_breakdown_SMR_FOM + price_breakdown_SMR_VOM +  price_breakdown_water_charges + price_breakdown_SMR_NG + price_breakdown_SMR_E\
                         + price_breakdown_taxes + remaining_financial + CO2_TnS_unit_cost\
                   
 
@@ -523,9 +528,11 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     lcoh_breakdown = {'LCOH: Hydrogen Storage ($/kg)':price_breakdown_H2_storage,\
                       'LCOH: Compression ($/kg)':price_breakdown_compression,\
                       'LCOH: SMR Plant CAPEX ($/kg)':price_breakdown_SMR_plant,\
-                      'LCOH: CO2 Transportation and Storage CAPEX ($/kg)': CO2_TnS_unit_cost,\
-                      'LCOH: SMR Plant FOM ($/kg)':price_breakdown_SMR_FOM,
-                      'LCOH: SMR Plant VOM ($/kg)':price_breakdown_SMR_VOM,\
+                      'LCOH: CO2 Transportation and Storage CAPEX ($/kg)':CO2_TnS_unit_cost,\
+                      'LCOH: SMR Plant FOM ($/kg)':price_breakdown_SMR_FOM,\
+                      'LCOH: SMR Plant VOM ($/kg)':price_breakdown_SMR_VOM,
+                      'LCOH: Electricity charges ($/kg)':price_breakdown_SMR_E, 
+                      'LCOH: Natural gas charges ($/kg)':price_breakdown_SMR_NG,
                       'LCOH: Taxes ($/kg)':price_breakdown_taxes,\
                       'LCOH: Water charges ($/kg)':price_breakdown_water_charges,\
                       'LCOH: Finances ($/kg)':remaining_financial,
@@ -544,6 +551,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
                          price_breakdown_SMR_plant,\
                          CO2_TnS_unit_cost,\
                          price_breakdown_SMR_FOM, price_breakdown_SMR_VOM,\
+                         price_breakdown_SMR_NG, price_breakdown_SMR_E,\
                          price_breakdown_taxes,\
                          price_breakdown_water_charges,\
                          remaining_financial,\
