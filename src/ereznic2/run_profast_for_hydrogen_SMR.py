@@ -115,8 +115,8 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     if CCS_option == 'wCCS':
         energy_demand_process_ccs = 1.5 # kWh/kgH2
         total_plant_cost = 1056400 * (h2_plant_capacity_kgpd**0.5016)  # 2020$ ; the correlation takes daily capacity
-        owners_cost = 0.12 * total_plant_cost # Percentage from NETL report
-        total_plant_cost = total_plant_cost * owners_cost
+        owners_n_catalyst_cost = 0.174 * total_plant_cost # Percentage from NETL report
+        total_plant_cost = total_plant_cost + owners_n_catalyst_cost #overnight cost
         energy_demand_NG = 0.51 # 2.01-1.50 # kWh/kgH2
         NG_consumption = 176 # MJ/kgH2 XXX Using same value as SMR only case for now as a placeholder
         total_energy_demand = energy_demand_process_ccs + energy_demand_NG 
@@ -125,8 +125,8 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     elif CCS_option == 'woCCS':
         energy_demand_process = 0.13 # kWh/kgH2
         total_plant_cost = 973218 * (h2_plant_capacity_kgpd**0.4436) # 2020$
-        owners_cost = 0.12 * total_plant_cost # Percentage from NETL report
-        total_plant_cost = total_plant_cost * owners_cost
+        owners_n_catalyst_cost = 0.174 * total_plant_cost # Percentage from NETL report
+        total_plant_cost = total_plant_cost + owners_n_catalyst_cost #overnight cost
         energy_demand_NG = 0.51 # 0.64-0.13 kWh/kgH2
         NG_consumption = 176 # MJ/kgH2
         total_energy_demand = energy_demand_process + energy_demand_NG    
