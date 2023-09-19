@@ -57,7 +57,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
     5. Model Development Required:
     - Floating Electrolyzer Platform
     """
-    [atb_year, policy_option,hopp_dict_init,
+    [atb_year, policy_option,policy,hopp_dict_init,
      electrolysis_scale,scenario,\
      parent_path,results_dir,\
      grid_connected_hopp,grid_connection_scenario, grid_price_scenario,\
@@ -67,7 +67,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
      electrolyzer_size_mw,n_pem_clusters,pem_control_type,
      electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg, time_between_replacement,
      user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
-     electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw] = arg_list
+     electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC] = arg_list
 
     electrolyzer_installation_factor = 12/100
     electrolyzer_direct_cost_kw = electrolyzer_capex_kw*(1+electrolyzer_installation_factor)
@@ -415,7 +415,19 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 plot_grid,
             )
 
+            if solar_size_mw > 0:
+                cf_solar = hybrid_plant.pv.capacity_factor/100
+                solar_annual_energy_MWh = hybrid_plant.annual_energies['pv']/1000
+            else:
+                cf_solar = 0
+                solar_annual_energy_MWh = 0
 
+            if wind_size_mw > 0:
+                cf_wind = hybrid_plant.wind.capacity_factor/100
+                wind_annual_energy_MWh = hybrid_plant.annual_energies['wind']/1000
+            else:
+                cf_wind = 0
+                wind_annual_energy_MWh = 0
 
             # Step #: Calculate hydrogen pipe costs for distributed case
             if electrolysis_scale == 'Distributed':
@@ -579,8 +591,8 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             h2_solution,h2_summary,h2_price_breakdown,lcoh_breakdown,electrolyzer_installed_cost_kw,elec_cf,ren_frac,electrolyzer_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,h2_production_capex = run_profast_for_hydrogen. run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
                                             electrolyzer_capex_kw,time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,\
                                             desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
-                                            grid_connection_scenario, atb_year, site_name, policy_option, electrical_generation_timeseries, combined_pv_wind_power_production_hopp,combined_pv_wind_curtailment_hopp,\
-                                            energy_shortfall_hopp,elec_price, grid_prices_interpolated_USDperkwh,grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency)
+                                            grid_connection_scenario, atb_year, site_name, policy_option,policy,electrical_generation_timeseries, combined_pv_wind_power_production_hopp,combined_pv_wind_curtailment_hopp,\
+                                            energy_shortfall_hopp,elec_price, grid_prices_interpolated_USDperkwh,grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC)
 
             lcoh_init = h2_solution['price']
             if save_param_sweep_summary:

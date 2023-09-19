@@ -52,6 +52,9 @@ wind_plant_degradation_power_decrease = 0.08
 # Determine if run with electrolyzer degradation or not
 electrolyzer_degradation_penalty = True
 
+# Determine if using solar PTC or ITC
+solar_ITC = True
+
 # Determine if PEM stack operation is optimized or not
 pem_control_type = 'basic' #use 'optimize' for Sanjana's controller; 'basic' to not optimize
 
@@ -75,14 +78,9 @@ if __name__ == '__main__':
                 ]
 
     policy = {
-        'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
-        #'base': {'Wind ITC': 0, 'Wind PTC': 0.0051, "H2 PTC": 0.6, 'Storage ITC': 0.06},
-        #'max': {'Wind ITC': 0, 'Wind PTC': 0.03072, "H2 PTC": 3.0, 'Storage ITC': 0.5},
-        # 'max on grid hybrid': {'Wind ITC': 0, 'Wind PTC': 0.0051, "H2 PTC": 0.60, 'Storage ITC': 0.06},
-        # 'max on grid hybrid': {'Wind ITC': 0, 'Wind PTC': 0.026, "H2 PTC": 0.60, 'Storage ITC': 0.5},
-        # 'option 3': {'Wind ITC': 0.06, 'Wind PTC': 0, "H2 PTC": 0.6},
-        # 'option 4': {'Wind ITC': 0.3, 'Wind PTC': 0, "H2 PTC": 3},
-        # 'option 5': {'Wind ITC': 0.5, 'Wind PTC': 0, "H2 PTC": 3},
+        #'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
+        'base': {'Wind ITC': 0, 'Wind PTC':  0.0055341, "H2 PTC": 0.6, 'Storage ITC': 0.06},
+        #'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
     }
 
 
@@ -100,9 +98,9 @@ if __name__ == '__main__':
                           ]
 
     grid_connection_cases = [
-                            'off-grid',
+                            #'off-grid',
                             #'grid-only',
-                            #'hybrid-grid'
+                            'hybrid-grid'
                             ]
 
     storage_capacity_cases = [
@@ -112,7 +110,7 @@ if __name__ == '__main__':
                             ]
 
     num_pem_stacks= 6 # Doesn't actually do anything
-    run_solar_param_sweep=False
+    run_solar_param_sweep=True
 #---- Create list of arguments to pass to batch generator kernel --------------
     arg_list = []
     for i in policy:
@@ -126,10 +124,10 @@ if __name__ == '__main__':
                                             direct_coupling,electrolyzer_cost_case,electrolyzer_degradation_power_increase,wind_plant_degradation_power_decrease,\
                                                 steel_annual_production_rate_target_tpy,project_path,results_dir,fin_sum_dir,energy_profile_dir,price_breakdown_dir,rodeo_output_dir,floris_dir,renewable_cost_path,\
                                             save_hybrid_plant_yaml,save_model_input_yaml,save_model_output_yaml,num_pem_stacks,run_solar_param_sweep,electrolyzer_degradation_penalty,\
-                                                pem_control_type,storage_capacity_multiplier])
+                                                pem_control_type,storage_capacity_multiplier,solar_ITC])
     for runs in range(len(arg_list)):
         batch_generator_kernel(arg_list[runs])
     []
 # ------------------ Run HOPP-RODeO/PyFAST Framework to get LCOH ---------------
-    # with Pool(processes=8) as pool:
+    # with Pool(processes=8,maxtasksperchild=1) as pool:
     #         pool.map(batch_generator_kernel, arg_list)

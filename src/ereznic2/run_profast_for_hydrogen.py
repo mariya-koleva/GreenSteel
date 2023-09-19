@@ -22,8 +22,8 @@ pf = ProFAST.ProFAST()
 def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
                             electrolyzer_system_capex_kw,user_defined_time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,\
                             capex_desal,opex_desal,plant_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost_info,wind_om_cost_kw,hybrid_plant,\
-                            grid_connection_scenario, atb_year, site_name, policy_option, energy_to_electrolyzer, combined_pv_wind_power_production_hopp,combined_pv_wind_curtailment_hopp,\
-                            energy_shortfall_hopp, elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency):
+                            grid_connection_scenario, atb_year, site_name, policy_option, policy, energy_to_electrolyzer, combined_pv_wind_power_production_hopp,combined_pv_wind_curtailment_hopp,\
+                            energy_shortfall_hopp, elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC): 
     # mwh_to_kwh = 0.001
     # plant_life=useful_life
     # electrolyzer_system_capex_kw = electrolyzer_capex_kw
@@ -105,6 +105,7 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
         energy_from_grid_pr_yr = energy_used_per_year_kWhpryr - AEP_renewables
         # grid_electricity_useage_kWhpkg=np.mean(energy_from_grid_pr_yr/h2prod_per_year_kgpryr)
         ren_electricity_useage_kWhpkg = AEP_renewables/h2prod_per_year_kgpryr
+        wind_electricity_useage_kWhpkg = wind_annual_energy_MWh*1000/h2prod_per_year_kgpryr
         ren_frac = AEP_renewables/energy_used_per_year_kWhpryr
         grid_cost_pr_yr_USDprkg = grid_price_per_yr*energy_from_grid_pr_yr/h2prod_per_year_kgpryr
         grid_prices_interpolated_USDperkg = dict(zip(grid_cost_keys,grid_cost_pr_yr_USDprkg))
@@ -114,6 +115,7 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
         # grid_electricity_useage_kWhpkg=0
         ren_frac = 1
         ren_electricity_useage_kWhpkg =AEP_renewables/h2prod_per_year_kgpryr
+        wind_electricity_useage_kWhpkg = wind_annual_energy_MWh*1000/h2prod_per_year_kgpryr
         grid_prices_interpolated_USDperkg = dict(zip(grid_cost_keys,np.zeros(len(grid_cost_keys))))
     #new changes end here
 
@@ -134,18 +136,30 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
                 if policy_option == 'no-policy':
                     Ren_PTC[year] = 0
                 elif policy_option == 'base':
-                    Ren_PTC[year] = 0.0051 * ren_electricity_useage_kWhpkg[y_idx]#np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output'])
+                    if solar_ITC == True:
+                        Ren_PTC[year] = policy['Wind PTC'] * wind_electricity_useage_kWhpkg[y_idx]
+                    else:
+                        Ren_PTC[year] = policy['Wind PTC'] * ren_electricity_useage_kWhpkg[y_idx]#np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output'])
                 elif policy_option == 'max':
-                    Ren_PTC[year] = 0.03072 * ren_electricity_useage_kWhpkg[y_idx]#np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output'])
+                    if solar_ITC == True:
+                        Ren_PTC[year] = policy['Wind PTC'] * wind_electricity_useage_kWhpkg[y_idx]
+                    else:
+                        Ren_PTC[year] = policy['Wind PTC'] * ren_electricity_useage_kWhpkg[y_idx]#np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output'])
             elif grid_connection_scenario == 'hybrid-grid':
                 electrolysis_total_EI_policy[year] = 0 # Basically this is not used for hybrid-grid
                 if policy_option == 'no-policy':
                     Ren_PTC[year] = 0
                 elif policy_option == 'base':
-                    Ren_PTC[year] = 0.0051  * ren_electricity_useage_kWhpkg[y_idx]#energy_from_renewables / (H2_Results['hydrogen_annual_output'])
+                    if solar_ITC == True:
+                        Ren_PTC[year] = policy['Wind PTC'] * wind_electricity_useage_kWhpkg[y_idx]
+                    else:
+                        Ren_PTC[year] = policy['Wind PTC']  * ren_electricity_useage_kWhpkg[y_idx]#energy_from_renewables / (H2_Results['hydrogen_annual_output'])
                     #Ren_PTC = 0.0051  * np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output']) # We will need to fix this by introducing ren_frac multiplier to denominator when HOPP changes to dealing with grid cases are changed
                 elif policy_option == 'max':
-                    Ren_PTC[year] = 0.03072 * ren_electricity_useage_kWhpkg[y_idx]#energy_from_renewables/ (H2_Results['hydrogen_annual_output'])
+                    if solar_ITC == True:
+                        Ren_PTC[year] = policy['Wind PTC'] * wind_electricity_useage_kWhpkg[y_idx]
+                    else:
+                        Ren_PTC[year] = policy['Wind PTC'] * ren_electricity_useage_kWhpkg[y_idx]#energy_from_renewables/ (H2_Results['hydrogen_annual_output'])
                     # Ren_PTC = 0.03072 * np.sum(energy_to_electrolyzer)/ (H2_Results['hydrogen_annual_output']) # We will need to fix this by introducing ren_frac multiplier to denominator when HOPP changes to dealing with grid cases are changed
         elif atb_year == 2035:
                 Ren_PTC[year]=0
@@ -366,7 +380,10 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     pf.set_params('debt type','Revolving debt')
     pf.set_params('debt interest rate',financial_assumptions['debt interest rate'])
     pf.set_params('cash onhand',financial_assumptions['cash onhand'])
-    pf.set_params('one time cap inct',{'value':ITC*(capex_storage_installed+capex_battery_installed),'depr type':'MACRS','depr period':7,'depreciable':True})
+    if solar_ITC == True:
+        pf.set_params('one time cap inct',{'value':ITC*(capex_storage_installed+capex_battery_installed+capex_solar_installed),'depr type':'MACRS','depr period':7,'depreciable':True})
+    else:
+        pf.set_params('one time cap inct',{'value':ITC*(capex_storage_installed+capex_battery_installed),'depr type':'MACRS','depr period':7,'depreciable':True})
     #pf.set_params('one time cap inct',{'value':ITC*capex_solar_installed,'depr type':'MACRS','depr period':7,'depreciable':True})
     #pf.set_params('one time cap inct',{'value':ITC*capex_battery_installed,'depr type':'MACRS','depr period':7,'depreciable':True})
 

@@ -64,7 +64,8 @@ def batch_generator_kernel(arg_list):
         run_pv_battery_sweep,
         electrolyzer_degradation_penalty,
         pem_control_type,
-        storage_capacity_multiplier
+        storage_capacity_multiplier,
+        solar_ITC
     ] = arg_list
 
     hopp_path = os.path.dirname(os.path.abspath(hopp.__file__))
@@ -480,7 +481,7 @@ def batch_generator_kernel(arg_list):
     if grid_connection_scenario !='grid-only':
         if run_pv_battery_sweep:
 
-            inputs_for_sweep=[atb_year,policy_option,hopp_dict,\
+            inputs_for_sweep=[atb_year,policy_option,policy[i],hopp_dict,\
             electrolysis_scale,scenario,project_path,results_dir,\
             grid_connected_hopp,grid_connection_scenario,grid_price_scenario,\
             site_df,sample_site,site,site_location,\
@@ -489,7 +490,7 @@ def batch_generator_kernel(arg_list):
             electrolyzer_size_mw,n_pem_clusters,pem_control_type,\
             electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg,time_between_replacement,\
             user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
-            electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw]
+            electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC]
             #if solar and battery size lists are set to 'None' then defaults will be used
             #
             lcoh,hopp_dict,best_result_data,param_sweep_tracker,combined_pv_wind_power_production_hopp,combined_pv_wind_storage_power_production_hopp,\
@@ -952,8 +953,8 @@ def batch_generator_kernel(arg_list):
         h2_solution,h2_summary,profast_h2_price_breakdown,lcoh_breakdown,electrolyzer_installed_cost_kw,elec_cf,ren_frac,electrolysis_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,h2_production_capex = run_profast_for_hydrogen. run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
                                         electrolyzer_capex_kw,time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,\
                                         desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
-                                        grid_connection_scenario,atb_year, site_name, policy_option, electrical_generation_timeseries, combined_pv_wind_storage_power_production_hopp,combined_pv_wind_curtailment_hopp,\
-                                        energy_shortfall_hopp,elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency)
+                                        grid_connection_scenario,atb_year, site_name, policy_option, policy[i],electrical_generation_timeseries, combined_pv_wind_storage_power_production_hopp,combined_pv_wind_curtailment_hopp,\
+                                        energy_shortfall_hopp,elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC)
 
         lcoh = h2_solution['price']
 
