@@ -403,7 +403,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     
     financial_assumptions = pd.read_csv('H2_Analysis/financial_inputs.csv',index_col=None,header=0)
     financial_assumptions.set_index(["Parameter"], inplace = True)
-    financial_assumptions = financial_assumptions['Value']
+    financial_assumptions = financial_assumptions['Hydrogen/Steel/Ammonia']
 
     # Set up ProFAST
     pf = ProFAST.ProFAST('blank')
@@ -439,7 +439,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     pf.set_params('debt equity ratio of initial financing',financial_assumptions['debt equity ratio of initial financing'])
     pf.set_params('debt type','Revolving debt')
     pf.set_params('debt interest rate',financial_assumptions['debt interest rate'])
-    pf.set_params('cash onhand',financial_assumptions['cash onhand'])
+    pf.set_params('cash onhand',1)
     
     #----------------------------------- Add capital items to ProFAST ----------------
     pf.add_capital_item(name="SMR Plant Cost",cost=total_plant_cost,depr_type="MACRS",depr_period=7,refurb=[0])

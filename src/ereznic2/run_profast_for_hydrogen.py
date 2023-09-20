@@ -334,12 +334,41 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
 
     financial_assumptions = pd.read_csv('H2_Analysis/financial_inputs.csv',index_col=None,header=0)
     financial_assumptions.set_index(["Parameter"], inplace = True)
-    financial_assumptions = financial_assumptions['Value']
+
+    fraction_capex_vre = (capex_wind_installed + capex_solar_installed + capex_battery_installed)\
+                        /(capex_wind_installed + capex_solar_installed + capex_battery_installed + capex_electrolyzer_overnight + capex_desal + capex_compressor_installed + capex_storage_installed)
+
+    fraction_debt_financing_vre = 1/(1+1/financial_assumptions.loc['debt equity ratio of initial financing','Wind/Solar/Bat'])
+    fraction_debt_financing_h2 = 1/(1+1/financial_assumptions.loc['debt equity ratio of initial financing','Hydrogen/Steel/Ammonia'])
+    fraction_equity_financing_vre = 1 - fraction_debt_financing_vre
+    fraction_equity_financing_h2 = 1 - fraction_debt_financing_h2
+
+    real_roe_vre = financial_assumptions.loc['leverage after tax nominal discount rate','Wind/Solar/Bat']
+    real_roe_h2 = financial_assumptions.loc['leverage after tax nominal discount rate','Hydrogen/Steel/Ammonia']
+
+    real_interest_vre = financial_assumptions.loc['debt interest rate','Wind/Solar/Bat']
+    real_interest_h2 = financial_assumptions.loc['debt interest rate','Hydrogen/Steel/Ammonia']
+
+    real_roe_combined = (fraction_equity_financing_vre*fraction_capex_vre*real_roe_vre + fraction_equity_financing_h2*(1-fraction_capex_vre)*real_roe_h2)\
+                        /(fraction_equity_financing_vre*fraction_capex_vre + fraction_equity_financing_h2*(1-fraction_capex_vre))
+
+    real_interest_combined = (real_interest_vre*fraction_capex_vre*fraction_debt_financing_vre + real_interest_h2*(1-fraction_capex_vre)*fraction_debt_financing_h2)\
+                             /(fraction_capex_vre*fraction_debt_financing_vre + (1-fraction_capex_vre)*fraction_debt_financing_h2)
+
+    debt_equity_ratio_combined = financial_assumptions.loc['debt equity ratio of initial financing','Wind/Solar/Bat']*fraction_capex_vre + financial_assumptions.loc['debt equity ratio of initial financing','Hydrogen/Steel/Ammonia']*(1-fraction_capex_vre)
+
+    total_income_tax_rate_combined = financial_assumptions.loc['total income tax rate','Wind/Solar/Bat']*fraction_capex_vre + financial_assumptions.loc['total income tax rate','Hydrogen/Steel/Ammonia']*(1-fraction_capex_vre)
+    capitalgains_tax_rate_combined = financial_assumptions.loc['capital gains tax rate','Wind/Solar/Bat']*fraction_capex_vre + financial_assumptions.loc['capital gains tax rate','Hydrogen/Steel/Ammonia']*(1-fraction_capex_vre)
+    gen_inflation = 0.00
+
+    nominal_roe_combined = (real_roe_combined+1)*(1+gen_inflation)-1
+    nominal_interest_combined = (real_interest_combined+1)*(1+gen_inflation)-1
+   # total_income_tax_rate = 
 
     pf = ProFAST.ProFAST('blank')
 
     # Fill these in - can have most of them as 0 also
-    gen_inflation = 0.00
+    
     install_years = 3
     analysis_start = atb_year + 5 - install_years
     #09/05 (5 lines below)
@@ -370,16 +399,16 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     pf.set_params('rent',{'value':0,'escalation':gen_inflation})
     pf.set_params('property tax and insurance',property_tax_insurance)
     pf.set_params('admin expense',0)
-    pf.set_params('total income tax rate',financial_assumptions['total income tax rate'])
-    pf.set_params('capital gains tax rate',financial_assumptions['capital gains tax rate'])
+    pf.set_params('total income tax rate',total_income_tax_rate_combined)
+    pf.set_params('capital gains tax rate',capitalgains_tax_rate_combined)
     pf.set_params('sell undepreciated cap',True)
     pf.set_params('tax losses monetized',True)
     pf.set_params('general inflation rate',gen_inflation)
-    pf.set_params('leverage after tax nominal discount rate',financial_assumptions['leverage after tax nominal discount rate'])
-    pf.set_params('debt equity ratio of initial financing',financial_assumptions['debt equity ratio of initial financing'])
+    pf.set_params('leverage after tax nominal discount rate',nominal_roe_combined)
+    pf.set_params('debt equity ratio of initial financing',debt_equity_ratio_combined)
     pf.set_params('debt type','Revolving debt')
-    pf.set_params('debt interest rate',financial_assumptions['debt interest rate'])
-    pf.set_params('cash onhand',financial_assumptions['cash onhand'])
+    pf.set_params('debt interest rate',nominal_interest_combined)
+    pf.set_params('cash onhand',1)
     if solar_ITC == True:
         pf.set_params('one time cap inct',{'value':ITC*(capex_storage_installed+capex_battery_installed+capex_solar_installed),'depr type':'MACRS','depr period':7,'depreciable':True})
     else:
