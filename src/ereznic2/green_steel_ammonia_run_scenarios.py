@@ -65,7 +65,8 @@ def batch_generator_kernel(arg_list):
         electrolyzer_degradation_penalty,
         pem_control_type,
         storage_capacity_multiplier,
-        solar_ITC
+        solar_ITC,
+        grid_price_filename
     ] = arg_list
 
     hopp_path = os.path.dirname(os.path.abspath(hopp.__file__))
@@ -490,7 +491,7 @@ def batch_generator_kernel(arg_list):
             electrolyzer_size_mw,n_pem_clusters,pem_control_type,\
             electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg,time_between_replacement,\
             user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
-            electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC]
+            electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC,grid_price_filename]
             #if solar and battery size lists are set to 'None' then defaults will be used
             #
             lcoh,hopp_dict,best_result_data,param_sweep_tracker,combined_pv_wind_power_production_hopp,combined_pv_wind_storage_power_production_hopp,\
@@ -936,7 +937,7 @@ def batch_generator_kernel(arg_list):
             grid_year = 2040
 
         # Read in csv for grid prices
-        grid_prices = pd.read_csv(os.path.join(project_path, "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
+        grid_prices = pd.read_csv(os.path.join(project_path, "H2_Analysis", grid_price_filename),index_col = None,header = 0)
         elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
         grid_prices_interpolated_USDperkwh = grid_price_interpolation(grid_prices,site_name,atb_year,useful_life,'kWh')
 
@@ -972,7 +973,7 @@ def batch_generator_kernel(arg_list):
 
     # Calculate hydrogen transmission cost and add to LCOH
     hopp_dict,h2_transmission_economics_from_profast,h2_transmission_economics_summary,h2_transmission_price,h2_transmission_price_breakdown = hopp_tools_steel.levelized_cost_of_h2_transmission(hopp_dict,max_hydrogen_production_rate_kg_hr,
-    max_hydrogen_delivery_rate_kg_hr,electrolyzer_capacity_factor,atb_year,site_name)
+    max_hydrogen_delivery_rate_kg_hr,electrolyzer_capacity_factor,atb_year,site_name,grid_price_filename)
 
     lcoh = lcoh + h2_transmission_price
     #print(grid_connection_scenario, ' LCOH without policy:', lcoh)
@@ -992,7 +993,7 @@ def batch_generator_kernel(arg_list):
                                                                                                             lime_unit_cost,
                                                                                                             carbon_unit_cost,
                                                                                                             iron_ore_pellets_unit_cost,
-                                                                                                            o2_heat_integration,atb_year,site_name)
+                                                                                                            o2_heat_integration,atb_year,site_name,grid_price_filename)
 
 
     # Calcualte break-even price of steel WITH oxygen and heat integration
@@ -1001,7 +1002,7 @@ def batch_generator_kernel(arg_list):
                                                                                                             lime_unit_cost,
                                                                                                             carbon_unit_cost,
                                                                                                             iron_ore_pellets_unit_cost,
-                                                                                                            o2_heat_integration,atb_year,site_name)
+                                                                                                            o2_heat_integration,atb_year,site_name,grid_price_filename)
 
 
     # Calculate break-even price of ammonia
@@ -1012,7 +1013,7 @@ def batch_generator_kernel(arg_list):
                                                                                                             cooling_water_cost,
                                                                                                             iron_based_catalyst_cost,
                                                                                                             oxygen_cost,
-                                                                                                            atb_year,site_name)
+                                                                                                            atb_year,site_name,grid_price_filename)
 
     # Step 7: Write outputs to file
 

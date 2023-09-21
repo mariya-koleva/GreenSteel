@@ -1961,7 +1961,7 @@ def steel_LCOS(
     steel_annual_production_rate_target_tpy,
     lime_unitcost,
     carbon_unitcost,
-    iron_ore_pellet_unitcost,o2_heat_integration,atb_year,site_name
+    iron_ore_pellet_unitcost,o2_heat_integration,atb_year,site_name,grid_price_filename
 ):
     if hopp_dict.save_model_input_yaml:
         input_dict = {
@@ -2014,7 +2014,7 @@ def steel_LCOS(
         grid_year = 2040
 
     # Read in csv for grid prices
-    grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
+    grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis",grid_price_filename),index_col = None,header = 0)
     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
     grid_prices_interpolated_USDperMWh = grid_price_interpolation(grid_prices,site_name,atb_year,steel_plant_life,'MWh')
     # if site_name=='WY':
@@ -2060,7 +2060,7 @@ def steel_LCOS_SMR(
     hydrogen_annual_production,
     lime_unitcost,
     carbon_unitcost,
-    iron_ore_pellet_unitcost, lcoe, policy_option, natural_gas_cost, o2_heat_integration, atb_year, site_name
+    iron_ore_pellet_unitcost, lcoe, policy_option, natural_gas_cost, o2_heat_integration, atb_year, site_name, grid_price_filename
 ):
     # if hopp_dict.save_model_input_yaml:
     #     input_dict = {
@@ -2108,7 +2108,7 @@ def steel_LCOS_SMR(
     elif atb_year == 2035:
         grid_year = 2040
 
-    grid_prices = pd.read_csv(os.path.join("H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
+    grid_prices = pd.read_csv(os.path.join("H2_Analysis", grid_price_filename),index_col = None,header = 0)
     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
     grid_prices_interpolated_USDperMWh = grid_price_interpolation(grid_prices,site_name,atb_year,steel_plant_life,'MWh')
     # print('==============================================================')
@@ -2147,7 +2147,7 @@ def levelized_cost_of_ammonia(
     ammonia_production_target_kgpy,
     cooling_water_unitcost,
     iron_based_catalyst_unitcost,
-    oxygen_unitcost,atb_year,site_name
+    oxygen_unitcost,atb_year,site_name,grid_price_filename
 ):
     if hopp_dict.save_model_input_yaml:
         input_dict = {
@@ -2199,7 +2199,7 @@ def levelized_cost_of_ammonia(
         grid_year = 2040
 
     # Read in csv for grid prices
-    grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
+    grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis", grid_price_filename),index_col = None,header = 0)
     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
     grid_prices_interpolated_USDperMWh = grid_price_interpolation(grid_prices,site_name,atb_year,ammonia_plant_life,'MWh')
     # if site_name=='WY':
@@ -2238,7 +2238,7 @@ def levelized_cost_of_ammonia_SMR(
     hydrogen_annual_production,
     cooling_water_unitcost,
     iron_based_catalyst_unitcost,
-    oxygen_unitcost, lcoe, policy_option,atb_year,site_name
+    oxygen_unitcost, lcoe, policy_option,atb_year,site_name,grid_price_filename
 ):
     # if hopp_dict.save_model_input_yaml:
     #     input_dict = {
@@ -2289,7 +2289,7 @@ def levelized_cost_of_ammonia_SMR(
     elif atb_year == 2035:
         grid_year = 2040
 
-    grid_prices = pd.read_csv('H2_Analysis/annual_average_retail_prices.csv',index_col = None,header = 0)
+    grid_prices = pd.read_csv('H2_Analysis/'+grid_price_filename,index_col = None,header = 0)
     electricity_cost = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
     grid_prices_interpolated_USDperMWh = grid_price_interpolation(grid_prices,site_name,atb_year,ammonia_plant_life,'MWh')
     # cooling_water_cost = 0.000113349938601175 # $/Gal
@@ -2323,7 +2323,8 @@ def levelized_cost_of_h2_transmission(
     max_hydrogen_delivery_rate_kg_hr,
     electrolyzer_capacity_factor,
     atb_year,
-    site_name
+    site_name,
+    grid_price_filename
 ):
     if hopp_dict.save_model_input_yaml:
         input_dict = {
@@ -2363,7 +2364,7 @@ def levelized_cost_of_h2_transmission(
         grid_year = 2040
 
     # Read in csv for grid prices
-    grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
+    grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis", grid_price_filename),index_col = None,header = 0)
     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]/1000
     grid_prices_interpolated_USDperkWh = grid_price_interpolation(grid_prices,site_name,atb_year,plant_life,'kWh')
     # if site_name=='WY':

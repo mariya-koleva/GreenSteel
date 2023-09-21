@@ -21,7 +21,7 @@ NG_costs_csv = pd.read_csv(dir1 + '\\H2_Analysis\\' + 'Green_steel_regional_NG_p
 NG_costs_csv = pd.DataFrame(NG_costs_csv, columns = ['Default','Min','Max'],index = ['Indiana',"Texas","Iowa","Mississippi","Minnesota"])
 dircambium = 'H2_Analysis/Cambium_data/Cambium22_MidCase100by2035_hourly_' 
 
-def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG_price_case,CCS_option):
+def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG_price_case,CCS_option,grid_price_filename):
     import numpy as np
     # Toggles
     #------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
         cambium_year = 2040
     
     # Read in csv for grid prices
-    electricity_prices= pd.read_csv('H2_Analysis/annual_average_retail_prices.csv',index_col = None,header = 0)
+    electricity_prices= pd.read_csv('H2_Analysis/'+grid_price_filename,index_col = None,header = 0)
     elec_price = electricity_prices.loc[electricity_prices['Year']==cambium_year,site_name].tolist()[0]
     grid_prices_interpolated_USDperkwh = grid_price_interpolation(electricity_prices,site_name,atb_year,plant_life,'kWh')
     grid_cost_keys = list(grid_prices_interpolated_USDperkwh.keys())

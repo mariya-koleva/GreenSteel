@@ -67,7 +67,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
      electrolyzer_size_mw,n_pem_clusters,pem_control_type,
      electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg, time_between_replacement,
      user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
-     electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC] = arg_list
+     electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC,grid_price_filename] = arg_list
 
     electrolyzer_installation_factor = 12/100
     electrolyzer_direct_cost_kw = electrolyzer_capex_kw*(1+electrolyzer_installation_factor)
@@ -583,7 +583,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 grid_year = 2040
 
             # Read in csv for grid prices
-            grid_prices = pd.read_csv(os.path.join(project_path, "H2_Analysis", "annual_average_retail_prices.csv"),index_col = None,header = 0)
+            grid_prices = pd.read_csv(os.path.join(project_path, "H2_Analysis", grid_price_filename),index_col = None,header = 0)
             elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
             grid_prices_interpolated_USDperkwh = grid_price_interpolation(grid_prices,site_name,atb_year,useful_life,'kWh')
 
@@ -608,7 +608,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
 
             # Calculate hydrogen transmission cost and add to LCOH
             hopp_dict,h2_transmission_economics_from_profast,h2_transmission_economics_summary,h2_transmission_price,h2_transmission_price_breakdown = hopp_tools_steel.levelized_cost_of_h2_transmission(hopp_dict,max_hydrogen_production_rate_kg_hr,
-            max_hydrogen_delivery_rate_kg_hr,electrolyzer_capacity_factor,atb_year,site_name)
+            max_hydrogen_delivery_rate_kg_hr,electrolyzer_capacity_factor,atb_year,site_name,grid_price_filename)
             h2_transmission_price_tracker.append(h2_transmission_price)
             lcoh_final = lcoh_init + h2_transmission_price
             plant_cf=np.sum(combined_pv_wind_storage_power_production_hopp)/(1000*electrolyzer_size_mw*len(combined_pv_wind_storage_power_production_hopp))

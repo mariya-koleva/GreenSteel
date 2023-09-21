@@ -77,7 +77,7 @@ NG_price_cases = ['default',
                   'max',
                   ]
 CCS_options = ['wCCS',
-               'woCCS'
+               #'woCCS'
              ]
 
 o2_heat_integration = 0 # should always be set to zero in this scenario
@@ -93,6 +93,12 @@ for atb_year in atb_years:
         for policy_case in policy_cases:
             for CCS_option in CCS_options:
                 for NG_price_case in NG_price_cases:
+                    if NG_price_case == 'default':
+                        grid_price_filename = 'annual_average_retail_prices_adder.csv'
+                    elif NG_price_case == 'min':
+                        grid_price_filename = 'annual_average_ws_prices.csv'
+                    elif NG_price_case == 'max':
+                        grid_price_filename = 'annual_average_retail_prices_mult.csv'
                     site_df = scenario_df[site_location]                
                     site_name = site_df['State']                
                     hydrogen_annual_production, hydrogen_storage_duration_hr, lcoh, lcoh_breakdown,profast_h2_price_breakdown,lcoe, plant_life, natural_gas_cost,\
@@ -105,7 +111,7 @@ for atb_year in atb_years:
                     price_breakdown_water_charges,\
                     remaining_financial,\
                     h2_production_capex = \
-                    run_profast_for_hydrogen_SMR.run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG_price_case,CCS_option)
+                    run_profast_for_hydrogen_SMR.run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG_price_case,CCS_option,grid_price_filename)
     
                     lime_unit_cost = site_df['Lime ($/metric tonne)'] + site_df['Lime Transport ($/metric tonne)']
                     carbon_unit_cost = site_df['Carbon ($/metric tonne)'] + site_df['Carbon Transport ($/metric tonne)']
@@ -115,7 +121,7 @@ for atb_year in atb_years:
                                                                                                                             lime_unit_cost,
                                                                                                                             carbon_unit_cost,
                                                                                                                             iron_ore_pellets_unit_cost,
-                                                                                                                            lcoe, scenario, natural_gas_cost, o2_heat_integration,atb_year,site_name)
+                                                                                                                            lcoe, scenario, natural_gas_cost, o2_heat_integration,atb_year,site_name,grid_price_filename)
                     
                     cooling_water_cost = 0.00013817 # 2020$/Gal
                     iron_based_catalyst_cost = 28.2805 # 2020$/kg
@@ -125,7 +131,7 @@ for atb_year in atb_years:
                                                                                                                             cooling_water_cost,
                                                                                                                             iron_based_catalyst_cost,
                                                                                                                             oxygen_cost, 
-                                                                                                                            lcoe, scenario,atb_year,site_name)
+                                                                                                                            lcoe, scenario,atb_year,site_name,grid_price_filename)
 
                     lcoe_first_year = lcoe[atb_year+5]
                     atb_year, lcoh = hopp_tools_steel.write_outputs_ProFAST_SMR(fin_sum_dir,price_breakdown_dir,atb_year,

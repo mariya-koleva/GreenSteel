@@ -43,7 +43,7 @@ rodeo_output_dir = os.path.join("examples", "H2_Analysis", "RODeO_files", "Outpu
 direct_coupling = True
 
 # Electrolzyer cost case ('Mid', 'High', or 'Low')
-electrolyzer_cost_case = 'Mid'
+#electrolyzer_cost_case = 'Mid'
 
 # Degradation penalties for capital costs to estimate cost of plant oversizing
 electrolyzer_degradation_power_increase = 0.13
@@ -71,24 +71,24 @@ if __name__ == '__main__':
 #-------------------- Define scenarios to run----------------------------------
 
     atb_years = [
-                #2020,
-                #2025,
+                2020,
+                2025,
                 2030,
-                #2035
+                2035
                 ]
 
     policy = {
         'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
-        #'base': {'Wind ITC': 0, 'Wind PTC':  0.0055341, "H2 PTC": 0.6, 'Storage ITC': 0.06},
-        #'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
+        'base': {'Wind ITC': 0, 'Wind PTC':  0.0055341, "H2 PTC": 0.6, 'Storage ITC': 0.06},
+        'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
     }
 
 
     site_selection = [
-                    #'Site 1',
-                    #'Site 2',
-                    #'Site 3',
-                    #'Site 4',
+                    'Site 1',
+                    'Site 2',
+                    'Site 3',
+                    'Site 4',
                     'Site 5'
                     ]
 
@@ -97,9 +97,15 @@ if __name__ == '__main__':
                           #'Distributed'
                           ]
 
+    electrolyzer_cost_cases = [
+                                #'Low',
+                                'Mid',
+                                #'High'
+                                ]
+
     grid_connection_cases = [
                             'off-grid',
-                            #'grid-only',
+                            'grid-only',
                             'hybrid-grid'
                             ]
 
@@ -119,12 +125,25 @@ if __name__ == '__main__':
                 for electrolysis_scale in electrolysis_cases:
                     for grid_connection_scenario in grid_connection_cases:
                         for storage_capacity_multiplier in storage_capacity_cases:
-                            arg_list.append([policy, i, atb_year, site_location, electrolysis_scale,run_RODeO_selector,floris,\
-                                            grid_connection_scenario,grid_price_scenario,\
-                                            direct_coupling,electrolyzer_cost_case,electrolyzer_degradation_power_increase,wind_plant_degradation_power_decrease,\
-                                                steel_annual_production_rate_target_tpy,project_path,results_dir,fin_sum_dir,energy_profile_dir,price_breakdown_dir,rodeo_output_dir,floris_dir,renewable_cost_path,\
-                                            save_hybrid_plant_yaml,save_model_input_yaml,save_model_output_yaml,num_pem_stacks,run_solar_param_sweep,electrolyzer_degradation_penalty,\
-                                                pem_control_type,storage_capacity_multiplier,solar_ITC])
+                            for electrolyzer_cost_case in electrolyzer_cost_cases:
+                                if electrolyzer_cost_case == 'Mid':
+                                    grid_price_filename = 'annual_average_retail_prices_adder.csv'
+                                elif electrolyzer_cost_case == 'Low':
+                                    grid_price_filename = 'annual_average_ws_prices.csv'
+                                elif electrolyzer_cost_case == 'High':
+                                    grid_price_filename = 'annual_average_retail_prices_mult.csv'
+                                
+                                if electrolyzer_cost_case != 'Mid':
+                                    fin_sum_dir = os.path.join(project_path, "Results_sensitivity", "Fin_sum")
+                                    energy_profile_dir = os.path.join(project_path, "Results_sensitivity", "Profiles")
+                                    price_breakdown_dir = os.path.join(project_path, "Results_sensitivity", "ProFAST")
+
+                                arg_list.append([policy, i, atb_year, site_location, electrolysis_scale,run_RODeO_selector,floris,\
+                                                grid_connection_scenario,grid_price_scenario,\
+                                                direct_coupling,electrolyzer_cost_case,electrolyzer_degradation_power_increase,wind_plant_degradation_power_decrease,\
+                                                    steel_annual_production_rate_target_tpy,project_path,results_dir,fin_sum_dir,energy_profile_dir,price_breakdown_dir,rodeo_output_dir,floris_dir,renewable_cost_path,\
+                                                save_hybrid_plant_yaml,save_model_input_yaml,save_model_output_yaml,num_pem_stacks,run_solar_param_sweep,electrolyzer_degradation_penalty,\
+                                                    pem_control_type,storage_capacity_multiplier,solar_ITC,grid_price_filename])
     for runs in range(len(arg_list)):
         batch_generator_kernel(arg_list[runs])
     []
