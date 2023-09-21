@@ -207,7 +207,7 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
         capex_battery_installed=0
         fixed_cost_battery=0
 
-    capex_wind_installed=capex_wind_installed_init-wind_revised_cost
+    capex_wind_installed=capex_wind_installed_init+wind_revised_cost
 
 
     #Calculate H2 and combined PTC

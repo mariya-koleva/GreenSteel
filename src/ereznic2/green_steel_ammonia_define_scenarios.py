@@ -148,5 +148,5 @@ if __name__ == '__main__':
         batch_generator_kernel(arg_list[runs])
     []
 # ------------------ Run HOPP-RODeO/PyFAST Framework to get LCOH ---------------
-    # with Pool(processes=8,maxtasksperchild=1) as pool:
+    # with Pool(processes=4,maxtasksperchild=1) as pool:
     #         pool.map(batch_generator_kernel, arg_list)

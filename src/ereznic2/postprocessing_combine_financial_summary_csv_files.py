@@ -131,7 +131,7 @@ if 1==1:            # This section captures the summary files
         #files2load_summary_data = pd.read_csv(dir0+files2load_summary[i0+1],sep=',',header=0,names=['Data'],skiprows=[0,1]).T
         files2load_summary_data = pd.read_csv(dir0+files2load_summary[i0+1],sep=',',header=0,names=['Data']).T
         #files2load_summary_data = files2load_summary_data.drop(['Fraction of electricity from renewables (-)'],axis=1)
-        #files2load_summary_data = files2load_summary_data.astype(float)
+        files2load_summary_data = files2load_summary_data.astype(float)
         # if files2load_summary_data['output to input ratio'].values==['         +INF']:
         #     files2load_summary_data['output to input ratio'] = 0
         #     files2load_summary_data = files2load_summary_data.astype('float64', copy=False)

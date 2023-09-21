@@ -134,9 +134,9 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
     hopp_dict.main_dict['Configuration']['wind_om_cost_kw']=wind_om_cost_kw
     hopp_dict.main_dict['Configuration']['wind_cost_kw']=wind_cost_kw
 
-    solar_main_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']
+    solar_main_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']/1.34
     solar_capex_multiplier=site_df['PV Capex Multiplier']
-    solar_capex=site_df[str(atb_year) + ' PV base installed cost']
+    solar_capex=site_df[str(atb_year) + ' PV base installed cost']/1.34
     solar_main_cost_kw=solar_capex * solar_capex_multiplier
 
     # solar_cost_kw = copy.copy(solar_main_cost_kw)
@@ -256,7 +256,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             hopp_dict.main_dict['Configuration']['battery_cost_kw']=storage_cost_kw
             hopp_dict.main_dict['Configuration']['battery_cost_kwh']=storage_cost_kwh
             # hopp_dict['Configuration']['battery_om_percent'] = storage_om_percent
-            renewable_plant_cost['battery']={'capex_per_kw':storage_cost_kwh,
+            renewable_plant_cost['battery']={'capex_per_kw':storage_cost_kw,
             'capex_per_kwh':storage_cost_kwh,
             'o&m_percent':storage_om_percent,
             'size_mw':storage_size_mw,

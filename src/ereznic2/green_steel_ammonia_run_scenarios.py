@@ -508,9 +508,9 @@ def batch_generator_kernel(arg_list):
             renewable_plant_cost['wind']={'o&m_per_kw':wind_om_cost_kw,'capex_per_kw':wind_cost_kw,'size_mw':wind_size_mw}
             #renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw,'capex_per_kw':solar_cost_kw,'size_mw':solar_size_mw}
             if solar_size_mw>0:
-                solar_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']
+                solar_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']/1.34
                 solar_capex_multiplier=site_df['PV Capex Multiplier']
-                solar_capex=site_df[str(atb_year) + ' PV base installed cost']
+                solar_capex=site_df[str(atb_year) + ' PV base installed cost']/1.34
                 solar_cost_kw=solar_capex * solar_capex_multiplier
                 hopp_dict.main_dict['Configuration']['solar_size']=solar_size_mw
                 hopp_dict.main_dict['Configuration']['solar_cost_kw']=solar_cost_kw
@@ -521,7 +521,7 @@ def batch_generator_kernel(arg_list):
                 storage_hours = storage_size_mwh/storage_size_mw
             else:
                 storage_hours=0
-            renewable_plant_cost['battery']={'capex_per_kw':storage_cost_kwh,
+            renewable_plant_cost['battery']={'capex_per_kw':storage_cost_kw,
                     'capex_per_kwh':storage_cost_kwh,
                     'o&m_percent':storage_om_percent,
                     'size_mw':storage_size_mw,
@@ -542,9 +542,9 @@ def batch_generator_kernel(arg_list):
             renewable_plant_cost['wind']={'o&m_per_kw':wind_om_cost_kw,'capex_per_kw':wind_cost_kw,'size_mw':wind_size_mw}
             #renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw,'capex_per_kw':solar_cost_kw,'size_mw':solar_size_mw}
             if solar_size_mw>0:
-                solar_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']
+                solar_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']/1.34
                 solar_capex_multiplier=site_df['PV Capex Multiplier']
-                solar_capex=site_df[str(atb_year) + ' PV base installed cost']
+                solar_capex=site_df[str(atb_year) + ' PV base installed cost']/1.34
                 solar_cost_kw=solar_capex * solar_capex_multiplier
                 hopp_dict.main_dict['Configuration']['solar_size']=solar_size_mw
                 hopp_dict.main_dict['Configuration']['solar_cost_kw']=solar_cost_kw
@@ -554,7 +554,7 @@ def batch_generator_kernel(arg_list):
                 storage_hours = storage_size_mwh/storage_size_mw
             else:
                 storage_hours=0
-            renewable_plant_cost['battery']={'capex_per_kw':storage_cost_kwh,
+            renewable_plant_cost['battery']={'capex_per_kw':storage_cost_kw,
                     'capex_per_kwh':storage_cost_kwh,
                     'o&m_percent':storage_om_percent,
                     'size_mw':storage_size_mw,
@@ -575,7 +575,7 @@ def batch_generator_kernel(arg_list):
                 storage_hours = storage_size_mwh/storage_size_mw
             else:
                 storage_hours=0
-            renewable_plant_cost['battery']={'capex_per_kw':storage_cost_kwh,
+            renewable_plant_cost['battery']={'capex_per_kw':storage_cost_kw,
                     'capex_per_kwh':storage_cost_kwh,
                     'o&m_percent':storage_om_percent,
                     'size_mw':storage_size_mw,
@@ -792,7 +792,7 @@ def batch_generator_kernel(arg_list):
             trans_cap_cost_per_mw = transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'trans_cap_cost_per_mw'].tolist()[0]
             reinforcement_cost_per_mw = transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'reinforcement_cost_per_mw'].tolist()[0]
             transmission_cost = (trans_cap_cost_per_mw + reinforcement_cost_per_mw)*interconnection_size_mw
-
+            []
         else:
             transmission_cost = 0
 
@@ -963,6 +963,7 @@ def batch_generator_kernel(arg_list):
         electrolysis_total_EI_policy_offgrid_firstyear = electrolysis_total_EI_policy_offgrid[atb_year+5]
         H2_PTC_firstyear = H2_PTC[atb_year+5]
         Ren_PTC_firstyear = Ren_PTC[atb_year+5]
+        ren_frac = ren_frac[0]
 
 
         # # Max hydrogen production rate [kg/hr]
