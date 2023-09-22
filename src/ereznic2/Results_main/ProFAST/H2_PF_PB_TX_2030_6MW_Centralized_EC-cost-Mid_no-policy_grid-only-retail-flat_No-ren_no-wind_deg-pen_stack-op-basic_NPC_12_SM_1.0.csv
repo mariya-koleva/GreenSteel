@@ -22,22 +22,22 @@
 20,Operating Expenses,Property insurance,0.006237656668534257
 21,Financing cash outflow,Compression,0.008514246043742539
 22,Operating Expenses,Water,0.01261213720316623
-23,Operating Expenses,Cash on hand reserve,0.027169180892977218
-24,Financing cash outflow,Repayment of debt,0.05905000472510159
+23,Operating Expenses,Cash on hand reserve,0.019373552322543106
+24,Financing cash outflow,Repayment of debt,0.05610570099379795
 25,Operating Expenses,Var O&M,0.0752748738237094
 26,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-27,Financing cash outflow,Income taxes payable,0.12319727031789678
-28,Financing cash outflow,Interest expense,0.1287114453098211
+27,Financing cash outflow,Interest expense,0.08833014886096013
+28,Financing cash outflow,Income taxes payable,0.10780905899556216
 29,Financing cash outflow,Electrolysis system,0.17550251372488856
-30,Financing cash outflow,Dividends paid,0.4125068389822231
-31,Operating Expenses,Grid Electricity Cost,7.2816573820346395
+30,Financing cash outflow,Dividends paid,0.4005959136816169
+31,Operating Expenses,Grid Electricity Cost,5.328553940929824
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.00011370520891752896
-37,Financing cash inflow,Monetized tax losses,0.02454956567868582
-38,Operating Revenue,Cash on hand recovery,0.027169180892977218
-39,Financing cash inflow,Inflow of debt,0.05905000472510159
-40,Financing cash inflow,Inflow of equity,0.12790782785138372
-41,Operating Revenue,Hydrogen sales,8.157628855328609
+37,Financing cash inflow,Monetized tax losses,0.011558027757902448
+38,Operating Revenue,Cash on hand recovery,0.019373552322543106
+39,Financing cash inflow,Inflow of debt,0.05610570099379795
+40,Financing cash inflow,Inflow of equity,0.12291131462533843
+41,Operating Revenue,Hydrogen sales,6.154833032298821

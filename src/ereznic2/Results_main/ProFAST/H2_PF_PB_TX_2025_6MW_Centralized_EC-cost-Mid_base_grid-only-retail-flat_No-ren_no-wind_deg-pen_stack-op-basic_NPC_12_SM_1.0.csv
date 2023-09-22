@@ -22,22 +22,22 @@
 20,Financing cash outflow,Compression,0.008514246043742539
 21,Operating Expenses,Property insurance,0.01015805409776345
 22,Operating Expenses,Water,0.01261213720316623
-23,Operating Expenses,Cash on hand reserve,0.02671665334400181
-24,Financing cash outflow,Income taxes payable,0.032264736410851334
+23,Operating Expenses,Cash on hand reserve,0.01963750528209028
+24,Financing cash outflow,Income taxes payable,0.04529832471465666
 25,Operating Expenses,Var O&M,0.0752748738237094
 26,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-27,Financing cash outflow,Repayment of debt,0.10318278800970161
-28,Financing cash outflow,Interest expense,0.20770852537699347
+27,Financing cash outflow,Repayment of debt,0.09695140685523215
+28,Financing cash outflow,Interest expense,0.14325240892716143
 29,Financing cash outflow,Electrolysis system,0.292353154675969
-30,Financing cash outflow,Dividends paid,0.37671742717821805
-31,Operating Expenses,Grid Electricity Cost,7.154427387719656
+30,Financing cash outflow,Dividends paid,0.4385356735297695
+31,Operating Expenses,Grid Electricity Cost,5.271006646329688
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.0001137052089173392
-37,Operating Revenue,Cash on hand recovery,0.026716653344001806
-38,Financing cash inflow,Inflow of debt,0.10318278800970163
-39,Financing cash inflow,Monetized tax losses,0.19355305947258036
-40,Financing cash inflow,Inflow of equity,0.2787093024915048
-41,Operating Revenue,Hydrogen sales,7.7836400653160425
+37,Operating Revenue,Cash on hand recovery,0.01963750528209028
+38,Financing cash inflow,Inflow of debt,0.09695140685523215
+39,Financing cash inflow,Monetized tax losses,0.1712954093167955
+40,Financing cash inflow,Inflow of equity,0.23871218878054018
+41,Operating Revenue,Hydrogen sales,5.972869805998349

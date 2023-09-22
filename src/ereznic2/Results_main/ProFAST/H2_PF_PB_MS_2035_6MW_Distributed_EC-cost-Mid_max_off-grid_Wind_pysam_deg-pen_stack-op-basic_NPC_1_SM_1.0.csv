@@ -18,26 +18,26 @@
 16,Financing cash outflow,Desalination,0.0010785076061976316
 17,Operating Expenses,Desalination Fixed O&M Cost,0.004761709115585882
 18,Operating Expenses,Water,0.010791556728232194
-19,Operating Expenses,Cash on hand reserve,0.011551244553142468
+19,Operating Expenses,Cash on hand reserve,0.01116110019391785
 20,Financing cash outflow,Compression,0.02438328802267634
 21,Operating Expenses,Var O&M,0.0738343702772482
-22,Operating Expenses,Property insurance,0.08180578943012197
+22,Operating Expenses,Property insurance,0.07845647728086602
 23,Financing cash outflow,Hydrogen Storage,0.11604477414105001
 24,Operating Expenses,Electrolyzer Fixed O&M Cost,0.24008160514635166
-25,Operating Expenses,Wind Plant Fixed O&M Cost,0.5927058062867276
-26,Financing cash outflow,Repayment of debt,0.6728266526110699
-27,Financing cash outflow,Income taxes payable,1.03248517746699
-28,Financing cash outflow,Wind Plant,1.156601448205662
+25,Financing cash outflow,Income taxes payable,0.42692405180219145
+26,Operating Expenses,Wind Plant Fixed O&M Cost,0.5927058062867276
+27,Financing cash outflow,Wind Plant,1.056772469524085
+28,Financing cash outflow,Repayment of debt,1.1245529487843418
 29,Financing cash outflow,Electrolysis system,1.1603716600597727
-30,Financing cash outflow,Interest expense,1.5473573669399427
-31,Financing cash outflow,Dividends paid,4.12645210346073
+30,Financing cash outflow,Interest expense,1.667401770989545
+31,Financing cash outflow,Dividends paid,1.96082731499002
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
-36,Operating Revenue,Sale of non-depreciable assets,0.011146949015187474
-37,Operating Revenue,Cash on hand recovery,0.011551244553142468
-38,Financing cash inflow,Monetized tax losses,0.17530881323018088
-39,Financing cash inflow,Inflow of debt,0.67282665261107
-40,Financing cash inflow,Inflow of equity,1.653494962504034
-41,Operating Revenue,Hydrogen sales,8.32890726914338
+36,Operating Revenue,Sale of non-depreciable assets,0.011146949015188258
+37,Operating Revenue,Cash on hand recovery,0.01116110019391785
+38,Financing cash inflow,Monetized tax losses,0.3148328204661073
+39,Financing cash inflow,Inflow of debt,1.1245529487843418
+40,Financing cash inflow,Inflow of equity,1.6374436771105516
+41,Operating Revenue,Hydrogen sales,5.451114746384197

@@ -22,22 +22,22 @@
 20,Operating Expenses,Property insurance,0.006237656668534257
 21,Operating Expenses,Water,0.007678100263852243
 22,Financing cash outflow,Compression,0.008514246043742539
-23,Operating Expenses,Cash on hand reserve,0.021926396521214413
-24,Financing cash outflow,Income taxes payable,0.039035571531178634
-25,Financing cash outflow,Repayment of debt,0.06297416082771747
+23,Operating Expenses,Cash on hand reserve,0.01767470937368197
+24,Financing cash outflow,Income taxes payable,0.021528298240009867
+25,Financing cash outflow,Repayment of debt,0.06285342554079582
 26,Operating Expenses,Var O&M,0.0752748738237094
 27,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-28,Financing cash outflow,Interest expense,0.12914339894167495
+28,Financing cash outflow,Interest expense,0.09101025134895284
 29,Financing cash outflow,Electrolysis system,0.17550251372488856
-30,Financing cash outflow,Dividends paid,0.28436085014652707
-31,Operating Expenses,Grid Electricity Cost,6.007408911312396
+30,Financing cash outflow,Dividends paid,0.25791805052089706
+31,Operating Expenses,Grid Electricity Cost,4.965346766451299
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.00011370520891752896
-37,Operating Revenue,Cash on hand recovery,0.021926396521214413
-38,Financing cash inflow,Inflow of debt,0.06297416082771747
-39,Financing cash inflow,Inflow of equity,0.15552806715707135
-40,Financing cash inflow,Monetized tax losses,0.26370355114135113
-41,Operating Revenue,Hydrogen sales,6.399796388908138
+37,Operating Revenue,Cash on hand recovery,0.01767470937368197
+38,Financing cash inflow,Inflow of debt,0.06285342554079582
+39,Financing cash inflow,Inflow of equity,0.16236053268714132
+40,Financing cash inflow,Monetized tax losses,0.2577301497207415
+41,Operating Revenue,Hydrogen sales,5.274791959428061

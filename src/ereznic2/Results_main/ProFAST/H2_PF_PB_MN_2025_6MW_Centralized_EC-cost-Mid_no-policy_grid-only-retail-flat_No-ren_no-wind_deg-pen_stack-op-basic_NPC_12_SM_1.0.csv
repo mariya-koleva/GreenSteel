@@ -22,22 +22,22 @@
 20,Operating Expenses,Water,0.007678100263852243
 21,Financing cash outflow,Compression,0.008514246043742539
 22,Operating Expenses,Property insurance,0.01015805409776345
-23,Operating Expenses,Cash on hand reserve,0.022624676690860098
+23,Operating Expenses,Cash on hand reserve,0.018267149493055287
 24,Operating Expenses,Var O&M,0.0752748738237094
 25,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-26,Financing cash outflow,Repayment of debt,0.09713106661459092
-27,Financing cash outflow,Income taxes payable,0.12083625617753661
-28,Financing cash outflow,Interest expense,0.2064468517110084
+26,Financing cash outflow,Repayment of debt,0.09317688355669666
+27,Financing cash outflow,Income taxes payable,0.13241593358233752
+28,Financing cash outflow,Interest expense,0.1438748353351133
 29,Financing cash outflow,Electrolysis system,0.292353154675969
-30,Financing cash outflow,Dividends paid,0.5259473027644876
-31,Operating Expenses,Grid Electricity Cost,5.957461498152067
+30,Financing cash outflow,Dividends paid,0.5705750038756119
+31,Operating Expenses,Grid Electricity Cost,4.938559790825785
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.0001137052089173392
-37,Financing cash inflow,Monetized tax losses,0.02112753286997038
-38,Operating Revenue,Cash on hand recovery,0.022624676690860095
-39,Financing cash inflow,Inflow of debt,0.09713106661459094
-40,Financing cash inflow,Inflow of equity,0.23828724865338186
-41,Operating Revenue,Hydrogen sales,7.0311274409368405
+37,Financing cash inflow,Monetized tax losses,0.010108864082150969
+38,Operating Revenue,Cash on hand recovery,0.018267149493055287
+39,Financing cash inflow,Inflow of debt,0.09317688355669665
+40,Financing cash inflow,Inflow of equity,0.21771863320413368
+41,Operating Revenue,Hydrogen sales,6.037448379987658

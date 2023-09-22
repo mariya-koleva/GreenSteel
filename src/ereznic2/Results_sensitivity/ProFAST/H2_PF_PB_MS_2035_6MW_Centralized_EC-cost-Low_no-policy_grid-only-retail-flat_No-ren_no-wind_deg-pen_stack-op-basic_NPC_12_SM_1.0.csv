@@ -22,22 +22,22 @@
 20,Operating Expenses,Property insurance,0.0029810749177570308
 21,Financing cash outflow,Compression,0.008514246043742539
 22,Operating Expenses,Water,0.010791556728232189
-23,Operating Expenses,Cash on hand reserve,0.020712717071055636
-24,Financing cash outflow,Repayment of debt,0.02532568833405778
-25,Financing cash outflow,Interest expense,0.05676955187414342
-26,Financing cash outflow,Income taxes payable,0.06824292796698225
+23,Operating Expenses,Cash on hand reserve,0.01483286234751181
+24,Financing cash outflow,Repayment of debt,0.024998381536511967
+25,Financing cash outflow,Interest expense,0.040514756084078514
+26,Financing cash outflow,Income taxes payable,0.06673129762426212
 27,Operating Expenses,Var O&M,0.0752748738237094
 28,Financing cash outflow,Electrolysis system,0.0784374401558739
 29,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-30,Financing cash outflow,Dividends paid,0.2260100416065162
-31,Operating Expenses,Grid Electricity Cost,5.558638687636147
+30,Financing cash outflow,Dividends paid,0.22377201641097036
+31,Operating Expenses,Grid Electricity Cost,3.93477276208939
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.00011370520891754251
-37,Financing cash inflow,Monetized tax losses,0.012765082128553266
-38,Operating Revenue,Cash on hand recovery,0.020712717071055632
-39,Financing cash inflow,Inflow of debt,0.02532568833405778
-40,Financing cash inflow,Inflow of equity,0.06595624083100195
-41,Operating Revenue,Hydrogen sales,6.092810962543608
+37,Financing cash inflow,Monetized tax losses,0.009610325071727538
+38,Operating Revenue,Cash on hand recovery,0.01483286234751181
+39,Financing cash inflow,Inflow of debt,0.02499838153651197
+40,Financing cash inflow,Inflow of equity,0.058977788681707756
+41,Operating Revenue,Hydrogen sales,4.459073794874638

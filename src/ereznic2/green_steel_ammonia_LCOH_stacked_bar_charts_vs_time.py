@@ -38,27 +38,27 @@ elif retail_string == 'wholesale':
 
 # Note that if you set this to 'Distributed', you must only run 'off-grid' for grid-cases
 electrolysis_cases = [
-                    'Centralized',
-                    #'Distributed'
+                    #'Centralized',
+                    'Distributed'
                     ]
 
 grid_cases = [
-    'grid-only-'+retail_string,
-    'hybrid-grid-'+retail_string,
+    #'grid-only-'+retail_string,
+    #'hybrid-grid-'+retail_string,
     'off-grid'
     ]
 
     # Select hybrids case 'Wind' or 'Wind+PV+bat'
 hybrids_cases = [
             'Wind',
-            'Wind+PV+bat',
+            #'Wind+PV+bat',
                 ]
 
 locations = [
         'IN',
         'TX',
         'IA',
-        'MS',
+        #'MS',
         'MN'
         ]
 
@@ -71,7 +71,7 @@ location_strings = [
 ]
 
 # True if you want to plot quad of four locations. Must select four locations above
-plot_quad = False
+plot_quad = True
 
 for electrolysis_case in electrolysis_cases:
     for grid_case in grid_cases:

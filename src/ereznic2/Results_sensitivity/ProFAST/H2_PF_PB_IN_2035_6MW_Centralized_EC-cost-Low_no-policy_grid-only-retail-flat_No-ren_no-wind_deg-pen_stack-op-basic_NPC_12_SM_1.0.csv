@@ -22,22 +22,22 @@
 20,Operating Expenses,Property insurance,0.0029810749177570308
 21,Financing cash outflow,Compression,0.008514246043742539
 22,Operating Expenses,Water,0.011873350923482847
-23,Financing cash outflow,Repayment of debt,0.029931825947535833
-24,Operating Expenses,Cash on hand reserve,0.03219749939773338
-25,Financing cash outflow,Income taxes payable,0.05828430335665111
-26,Financing cash outflow,Interest expense,0.06062600477223995
+23,Operating Expenses,Cash on hand reserve,0.01804671584979408
+24,Financing cash outflow,Repayment of debt,0.027752703791393062
+25,Financing cash outflow,Interest expense,0.042165056660988465
+26,Financing cash outflow,Income taxes payable,0.04932636101374222
 27,Operating Expenses,Var O&M,0.0752748738237094
 28,Financing cash outflow,Electrolysis system,0.0784374401558739
 29,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-30,Financing cash outflow,Dividends paid,0.21139421299961206
-31,Operating Expenses,Grid Electricity Cost,8.7575683398896
+30,Financing cash outflow,Dividends paid,0.18415336589732476
+31,Operating Expenses,Grid Electricity Cost,4.835956425937129
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.00011370520891754251
-37,Financing cash inflow,Monetized tax losses,0.024780144310649385
-38,Financing cash inflow,Inflow of debt,0.02993182594753583
-39,Operating Revenue,Cash on hand recovery,0.03219749939773337
-40,Financing cash inflow,Inflow of equity,0.114734583988109
-41,Operating Revenue,Hydrogen sales,9.211311003333968
+37,Financing cash inflow,Monetized tax losses,0.009552943225170356
+38,Operating Revenue,Cash on hand recovery,0.01804671584979408
+39,Financing cash inflow,Inflow of debt,0.02775270379139306
+40,Financing cash inflow,Inflow of equity,0.06940690105741225
+41,Operating Revenue,Hydrogen sales,5.295594235841225

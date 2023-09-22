@@ -22,22 +22,22 @@
 20,Financing cash outflow,Compression,0.008514246043742539
 21,Operating Expenses,Property insurance,0.01015805409776345
 22,Operating Expenses,Water,0.01261213720316623
-23,Operating Expenses,Cash on hand reserve,0.02685482060404127
+23,Operating Expenses,Cash on hand reserve,0.019335041135616512
 24,Operating Expenses,Var O&M,0.0752748738237094
 25,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-26,Financing cash outflow,Income taxes payable,0.09541145289202062
-27,Financing cash outflow,Repayment of debt,0.10139245099440172
-28,Financing cash outflow,Interest expense,0.20997451201563666
+26,Financing cash outflow,Repayment of debt,0.09481455587427401
+27,Financing cash outflow,Income taxes payable,0.11661144206945094
+28,Financing cash outflow,Interest expense,0.14461397362153414
 29,Financing cash outflow,Electrolysis system,0.292353154675969
-30,Financing cash outflow,Dividends paid,0.46231593793674824
-31,Operating Expenses,Grid Electricity Cost,7.154427387719656
+30,Financing cash outflow,Dividends paid,0.5356869458639364
+31,Operating Expenses,Grid Electricity Cost,5.271006646329688
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.0001137052089173392
-37,Financing cash inflow,Monetized tax losses,0.025692575643861286
-38,Operating Revenue,Cash on hand recovery,0.02685482060404127
-39,Financing cash inflow,Inflow of debt,0.10139245099440172
-40,Financing cash inflow,Inflow of equity,0.26117670621769973
-41,Operating Revenue,Hydrogen sales,8.120044359296909
+37,Financing cash inflow,Monetized tax losses,0.008660053260247717
+38,Operating Revenue,Cash on hand recovery,0.019335041135616515
+39,Financing cash inflow,Inflow of debt,0.09481455587427401
+40,Financing cash inflow,Inflow of equity,0.22424676975782037
+41,Operating Revenue,Hydrogen sales,6.31979653546095

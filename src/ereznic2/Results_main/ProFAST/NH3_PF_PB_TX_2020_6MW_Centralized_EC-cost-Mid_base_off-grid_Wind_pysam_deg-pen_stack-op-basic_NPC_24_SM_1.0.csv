@@ -19,24 +19,24 @@
 17,Operating Expenses,Iron based catalyst,0.0021180315277480317
 18,Financing cash outflow,Air Separation by Cryogenic,0.0023365499184478922
 19,Financing cash outflow,Depreciable Nonequipment,0.002641221737493733
-20,Financing cash outflow,Repayment of debt,0.003664738093889476
-21,Operating Expenses,Administrative Expense,0.0038706439252150734
-22,Operating Expenses,Property tax and insurance,0.0048872332802896105
-23,Operating Expenses,Cash on hand reserve,0.004995212378765364
-24,Financing cash outflow,Income taxes payable,0.0082369350385918
-25,Financing cash outflow,Interest expense,0.00846554499688469
+20,Financing cash outflow,Repayment of debt,0.0036821565112297415
+21,Operating Expenses,Cash on hand reserve,0.0037645742657466627
+22,Operating Expenses,Administrative Expense,0.0038706439252150734
+23,Operating Expenses,Property tax and insurance,0.0048872332802896105
+24,Financing cash outflow,Interest expense,0.006081512290607733
+25,Financing cash outflow,Income taxes payable,0.009256944378724088
 26,Operating Expenses,Labor Cost,0.019353219626075363
-27,Financing cash outflow,Dividends paid,0.03109326756763031
-28,Operating Expenses,Electricity,0.06117712511928805
-29,Operating Expenses,Hydrogen,1.6744943823997127
+27,Financing cash outflow,Dividends paid,0.03304469006585332
+28,Operating Expenses,Electricity,0.0462683379833872
+29,Operating Expenses,Hydrogen,1.2548861282590225
 30,Operating Revenue,Take or pay revenue,0.0
 31,Operating Revenue,Incidental revenue,0.0
 32,Financing cash inflow,One time capital incentive,0.0
 33,Financing cash inflow,Annual operating incentives,0.0
-34,Financing cash inflow,Monetized tax losses,0.00019809375292710173
+34,Financing cash inflow,Monetized tax losses,0.00017166669310526793
 35,Operating Revenue,Sale of non-depreciable assets,0.00023582057401156072
-36,Financing cash inflow,Inflow of debt,0.003664738093889476
-37,Operating Revenue,Cash on hand recovery,0.0049952123787653634
-38,Operating Revenue,Oxygen byproduct,0.008386648300601962
-39,Financing cash inflow,Inflow of equity,0.009095575840323382
-40,Operating Revenue,Ammonia sales,1.8062373873505848
+36,Financing cash inflow,Inflow of debt,0.0036821565112297415
+37,Operating Revenue,Cash on hand recovery,0.0037645742657466627
+38,Financing cash inflow,Inflow of equity,0.008028025259269269
+39,Operating Revenue,Oxygen byproduct,0.008386648300601962
+40,Operating Revenue,Ammonia sales,1.3734017228469484

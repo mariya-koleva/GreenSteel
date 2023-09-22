@@ -22,22 +22,22 @@
 20,Operating Expenses,Property insurance,0.007947024268008591
 21,Financing cash outflow,Compression,0.008514246043742539
 22,Operating Expenses,Water,0.010791556728232189
-23,Operating Expenses,Cash on hand reserve,0.021612372168675033
-24,Financing cash outflow,Repayment of debt,0.0750657193589749
+23,Operating Expenses,Cash on hand reserve,0.015601593020185319
+24,Financing cash outflow,Repayment of debt,0.0725076503124711
 25,Operating Expenses,Var O&M,0.0752748738237094
 26,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-27,Financing cash outflow,Income taxes payable,0.12309342968840546
-28,Financing cash outflow,Interest expense,0.16262773353328994
+27,Financing cash outflow,Interest expense,0.11365182788175379
+28,Financing cash outflow,Income taxes payable,0.12238423665039934
 29,Financing cash outflow,Electrolysis system,0.2264516083575871
-30,Financing cash outflow,Dividends paid,0.47151767809792267
-31,Operating Expenses,Grid Electricity Cost,5.696084612538552
+30,Financing cash outflow,Dividends paid,0.48343475003607905
+31,Operating Expenses,Grid Electricity Cost,4.032066094122986
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.00011370520891742052
-37,Operating Revenue,Cash on hand recovery,0.02161237216867503
-38,Financing cash inflow,Monetized tax losses,0.024011847141477628
-39,Financing cash inflow,Inflow of debt,0.07506571935897491
-40,Financing cash inflow,Inflow of equity,0.18566692751770283
-41,Operating Revenue,Hydrogen sales,6.658495873170329
+37,Financing cash inflow,Monetized tax losses,0.012141633732273803
+38,Operating Revenue,Cash on hand recovery,0.015601593020185319
+39,Financing cash inflow,Inflow of debt,0.0725076503124711
+40,Financing cash inflow,Inflow of equity,0.16538441232434636
+41,Operating Revenue,Hydrogen sales,4.988862056605934

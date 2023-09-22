@@ -13,24 +13,24 @@
 11,Operating Expenses,Non-depreciable assets,1.1840537493088503e-06
 12,Financing cash outflow,Hydrogen Storage,3.2378580323785805e-05
 13,Financing cash outflow,Compression,0.0054414003044140034
-14,Operating Expenses,Cash on hand reserve,0.006318486752424839
+14,Operating Expenses,Cash on hand reserve,0.006277297572646368
 15,Operating Expenses,SMR VOM Cost,0.041499999999999995
-16,Financing cash outflow,Repayment of debt,0.04271230713095895
+16,Financing cash outflow,Repayment of debt,0.04291531776149028
 17,Operating Expenses,Water Charges,0.04780000000000001
-18,Financing cash outflow,Income taxes payable,0.07087068415465697
+18,Financing cash outflow,Interest expense,0.0708796683752793
 19,Operating Expenses,SMR Electricity Cost,0.07963380555306665
-20,Financing cash outflow,Interest expense,0.09866542947251519
+20,Financing cash outflow,Income taxes payable,0.08014839183778359
 21,Financing cash outflow,SMR Plant Cost,0.10612816214563145
 22,Operating Expenses,SMR FOM Cost,0.12735379457475773
-23,Financing cash outflow,Dividends paid,0.2754923389074612
+23,Financing cash outflow,Dividends paid,0.3045736735398881
 24,Operating Expenses,SMR NG Cost,1.7954559040000002
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,1.1840537493088503e-06
-30,Operating Revenue,Cash on hand recovery,0.006318486752424839
-31,Financing cash inflow,Monetized tax losses,0.011228926364432075
-32,Financing cash inflow,Inflow of debt,0.04271230713095895
-33,Financing cash inflow,Inflow of equity,0.1034256359742016
-34,Operating Revenue,Hydrogen sales,2.5337193353541934
+30,Operating Revenue,Cash on hand recovery,0.006277297572646367
+31,Financing cash inflow,Monetized tax losses,0.009424769142464998
+32,Financing cash inflow,Inflow of debt,0.04291531776149028
+33,Financing cash inflow,Inflow of equity,0.10053574730234509
+34,Operating Revenue,Hydrogen sales,2.548986662466334

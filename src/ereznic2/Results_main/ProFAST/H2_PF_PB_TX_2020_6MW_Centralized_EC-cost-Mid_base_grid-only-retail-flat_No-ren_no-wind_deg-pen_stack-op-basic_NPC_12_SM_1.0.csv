@@ -22,22 +22,22 @@
 20,Financing cash outflow,Compression,0.008514246043742539
 21,Operating Expenses,Water,0.01261213720316623
 22,Operating Expenses,Property insurance,0.01767960935513435
-23,Operating Expenses,Cash on hand reserve,0.027598274233912385
-24,Financing cash outflow,Income taxes payable,0.04195890223121822
-25,Operating Expenses,Var O&M,0.0752748738237094
+23,Operating Expenses,Cash on hand reserve,0.02054749019692502
+24,Operating Expenses,Var O&M,0.0752748738237094
+25,Financing cash outflow,Income taxes payable,0.08144558661263496
 26,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-27,Financing cash outflow,Repayment of debt,0.18495050789031056
-28,Financing cash outflow,Interest expense,0.36539566845681587
+27,Financing cash outflow,Repayment of debt,0.17043381106171993
+28,Financing cash outflow,Interest expense,0.25225963961856657
 29,Financing cash outflow,Electrolysis system,0.5165392400508768
-30,Financing cash outflow,Dividends paid,0.551712646604308
-31,Operating Expenses,Grid Electricity Cost,6.688611346704041
+30,Financing cash outflow,Dividends paid,0.73998230359244
+31,Operating Expenses,Grid Electricity Cost,5.0548651901006885
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.00011370520891761029
-37,Operating Revenue,Cash on hand recovery,0.02759827423391239
-38,Financing cash inflow,Monetized tax losses,0.1330707573626805
-39,Financing cash inflow,Inflow of debt,0.18495050789031056
-40,Financing cash inflow,Inflow of equity,0.6086654967232817
-41,Operating Revenue,Hydrogen sales,7.622434301137108
+37,Operating Revenue,Cash on hand recovery,0.02054749019692502
+38,Financing cash inflow,Monetized tax losses,0.045019507118245844
+39,Financing cash inflow,Inflow of debt,0.1704338110617199
+40,Financing cash inflow,Inflow of equity,0.42898771683046105
+41,Operating Revenue,Hydrogen sales,6.37103748720231

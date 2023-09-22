@@ -1,10 +1,10 @@
 ,0
 Useful Life,30
 Wind Cost ($/kW),1265.0
-Solar Cost ($/kW),1089.9
+Solar Cost ($/kW),813.3582089552239
 Electrolyzer Installed Cost ($/kW),554.41344
 Wind capacity (MW),522
-Solar capacity (MW),100
+Solar capacity (MW),500
 Battery storage capacity (MW),0
 Battery storage duration (hr),0
 Electrolyzer capacity (MW),480
@@ -14,20 +14,20 @@ ATB Year,2030
 Grid Total Emission Intensity first year (kg-CO2/kg-H2),0.0
 Off-grid Total Emission Intensity first year (kg-CO2/kg-H2),0.0
 H2 PTC first year ($/kg),0.6
-Ren PTC first year ($/kg),0.1580726579133032
-Wind PTC,0.0051
+Ren PTC first year ($/kg),0.12266917333396524
+Wind PTC,0.0055341
 Discount Rate,0.07
-NPV Wind Expenses,-971537411.3927649
-NPV Solar Expenses,-118195640.88759457
+NPV Wind Expenses,-963379845.503981
+NPV Solar Expenses,-481260474.9561039
 NPV HVDC Expenses,0.0
-LCOE ($/MWh),43.00477652883187
-Grid Price ($/MWh),110.5940722
+LCOE ($/MWh),42.99786981981015
+Grid Price ($/MWh),89.42320514
 Electricity CF (-),1.0
 Wind plant CF (-),0.3532347488665081
 Wind annual energy (MWh),1624526.6100370705
-Solar plant CF (-),0.16607113059679293
-Solar annual energy (MWh),145478.31040279058
-LCOH ($/kg),3.2602615534613277
+Solar plant CF (-),0.1660695933736443
+Solar annual energy (MWh),727384.818976562
+LCOH ($/kg),4.3025013127115885
 Electrolyzer CF (-),0.9518373167877198
 Fraction of electricity from renewables (-),"[0.56668243 0.55854667 0.55064121 0.54295641 0.53548316 0.52821284
  0.52113729 0.5142488  0.51236856 0.55854667 0.55064121 0.54295641
@@ -40,31 +40,31 @@ Hydrogen storage duration (hr),0.0
 Hydrogen storage capacity (kg),0.0
 Hydrogen storage CAPEX ($/kg),0
 Hydrogen annual production (kg),73288932.07856058
-Hydrogen production total CAPEX ($),276045707.86980003
+Hydrogen production total CAPEX ($),2041297967.9772348
 Hydrogen transmission total CAPEX ($),21320435.681093663
 Steel Plant Total CAPEX ($),458597254.6437372
 Ammonia Plant Total CAPEX ($),75971822.94143984
-LCOH: Compression & storage ($/kg),0.011678047102548309
-LCOH: Electrolyzer CAPEX ($/kg),0.2407173355532941
-LCOH: Desalination CAPEX ($/kg),0.0005165366792993382
+LCOH: Compression & storage ($/kg),0.015413324982253887
+LCOH: Electrolyzer CAPEX ($/kg),0.31771189901567976
+LCOH: Desalination CAPEX ($/kg),0.0006817533474032347
 LCOH: Electrolyzer FOM ($/kg),0.08383257643069576
 LCOH:Desalination FOM ($/kg),0.0016627110733025703
 LCOH: Electrolyzer VOM ($/kg),0.0752748738237094
-LCOH: Wind Plant CAPEX ($/kg),0.07399262773044428
+LCOH: Wind Plant CAPEX ($/kg),1.1106753059183407
 LCOH: Wind Plant FOM ($/kg),0.20769193339703196
-LCOH: Solar Plant CAPEX ($/kg),0.06799093769800964
-LCOH: Solar Plant FOM ($/kg),0.0245603251261804
+LCOH: Solar Plant CAPEX ($/kg),0.33484386756439183
+LCOH: Solar Plant FOM ($/kg),0.09164300420216567
 LCOH: Battery Storage CAPEX ($/kg),0.0
 LCOH: Battery Storage FOM ($/kg),0.0
-LCOH: Taxes and Finances ($/kg),-0.3409770931704136
+LCOH: Taxes and Finances ($/kg),-0.3532795246246235
 LCOH: Water consumption ($/kg),0.007678100263852243
-LCOH: Grid electricity ($/kg),2.791465133411446
-LCOH: Bulk H2 Transmission ($/kg),0.12207079433194165
+LCOH: Grid electricity ($/kg),2.3073385744226877
+LCOH: Bulk H2 Transmission ($/kg),0.11243088070357901
 Steel annual production (tonne/year),999999.9999999999
 Steel annual capacity margin (%),11.111176589691606
 Ammonia annual production (kg/year),334339658.8730839
 Ammonia annual capacity margin (%),11.111176589691588
-Steel Price with Integration ($/tonne),875.5953714990118
+Steel Price with Integration ($/tonne),944.691685955794
 Steel price: EAF and Casting CAPEX ($/tonne),6.1918436335910485
 Steel price: Shaft Furnace CAPEX ($/tonne),3.492643247616326
 Steel price: Oxygen Supply CAPEX ($/tonne),0.42313767303929395
@@ -83,15 +83,15 @@ Steel price: Raw Water Withdrawal ($/tonne),0.4764879063
 Steel price: Lime ($/tonne),2.212452
 Steel price: Carbon ($/tonne),12.748985999999999
 Steel price: Iron Ore ($/tonne),337.8291345
-Steel price: Hydrogen ($/tonne),215.04685206630919
+Steel price: Hydrogen ($/tonne),283.7929865864564
 Steel price: Natural gas ($/tonne),2.716709262358007
-Steel price: Electricity ($/tonne),56.6395494889444
+Steel price: Electricity ($/tonne),46.943180077908224
 Steel price: Slag Disposal ($/tonne),6.560037899999999
-Steel price: Taxes ($/tonne),25.734701970340804
-Steel price: Equipment Financing ($/tonne),88.33121840936664
+Steel price: Taxes ($/tonne),29.846867663421854
+Steel price: Equipment Financing ($/tonne),94.34686557578004
 Steel price: Remaining Financial ($/tonne),10.06676900437472
 Steel price: Oxygen sales ($/tonne),0.0
-Steel price: Total ($/tonne),889.0789129430266
+Steel price: Total ($/tonne),958.2564909116321
 (-) Steel price: BOS savings ($/tonne),5.972329180470482
 Ammonia price: Air Separation by Cryogenic ($/kg),0.0021658289433065634
 Ammonia price: Haber Bosch ($/kg),0.0017940520936224223
@@ -101,12 +101,12 @@ Ammonia price: Depreciable Nonequipment ($/kg),0.002472312766371664
 Ammonia price: Labor Cost ($/kg),0.016786890891857285
 Ammonia price: Maintenance Cost ($/kg),0.0006711689831577444
 Ammonia price: Administrative Expense ($/kg),0.0033573781783714568
-Ammonia price: Hydrogen ($/kg),0.6431987541984705
-Ammonia price: Electricity ($/kg),0.055058724128091846
+Ammonia price: Hydrogen ($/kg),0.8488164028850219
+Ammonia price: Electricity ($/kg),0.045506560400950816
 Ammonia price: Cooling water ($/kg),0.00014327915783999995
 Ammonia price: Iron based catalyst ($/kg),0.0021180315277480326
 Ammonia price: Oxygen byproduct ($/kg),-0.008386648300601963
-Ammonia price: Taxes ($/kg),0.007148952090462168
-Ammonia price: Equipment Financing ($/kg),0.027390924154833938
+Ammonia price: Taxes ($/kg),0.008603416230172974
+Ammonia price: Equipment Financing ($/kg),0.029381979267416307
 Ammonia price: Remaining Financial ($/kg),0.004544589367441985
-Ammonia price: Total ($/kg),0.7774435810859921
+Ammonia price: Total ($/kg),0.9769545852976956

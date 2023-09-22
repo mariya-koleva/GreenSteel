@@ -1,43 +1,43 @@
 ,Type,Name,NPV
 0,Operating Expenses,Rent of land,0.0
 1,Financing cash outflow,Capital gains taxes payable,0.0
-2,Operating Expenses,Battery Storage Fixed O&M Cost,0.0
-3,Operating Expenses,Solar Plant Fixed O&M Cost,0.0
-4,Operating Expenses,Grid Electricity Cost,0.0
-5,Operating Expenses,Licensing and Permitting,0.0
-6,Financing cash outflow,Solar Plant,0.0
-7,Operating Expenses,Administrative expenses,0.0
-8,Operating Expenses,Labor,0.0
-9,Operating Expenses,Total annual maintenance,0.0
-10,Operating Expenses,Installation cost,0.0
+2,Financing cash outflow,Income taxes payable,0.0
+3,Operating Expenses,Battery Storage Fixed O&M Cost,0.0
+4,Operating Expenses,Solar Plant Fixed O&M Cost,0.0
+5,Operating Expenses,Grid Electricity Cost,0.0
+6,Operating Expenses,Licensing and Permitting,0.0
+7,Financing cash outflow,Solar Plant,0.0
+8,Operating Expenses,Administrative expenses,0.0
+9,Operating Expenses,Labor,0.0
+10,Operating Expenses,Total annual maintenance,0.0
 11,Financing cash outflow,Battery Storage,0.0
-12,Operating Expenses,Credit card fees,0.0
-13,Operating Expenses,Road tax,0.0
-14,Operating Expenses,Sales tax,0.0
-15,Operating Expenses,Non-depreciable assets,0.00011489928485296012
-16,Financing cash outflow,Desalination,0.0009196675370690333
-17,Operating Expenses,Desalination Fixed O&M Cost,0.004060415772132781
-18,Operating Expenses,Water,0.007678100263852245
-19,Financing cash outflow,Compression,0.020792174586991664
-20,Operating Expenses,Cash on hand reserve,0.02579239637728915
-21,Operating Expenses,Var O&M,0.07383260645322473
-22,Operating Expenses,Property insurance,0.07436995647263436
-23,Financing cash outflow,Income taxes payable,0.08367245948828438
+12,Operating Expenses,Sales tax,0.0
+13,Operating Expenses,Credit card fees,0.0
+14,Operating Expenses,Road tax,0.0
+15,Operating Expenses,Installation cost,0.0
+16,Operating Expenses,Non-depreciable assets,0.00011489928485296012
+17,Financing cash outflow,Desalination,0.0009196675370690333
+18,Operating Expenses,Desalination Fixed O&M Cost,0.004060415772132781
+19,Operating Expenses,Water,0.007678100263852245
+20,Financing cash outflow,Compression,0.020792174586991664
+21,Operating Expenses,Cash on hand reserve,0.026891178111805924
+22,Operating Expenses,Property insurance,0.07191591533469198
+23,Operating Expenses,Var O&M,0.07383260645322473
 24,Financing cash outflow,Hydrogen Storage,0.11481202444196606
 25,Operating Expenses,Electrolyzer Fixed O&M Cost,0.20472294977961025
 26,Operating Expenses,Wind Plant Fixed O&M Cost,0.5558016304154577
-27,Financing cash outflow,Repayment of debt,0.6429936995931353
-28,Financing cash outflow,Wind Plant,0.9338317395439528
-29,Financing cash outflow,Electrolysis system,1.14511666485106
-30,Financing cash outflow,Interest expense,1.3788154192348134
-31,Financing cash outflow,Dividends paid,2.4584447470321122
+27,Financing cash outflow,Wind Plant,0.8606870431029927
+28,Financing cash outflow,Electrolysis system,1.14511666485106
+29,Financing cash outflow,Repayment of debt,1.259431029556295
+30,Financing cash outflow,Dividends paid,1.4330458411052214
+31,Financing cash outflow,Interest expense,1.5666450042311604
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,Annual operating incentives,0.0
 35,Operating Revenue,Sale of non-depreciable assets,0.007307206507492851
-36,Operating Revenue,Cash on hand recovery,0.025792396377289153
+36,Operating Revenue,Cash on hand recovery,0.026891178111805927
 37,Financing cash inflow,One time capital incentive,0.05740601222098303
-38,Financing cash inflow,Inflow of debt,0.6429936995931352
-39,Financing cash inflow,Inflow of equity,1.7308786017408335
-40,Financing cash inflow,Monetized tax losses,1.964933882931403
-41,Operating Revenue,Hydrogen sales,3.2964597517573027
+38,Operating Revenue,Hydrogen sales,0.9222564535816391
+39,Financing cash inflow,Inflow of debt,1.2594310295562945
+40,Financing cash inflow,Inflow of equity,2.5061472647281002
+41,Financing cash inflow,Monetized tax losses,2.567028000122069

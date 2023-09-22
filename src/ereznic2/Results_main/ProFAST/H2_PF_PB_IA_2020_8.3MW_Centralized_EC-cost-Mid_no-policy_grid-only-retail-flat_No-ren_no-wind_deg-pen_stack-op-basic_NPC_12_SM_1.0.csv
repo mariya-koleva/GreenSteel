@@ -22,22 +22,22 @@
 20,Operating Expenses,Water,0.007678100263852243
 21,Financing cash outflow,Compression,0.008514246043742539
 22,Operating Expenses,Property insurance,0.01767960935513435
-23,Operating Expenses,Cash on hand reserve,0.02264557305934794
+23,Operating Expenses,Cash on hand reserve,0.018557057728668416
 24,Operating Expenses,Var O&M,0.0752748738237094
 25,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-26,Financing cash outflow,Income taxes payable,0.09924313478796207
-27,Financing cash outflow,Repayment of debt,0.17350527360924822
-28,Financing cash outflow,Interest expense,0.3560853599074982
+26,Financing cash outflow,Income taxes payable,0.1610954473575531
+27,Financing cash outflow,Repayment of debt,0.16507037392192622
+28,Financing cash outflow,Interest expense,0.24936303856838415
 29,Financing cash outflow,Electrolysis system,0.5165392400508768
-30,Financing cash outflow,Dividends paid,0.665716983313777
-31,Operating Expenses,Grid Electricity Cost,5.688900603786006
+30,Financing cash outflow,Dividends paid,0.8380731202759941
+31,Operating Expenses,Grid Electricity Cost,4.79346969602433
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.00011370520891761029
-37,Operating Revenue,Cash on hand recovery,0.02264557305934794
-38,Financing cash inflow,Monetized tax losses,0.02925072726662715
-39,Financing cash inflow,Inflow of debt,0.17350527360924822
-40,Financing cash inflow,Inflow of equity,0.46378861569395063
-41,Operating Revenue,Hydrogen sales,7.0284646931220385
+37,Financing cash inflow,Monetized tax losses,0.011452022994649052
+38,Operating Revenue,Cash on hand recovery,0.018557057728668423
+39,Financing cash inflow,Inflow of debt,0.1650703739219262
+40,Financing cash inflow,Inflow of equity,0.4063512596237309
+41,Operating Revenue,Hydrogen sales,6.335755973895255
