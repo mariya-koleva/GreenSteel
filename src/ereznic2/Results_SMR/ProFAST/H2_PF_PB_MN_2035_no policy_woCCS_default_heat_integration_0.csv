@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,2.7476313422928804e-06
 12,Financing cash outflow,Hydrogen Storage,3.2378580323785805e-05
-13,Operating Expenses,Cash on hand reserve,0.003574573601548785
+13,Operating Expenses,Cash on hand reserve,0.002943549775580669
 14,Financing cash outflow,Compression,0.0054414003044140034
 15,Operating Expenses,Water Charges,0.029099999999999994
 16,Operating Expenses,SMR VOM Cost,0.041499999999999995
 17,Financing cash outflow,Repayment of debt,0.04291591901194091
-18,Operating Expenses,SMR Electricity Cost,0.05426695725056001
+18,Operating Expenses,SMR Electricity Cost,0.054266957252948556
 19,Financing cash outflow,Interest expense,0.07088066141074481
-20,Financing cash outflow,Income taxes payable,0.07764879942383424
+20,Financing cash outflow,Income taxes payable,0.08038171834686625
 21,Financing cash outflow,SMR Plant Cost,0.10612816214563145
 22,Operating Expenses,SMR FOM Cost,0.12735379457475773
-23,Financing cash outflow,Dividends paid,0.29969534671797615
-24,Operating Expenses,SMR NG Cost,0.8707932640000001
+23,Financing cash outflow,Dividends paid,0.30607905544148606
+24,Operating Expenses,SMR NG Cost,0.6370647975333332
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,2.7476313422928804e-06
-30,Operating Revenue,Cash on hand recovery,0.003574573601548785
-31,Financing cash inflow,Monetized tax losses,0.009638415373669943
+30,Operating Revenue,Cash on hand recovery,0.0029435497755806693
+31,Financing cash inflow,Monetized tax losses,0.010246969567389108
 32,Financing cash inflow,Inflow of debt,0.04291591901194091
-33,Financing cash inflow,Inflow of equity,0.10348512451264597
-34,Operating Revenue,Hydrogen sales,1.5697172245219262
+33,Financing cash inflow,Inflow of equity,0.10374003273892302
+34,Operating Revenue,Hydrogen sales,1.3442419232841936

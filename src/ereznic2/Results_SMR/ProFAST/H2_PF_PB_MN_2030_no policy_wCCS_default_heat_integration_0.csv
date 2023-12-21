@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,2.7476313422928804e-06
 12,Financing cash outflow,Hydrogen Storage,0.00037359900373599005
-13,Operating Expenses,Cash on hand reserve,0.005322632435309416
+13,Operating Expenses,Cash on hand reserve,0.00481253552553398
 14,Financing cash outflow,Compression,0.0054414003044140034
 15,Operating Expenses,Water Charges,0.029099999999999994
 16,Operating Expenses,SMR VOM Cost,0.041499999999999995
 17,Financing cash outflow,Repayment of debt,0.11627170219685458
-18,Operating Expenses,SMR Electricity Cost,0.17237163173045
+18,Operating Expenses,SMR Electricity Cost,0.17237163173783837
 19,Financing cash outflow,Interest expense,0.19203631996726234
-20,Financing cash outflow,Income taxes payable,0.20693984726297956
+20,Financing cash outflow,Income taxes payable,0.20753751339994536
 21,Financing cash outflow,SMR Plant Cost,0.2965518031623389
 22,Operating Expenses,SMR FOM Cost,0.3558621637948067
-23,Financing cash outflow,Dividends paid,0.8056868998741236
-24,Operating Expenses,SMR NG Cost,0.8707932640000001
+23,Operating Expenses,SMR NG Cost,0.6769647491999999
+24,Financing cash outflow,Dividends paid,0.8084174634397544
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,2.7476313422928804e-06
-30,Operating Revenue,Cash on hand recovery,0.005322632435309415
-31,Financing cash inflow,Monetized tax losses,0.02648621590568421
+30,Operating Revenue,Cash on hand recovery,0.00481253552553398
+31,Financing cash inflow,Monetized tax losses,0.02621272947926049
 32,Financing cash inflow,Inflow of debt,0.11627170219685458
-33,Financing cash inflow,Inflow of equity,0.28507747234526754
-34,Operating Revenue,Hydrogen sales,2.665093240849159
+33,Financing cash inflow,Inflow of equity,0.2852947573810885
+34,Operating Revenue,Hydrogen sales,2.474649157149747

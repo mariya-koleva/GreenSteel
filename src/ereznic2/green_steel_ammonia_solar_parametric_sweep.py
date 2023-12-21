@@ -64,10 +64,11 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
      site_df,sample_site,site,site_location,\
      turbine_model,wind_size_mw,nTurbs,floris_config,floris,\
      sell_price,buy_price,discount_rate,debt_equity_split,\
-     electrolyzer_size_mw,n_pem_clusters,pem_control_type,
+     electrolyzer_size_mw,electrolyzer_capacity_EOL_MW,n_pem_clusters,pem_control_type,hydrogen_demand_kgphr,
      electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg, time_between_replacement,
      user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
-     electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC,grid_price_filename] = arg_list
+     electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC,grid_price_filename,
+     gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector] = arg_list
 
     electrolyzer_installation_factor = 12/100
     electrolyzer_direct_cost_kw = electrolyzer_capex_kw*(1+electrolyzer_installation_factor)
@@ -110,7 +111,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
     load = [kw_continuous for x in
             range(0, 8760)]  # * (sin(x) + pi) Set desired/required load profile for plant
     if battery_for_minimum_electrolyzer_op:
-        battery_dispatch_load = list(0.1*np.array(load))
+        battery_dispatch_load = list(0.15*np.array(load))
     else:
         battery_dispatch_load = list(np.array(load))
 
@@ -535,8 +536,17 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             elif site_location == 'Site 7':
                 storage_type = 'Lined rock cavern'
 
-            hydrogen_production_storage_system_output_kgprhr,hydrogen_storage_capacity_kg,hydrogen_storage_capacity_MWh_HHV,hydrogen_storage_duration_hr,hydrogen_storage_cost_USDprkg,storage_status_message\
-                = hopp_tools_steel.hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage_type)
+            hydrogen_production_storage_system_output_kgprhr,hydrogen_storage_capacity_kg,hydrogen_storage_capacity_MWh_HHV,hydrogen_storage_duration_hr,hydrogen_storage_cost_USDprkg,storage_compressor_total_capacity_kW,storage_compressor_total_installed_cost_USD,storage_status_message\
+                 = hopp_tools_steel.hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage_type,hydrogen_demand_kgphr)
+
+            #Make sure there is enough wind capacity for storage compressor; if not, add wind capacity. Because we round up
+            #to the nearest turbine size it is possible that there is already enough wind capacity; this bit just makes sure
+            # that there will always be enough.
+            wind_capacity_required_MW = electrolyzer_capacity_EOL_MW + storage_compressor_total_capacity_kW/1000
+            if wind_capacity_required_MW > wind_size_mw:
+                n_turbines = int(np.ceil(np.ceil(wind_capacity_required_MW)/turbine_rating))
+                wind_size_mw = turbine_rating*n_turbines
+                renewable_plant_cost['wind']['size_mw']=wind_size_mw
 
             # Apply storage multiplier
             hydrogen_storage_capacity_kg = hydrogen_storage_capacity_kg*storage_capacity_multiplier
@@ -588,11 +598,19 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             grid_prices_interpolated_USDperkwh = grid_price_interpolation(grid_prices,site_name,atb_year,useful_life,'kWh')
 
 
-            h2_solution,h2_summary,h2_price_breakdown,lcoh_breakdown,electrolyzer_installed_cost_kw,elec_cf,ren_frac,electrolyzer_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,h2_production_capex = run_profast_for_hydrogen. run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
-                                            electrolyzer_capex_kw,time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,\
-                                            desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
-                                            grid_connection_scenario, atb_year, site_name, policy_option,policy,electrical_generation_timeseries, combined_pv_wind_power_production_hopp,combined_pv_wind_curtailment_hopp,\
-                                            energy_shortfall_hopp,elec_price, grid_prices_interpolated_USDperkwh,grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC)
+            # h2_solution,h2_summary,h2_price_breakdown,lcoh_breakdown,electrolyzer_installed_cost_kw,elec_cf,ren_frac,electrolyzer_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,h2_production_capex = run_profast_for_hydrogen. run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
+            #                                 electrolyzer_capex_kw,time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,\
+            #                                 desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
+            #                                 grid_connection_scenario, atb_year, site_name, policy_option,policy,electrical_generation_timeseries, combined_pv_wind_power_production_hopp,combined_pv_wind_curtailment_hopp,\
+            #                                 energy_shortfall_hopp,elec_price, grid_prices_interpolated_USDperkwh,grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC)
+
+            h2_solution,h2_summary,profast_h2_price_breakdown,lcoh_breakdown,electrolyzer_installed_cost_kw,elec_cf,ren_frac,electrolysis_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,h2_production_capex,\
+                                    hydrogen_storage_cost_USDprkg,hydrogen_storage_duration_hr,hydrogen_storage_capacity_kg,electrolyzer_size_mw = run_profast_for_hydrogen. run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
+                                    electrolyzer_capex_kw,time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,storage_compressor_total_capacity_kW,storage_compressor_total_installed_cost_USD,hydrogen_storage_duration_hr,\
+                                    desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
+                                    grid_connection_scenario,atb_year, site_name, policy_option, policy,electrical_generation_timeseries, combined_pv_wind_storage_power_production_hopp,combined_pv_wind_curtailment_hopp,\
+                                    energy_shortfall_hopp,elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC,gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector)
+
 
             lcoh_init = h2_solution['price']
             if save_param_sweep_summary:

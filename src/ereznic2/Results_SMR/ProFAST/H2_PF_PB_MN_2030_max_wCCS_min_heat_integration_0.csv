@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,2.7476313422928804e-06
 12,Financing cash outflow,Hydrogen Storage,0.00037359900373599005
-13,Operating Expenses,Cash on hand reserve,0.004366408786371638
+13,Operating Expenses,Cash on hand reserve,0.003828373768436435
 14,Financing cash outflow,Compression,0.0054414003044140034
 15,Operating Expenses,Water Charges,0.029099999999999994
 16,Operating Expenses,SMR VOM Cost,0.041499999999999995
-17,Financing cash outflow,Income taxes payable,0.052902144316464686
-18,Operating Expenses,SMR Electricity Cost,0.11184809792195
+17,Financing cash outflow,Income taxes payable,0.05600314424469269
+18,Operating Expenses,SMR Electricity Cost,0.11184809792465752
 19,Financing cash outflow,Repayment of debt,0.11627170219685458
 20,Financing cash outflow,Interest expense,0.19203631996726234
 21,Financing cash outflow,SMR Plant Cost,0.2965518031623389
 22,Operating Expenses,SMR FOM Cost,0.3558621637948067
-23,Financing cash outflow,Dividends paid,0.5858857404604233
-24,Operating Expenses,SMR NG Cost,0.762350336
+23,Operating Expenses,SMR NG Cost,0.5634250666
+24,Financing cash outflow,Dividends paid,0.592507299669854
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,2.7476313422928804e-06
-30,Operating Revenue,Cash on hand recovery,0.004366408786371639
+30,Operating Revenue,Cash on hand recovery,0.0038283737684364346
 31,Financing cash inflow,Inflow of debt,0.11627170219685458
-32,Financing cash inflow,Inflow of equity,0.3028892400078595
-33,Financing cash inflow,Monetized tax losses,0.31577595810160264
-34,Operating Revenue,Hydrogen sales,1.8151864068219337
+32,Financing cash inflow,Inflow of equity,0.30292197760799394
+33,Financing cash inflow,Monetized tax losses,0.316593140790088
+34,Operating Revenue,Hydrogen sales,1.6251337762736804

@@ -21,11 +21,12 @@ import sys
 #mat_n_heat_integration = 1
 
 def run_profast_for_steel(plant_capacity_mtpy,plant_capacity_factor,\
-    plant_life,levelized_cost_of_hydrogen,electricity_cost, grid_prices_interpolated_USDperMWh,natural_gas_cost,\
+    plant_life,levelized_cost_of_hydrogen,electricity_cost, grid_prices_interpolated_USDperMWh,naturalgas_prices_dict,\
         lime_unitcost,
         carbon_unitcost,
         iron_ore_pellet_unitcost,
-        o2_heat_integration):
+        o2_heat_integration,
+        operational_year):
 
 # # Steel plant capacity in metric tonnes per year (eventually import to function)
     # plant_capacity_mtpy = 1162077
@@ -122,7 +123,7 @@ def run_profast_for_steel(plant_capacity_mtpy,plant_capacity_factor,\
     waste_disposal_onemonth = plant_capacity_mtpy*slag_disposal_unitcost*slag_production/12
     
     one_month_energy_cost_25percent = 0.25*plant_capacity_mtpy*(hydrogen_consumption*levelized_cost_of_hydrogen*1000\
-                                    + natural_gas_consumption*natural_gas_cost/1.05505585\
+                                    + natural_gas_consumption*naturalgas_prices_dict[operational_year]\
                                     + electricity_consumption*electricity_cost)/12
     two_percent_tpc = 0.02*total_plant_cost
     
@@ -209,7 +210,7 @@ def run_profast_for_steel(plant_capacity_mtpy,plant_capacity_factor,\
     pf.add_feedstock(name='Carbon',usage=carbon_consumption,unit='metric tonnes of carbon per metric tonne of steel',cost=carbon_unitcost,escalation=gen_inflation)
     pf.add_feedstock(name='Iron Ore',usage=iron_ore_consumption,unit='metric tonnes of iron ore per metric tonne of steel',cost=iron_ore_pellet_unitcost,escalation=gen_inflation)
     pf.add_feedstock(name='Hydrogen',usage=hydrogen_consumption,unit='metric tonnes of hydrogen per metric tonne of steel',cost=levelized_cost_of_hydrogen*1000,escalation=gen_inflation)
-    pf.add_feedstock(name='Natural Gas',usage=natural_gas_consumption,unit='GJ-LHV per metric tonne of steel',cost=natural_gas_cost/1.05505585,escalation=gen_inflation)
+    pf.add_feedstock(name='Natural Gas',usage=natural_gas_consumption,unit='GJ-LHV per metric tonne of steel',cost=naturalgas_prices_dict,escalation=gen_inflation)
     pf.add_feedstock(name='Electricity',usage=electricity_consumption,unit='MWh per metric tonne of steel',cost=grid_prices_interpolated_USDperMWh,escalation=gen_inflation)
     pf.add_feedstock(name='Slag Disposal',usage=slag_production,unit='metric tonnes of slag per metric tonne of steel',cost=slag_disposal_unitcost,escalation=gen_inflation)
 

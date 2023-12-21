@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 # sys.path.insert(1,sys.path[0] + '/ProFAST-main/') #ESG
 import ProFAST
+import run_RODeO
 
 from hopp.to_organize.H2_Analysis import LCA_single_scenario_ProFAST
 
@@ -20,10 +21,11 @@ pf = ProFAST.ProFAST()
 
 
 def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
-                            electrolyzer_system_capex_kw,user_defined_time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,\
+                            electrolyzer_system_capex_kw,user_defined_time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,storage_compressor_total_capacity_kW,storage_compressor_total_installed_cost_USD,hydrogen_storage_duration_hr,\
                             capex_desal,opex_desal,plant_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost_info,wind_om_cost_kw,hybrid_plant,\
                             grid_connection_scenario, atb_year, site_name, policy_option, policy, energy_to_electrolyzer, combined_pv_wind_power_production_hopp,combined_pv_wind_curtailment_hopp,\
-                            energy_shortfall_hopp, elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC): 
+                            energy_shortfall_hopp, elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC,\
+                            gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector): 
     # mwh_to_kwh = 0.001
     # plant_life=useful_life
     # electrolyzer_system_capex_kw = electrolyzer_capex_kw
@@ -73,7 +75,7 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     # Calculate capital costs
     capex_electrolyzer_overnight = electrolyzer_total_installed_capex + electrolyzer_indirect_cost
     capex_storage_installed = hydrogen_storage_capacity_kg*hydrogen_storage_cost_USDprkg
-    capex_compressor_installed = compressor_capex_USDprkWe_of_electrolysis*electrolyzer_size_mw*1000
+    capex_compressor_installed = storage_compressor_total_installed_cost_USD#compressor_capex_USDprkWe_of_electrolysis*electrolyzer_size_mw*1000
     #capex_hybrid_installed = hybrid_plant.grid.total_installed_cost
     # capex_hybrid_installed = revised_renewable_cost
 
@@ -202,6 +204,7 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
         capex_wind_installed_init=0
         wind_revised_cost = 0
         wind_om_cost_kW = 0
+        fixed_cost_wind = 0
         fixed_cost_solar=0
         capex_solar_installed=0
         capex_battery_installed=0
@@ -365,6 +368,9 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     nominal_interest_combined = (real_interest_combined+1)*(1+gen_inflation)-1
    # total_income_tax_rate = 
 
+
+
+
     pf = ProFAST.ProFAST('blank')
 
     # Fill these in - can have most of them as 0 also
@@ -380,6 +386,51 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     life_average_cf = H2_Results['Performance Schedules']['Capacity Factor [-]'].mean()
     total_variable_OM_perkg = dict(zip(year_keys,annual_variable_OM_perkg))
     # elec_cf = np.mean(cf_per_year_vals)
+
+    if run_RODeO_selector == True:
+        rodeo_scenario,lcoh_rodeo,electrolyzer_capacity_factor_rodeo,hydrogen_storage_duration_hr_rodeo,hydrogen_storage_capacity_kg_rodeo,\
+                hydrogen_annual_production_rodeo,water_consumption_hourly,RODeO_summary_results_dict,hydrogen_hourly_inputs_RODeO,hydrogen_hourly_results_RODeO,\
+                electrical_generation_timeseries,electrolyzer_installed_cost_kw_rodeo,hydrogen_storage_cost_USDprkg_rodeo\
+                = run_RODeO.run_RODeO(atb_year,site_name,policy_option,policy,wind_size_mw,solar_size_mw,electrolyzer_size_mw,\
+                        energy_to_electrolyzer,electrolyzer_energy_kWh_per_kg,hybrid_plant,capex_wind_installed,capex_solar_installed,capex_battery_installed,\
+                        capex_electrolyzer_overnight,capex_compressor_installed,capex_storage_installed,capex_desal,fixed_cost_electrolysis_total,opex_desal,\
+                        fixed_cost_wind,fixed_cost_solar,fixed_cost_battery,plant_life,grid_connection_scenario,grid_price_scenario,\
+                        gams_locations_rodeo_version,rodeo_output_dir,water_cost,np.average(elec_efficiency_per_yr_kWhprkg),gen_inflation,property_tax_insurance,total_income_tax_rate_combined,capitalgains_tax_rate_combined,\
+                            nominal_roe_combined,debt_equity_ratio_combined,nominal_interest_combined)
+
+
+        # Scale all costs based on RODeO's annual H2 production. RODeO scales total demand while maintaining the overall
+        # demand profile shape. This can mean reducing the annual average hydrogen production by reducing capacity factor.
+        # If this happens, you need to then scale up the capacity of the electrolyzer and any on-site renewables to make sure
+        # demand is met.
+        capacity_scale_ratio = np.max(h2prod_per_year_kgpryr)/hydrogen_annual_production_rodeo
+        electrolysis_plant_capacity_kgperday = electrolysis_plant_capacity_kgperday*capacity_scale_ratio
+        capex_storage_installed = capex_storage_installed*capacity_scale_ratio
+        capex_electrolyzer_overnight = capex_electrolyzer_overnight*capacity_scale_ratio
+        capex_compressor_installed = capex_compressor_installed*capacity_scale_ratio
+        capex_desal = capex_desal*capacity_scale_ratio
+        capex_wind_installed = capex_wind_installed*capacity_scale_ratio
+        capex_solar_installed = capex_solar_installed*capacity_scale_ratio
+        capex_battery_installed = capex_battery_installed*capacity_scale_ratio
+        fixed_cost_electrolysis_total = fixed_cost_electrolysis_total*capacity_scale_ratio
+        opex_desal = opex_desal*capacity_scale_ratio
+        fixed_cost_wind = fixed_cost_wind*capacity_scale_ratio
+        fixed_cost_solar = fixed_cost_solar*capacity_scale_ratio
+        fixed_cost_battery = fixed_cost_battery*capacity_scale_ratio
+        hydrogen_storage_cost_USDprkg = hydrogen_storage_cost_USDprkg_rodeo
+        capex_storage_installed = hydrogen_storage_capacity_kg_rodeo*hydrogen_storage_cost_USDprkg_rodeo*capacity_scale_ratio
+        electrolyzer_size_mw = electrolyzer_size_mw*capacity_scale_ratio
+        hydrogen_storage_duration_hr = hydrogen_storage_duration_hr_rodeo
+        hydrogen_storage_capacity_kg = hydrogen_storage_capacity_kg_rodeo
+
+        # Switch electrolyzer capacity factor to that optimized by RODeO
+        elec_cf_per_year_PF = electrolyzer_capacity_factor_rodeo
+        life_average_cf = electrolyzer_capacity_factor_rodeo
+
+
+        hydrogen_hourly_results_RODeO['Total scaled hourly costs ($)'] = hydrogen_hourly_inputs_RODeO['Elec Purchase ($/MWh)']*hydrogen_hourly_results_RODeO['Input Power (MW)']*capacity_scale_ratio
+        average_electricity_cost_per_kg = sum(hydrogen_hourly_results_RODeO['Total scaled hourly costs ($)'])/np.max(h2prod_per_year_kgpryr)
+        grid_prices_interpolated_USDperkg = average_electricity_cost_per_kg
 
     pf.set_params('commodity',{"name":'Hydrogen',"unit":"kg","initial price":100,"escalation":gen_inflation})
     pf.set_params('capacity',electrolysis_plant_capacity_kgperday) #units/day
@@ -575,4 +626,5 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     price_breakdown = price_breakdown.drop(columns=['index','Amount'])
    
     # return(sol,summary,price_breakdown,lcoh_breakdown,capex_electrolyzer_overnight/electrolyzer_size_mw/1000,elec_cf,ren_frac,electrolysis_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,total_capex)
-    return(sol,summary,price_breakdown,lcoh_breakdown,capex_electrolyzer_overnight/electrolyzer_size_mw/1000,life_average_cf,ren_frac,electrolysis_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,total_capex)
+    return(sol,summary,price_breakdown,lcoh_breakdown,capex_electrolyzer_overnight/electrolyzer_size_mw/1000,life_average_cf,ren_frac,electrolysis_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,total_capex,\
+           hydrogen_storage_cost_USDprkg,hydrogen_storage_duration_hr,hydrogen_storage_capacity_kg,electrolyzer_size_mw)

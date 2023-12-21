@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,1.3402093654148832e-06
 12,Financing cash outflow,Hydrogen Storage,3.2378580323785805e-05
-13,Operating Expenses,Cash on hand reserve,0.003544910782971115
+13,Operating Expenses,Cash on hand reserve,0.0027362309289642025
 14,Financing cash outflow,Compression,0.0054414003044140034
 15,Operating Expenses,Water Charges,0.040900000000000006
 16,Operating Expenses,SMR VOM Cost,0.041499999999999995
 17,Financing cash outflow,Repayment of debt,0.04291537780880418
-18,Operating Expenses,SMR Electricity Cost,0.0445519824832
+18,Operating Expenses,SMR Electricity Cost,0.04455198248270709
 19,Financing cash outflow,Interest expense,0.07087976755044374
-20,Financing cash outflow,Income taxes payable,0.07744483150765445
+20,Financing cash outflow,Income taxes payable,0.07679111334560168
 21,Financing cash outflow,SMR Plant Cost,0.10612816214563145
 22,Operating Expenses,SMR FOM Cost,0.12735379457475773
-23,Financing cash outflow,Dividends paid,0.29961275701860474
-24,Operating Expenses,SMR NG Cost,0.8523500479999999
+23,Financing cash outflow,Dividends paid,0.2993011125895414
+24,Operating Expenses,SMR NG Cost,0.5436441013
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,1.3402093654148832e-06
-30,Operating Revenue,Cash on hand recovery,0.0035449107829711155
-31,Financing cash inflow,Monetized tax losses,0.009470937465956493
+30,Operating Revenue,Cash on hand recovery,0.0027362309289642025
+31,Financing cash inflow,Monetized tax losses,0.009141132818837765
 32,Financing cash inflow,Inflow of debt,0.04291537780880418
-33,Financing cash inflow,Inflow of equity,0.1035078086294638
-34,Operating Revenue,Hydrogen sales,1.5532163760696096
+33,Financing cash inflow,Inflow of equity,0.10413065594939033
+34,Operating Revenue,Hydrogen sales,1.243252024105193

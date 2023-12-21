@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,3.573891641106355e-06
 12,Financing cash outflow,Hydrogen Storage,3.2378580323785805e-05
-13,Operating Expenses,Cash on hand reserve,0.004196673179428807
+13,Operating Expenses,Cash on hand reserve,0.002844338489505498
 14,Financing cash outflow,Compression,0.0054414003044140034
 15,Operating Expenses,SMR VOM Cost,0.041499999999999995
 16,Financing cash outflow,Repayment of debt,0.042916236738019364
 17,Operating Expenses,Water Charges,0.045
-18,Operating Expenses,SMR Electricity Cost,0.05348046604501333
+18,Operating Expenses,SMR Electricity Cost,0.05348046604809742
 19,Financing cash outflow,Interest expense,0.07088118617253733
-20,Financing cash outflow,Income taxes payable,0.07812139543626832
+20,Financing cash outflow,Income taxes payable,0.08006961398861306
 21,Financing cash outflow,SMR Plant Cost,0.10612816214563145
 22,Operating Expenses,SMR FOM Cost,0.12735379457475773
-23,Financing cash outflow,Dividends paid,0.30052252389732714
-24,Operating Expenses,SMR NG Cost,1.0779973600000003
+23,Financing cash outflow,Dividends paid,0.30533671692920095
+24,Operating Expenses,SMR NG Cost,0.5828250122666667
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,3.573891641106355e-06
-30,Operating Revenue,Cash on hand recovery,0.004196673179428807
-31,Financing cash inflow,Monetized tax losses,0.009597183114814736
+30,Operating Revenue,Cash on hand recovery,0.002844338489505498
+31,Financing cash inflow,Monetized tax losses,0.010246226464666604
 32,Financing cash inflow,Inflow of debt,0.042916236738019364
-33,Financing cash inflow,Inflow of equity,0.10282990513310258
-34,Operating Revenue,Hydrogen sales,1.794031578908356
+33,Financing cash inflow,Inflow of equity,0.10389597265848363
+34,Operating Revenue,Hydrogen sales,1.3039065318870924

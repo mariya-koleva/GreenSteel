@@ -14,11 +14,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 warnings.simplefilter("ignore",UserWarning)
 
-Scenario1 = 'Green_steel_ammonia_electrolysis'
-#Scenario1 = 'Green_steel_ammonia_smr'
+#Scenario1 = 'Green_steel_ammonia_electrolysis'
+Scenario1 = 'Green_steel_ammonia_smr'
 
-dir0 = 'Results_sensitivity\\Fin_sum\\' 
-#dir0 = 'Results_SMR\\Fin_sum\\'
+#dir0 = 'Results_sensitivity\\Fin_sum\\' 
+dir0 = 'Results_SMR\\Fin_sum\\'
 #dir0 = 'examples\\H2_Analysis\\Phase1B\\Fin_sum_sens\\' 
 #dir0 = 'examples\\H2_Analysis\\Phase1B\\Fin_sum_mid\\' 
 #dir0 = 'examples\\H2_Analysis\\Financial_summary_TX_2020_revised_EC_costs_dist_sensitivity\\' 
@@ -130,7 +130,8 @@ if 1==1:            # This section captures the summary files
         # Creating Summary Table header
         #files2load_summary_data = pd.read_csv(dir0+files2load_summary[i0+1],sep=',',header=0,names=['Data'],skiprows=[0,1]).T
         files2load_summary_data = pd.read_csv(dir0+files2load_summary[i0+1],sep=',',header=0,names=['Data']).T
-        files2load_summary_data = files2load_summary_data.drop(['Fraction of electricity from renewables (-)'],axis=1)
+        if Scenario1 == 'Green_steel_ammonia_electrolysis':
+            files2load_summary_data = files2load_summary_data.drop(['Fraction of electricity from renewables (-)'],axis=1)
         files2load_summary_data = files2load_summary_data.astype(float)
         # if files2load_summary_data['output to input ratio'].values==['         +INF']:
         #     files2load_summary_data['output to input ratio'] = 0

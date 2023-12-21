@@ -65,7 +65,8 @@ def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life
     H2_cost_in_startup_year = levelized_cost_of_hydrogen * H2_consumption\
          * plant_capacity_kgpy * plant_capacity_factor
     
-    electricity_usage = 0.530645243/1000 # mWh/kg_NH3
+    #electricity_usage = 0.530645243/1000 # mWh/kg_NH3
+    electricity_usage =  0.1207/1000 # MWh/kg_NH3
     energy_cost_in_startup_year = electricity_cost * electricity_usage\
         * plant_capacity_kgpy * plant_capacity_factor # 
     

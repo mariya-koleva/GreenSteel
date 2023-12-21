@@ -1,4 +1,5 @@
 # extra function in the osw_h2 file
+import math
 from math import floor
 import numpy as np
 import pandas as pd
@@ -259,7 +260,7 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
 
         # Calculate power electronics cost savings and correct total electrolyzer system capex accordingly
         if direct_coupling:
-            power_electronics_savings = component_costs_distributed['Power Electronics'] * 0.3
+            power_electronics_savings = 0.0 #component_costs_distributed['Power Electronics'] * 0.3
         else:
             power_electronics_savings = 0.0
         electrolyzer_capex_kw = electrolyzer_capex_kw - power_electronics_savings
@@ -1750,6 +1751,11 @@ def write_outputs_ProFAST(electrical_generation_timeseries,
     # EC cost case string
     electrolyzer_cost_case_string = 'EC-cost-'+electrolyzer_cost_case
 
+    if run_RODeO_selector == True:
+        h2_model_string = 'rodeo'
+    else:
+        h2_model_string = 'hopp'
+
     # Retrieve capital costs
     h2_transmission_capex = hopp_dict.main_dict['Models']['levelized_cost_of_h2_transmission']['output_dict']['H2 transmission capex']
     steel_total_capex = hopp_dict.main_dict['Models']['steel_LCOS']['output_dict']['steel_plant_capex']
@@ -1840,19 +1846,19 @@ def write_outputs_ProFAST(electrical_generation_timeseries,
     ammonia_price_breakdown_df = pd.DataFrame.from_dict(ammonia_price_breakdown,orient='index')
     financial_summary_df = pd.concat([financial_summary_df,steel_price_breakdown_df,ammonia_price_breakdown_df])
 
-    financial_summary_df.to_csv(os.path.join(fin_sum_dir, 'Fin_sum_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string)))
+    financial_summary_df.to_csv(os.path.join(fin_sum_dir, 'Fin_sum_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string,h2_model_string)))
 
     # energy dataframe
     df_energy = pd.DataFrame.from_dict(hopp_dict.main_dict["Models"]["grid"]["ouput_dict"])
     df_energy.drop(columns=["cost_to_buy_from_grid", "profit_from_selling_to_grid"], inplace=True)
     df_energy = df_energy.rename(columns={'energy_to_electrolyzer':'Energy to electrolyzer (kWh)','energy_from_the_grid':'Energy from grid (kWh)','energy_from_renewables':'Energy from renewables (kWh)','total_energy':'Total energy (kWh)'})
     df_energy['Hydrogen Hourly production (kg)'] = pd.DataFrame(H2_Results['hydrogen_hourly_production'])
-    df_energy.to_csv(os.path.join(energy_profile_dir, 'Energy_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string)))
+    df_energy.to_csv(os.path.join(energy_profile_dir, 'Energy_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string,h2_model_string)))
 
     # Write profast price breakdowns to file
-    profast_h2_price_breakdown.to_csv(os.path.join(price_breakdown_dir, 'H2_PF_PB_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string)))
-    profast_steel_price_breakdown.to_csv(os.path.join(price_breakdown_dir, 'Stl_PF_PB_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string)))
-    profast_ammonia_price_breakdown.to_csv(os.path.join(price_breakdown_dir, 'NH3_PF_PB_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string)))
+    profast_h2_price_breakdown.to_csv(os.path.join(price_breakdown_dir, 'H2_PF_PB_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string,h2_model_string)))
+    profast_steel_price_breakdown.to_csv(os.path.join(price_breakdown_dir, 'Stl_PF_PB_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string,h2_model_string)))
+    profast_ammonia_price_breakdown.to_csv(os.path.join(price_breakdown_dir, 'NH3_PF_PB_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}.csv'.format(site_name,atb_year,turbine_model,electrolysis_scale,electrolyzer_cost_case_string,policy_option,grid_string,renbat_string,windmodel_string,deg_string,stack_op_string,cluster_string,storage_mult_string,h2_model_string)))
 
 
     return policy_option,turbine_model,scenario['Useful Life'], wind_cost_kw, solar_cost_kw,\
@@ -1961,7 +1967,7 @@ def steel_LCOS(
     steel_annual_production_rate_target_tpy,
     lime_unitcost,
     carbon_unitcost,
-    iron_ore_pellet_unitcost,o2_heat_integration,atb_year,site_name,grid_price_filename
+    iron_ore_pellet_unitcost,o2_heat_integration,atb_year,site_name,grid_price_filename,electrolyzer_cost_case
 ):
     if hopp_dict.save_model_input_yaml:
         input_dict = {
@@ -2001,7 +2007,25 @@ def steel_LCOS(
     max_steel_production_capacity_mtpy = min(steel_annual_production_rate_target_tpy/steel_capacity_factor,hydrogen_annual_production/1000/hydrogen_consumption_for_steel)
 
     # Should connect these to something (AEO, Cambium, etc.)
-    natural_gas_cost = 4                        # $/MMBTU
+    if electrolyzer_cost_case == 'Mid':
+        ngprice_filename = 'ngprices_base.csv'
+    elif electrolyzer_cost_case == 'High':
+        ngprice_filename = 'ngprices_max.csv'
+    elif electrolyzer_cost_case == 'Low':
+        ngprice_filename = 'ngprices_min.csv'
+    
+    naturalgas_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis",ngprice_filename),index_col = None,header = 0,usecols=['Year',site_name])
+    naturalgas_prices = naturalgas_prices.set_index('Year')
+
+    operational_year = atb_year + 5
+    EOL_year = operational_year + steel_plant_life
+
+    # Put natural gas prices into a dictionary and convert to $/GJ
+    naturalgas_prices_dict = {}
+    for year in range(operational_year,EOL_year):
+        naturalgas_prices_dict[year]=naturalgas_prices.loc[year,site_name]*1000
+
+    #natural_gas_cost = 4                        # $/MMBTU
 
      # Specify grid cost year for ATB year
     if atb_year == 2020:
@@ -2029,10 +2053,10 @@ def steel_LCOS(
     steel_economics_from_profast,steel_economics_summary,profast_steel_price_breakdown,steel_annual_capacity,steel_price_breakdown,steel_plant_capex=\
         run_profast_for_steel(max_steel_production_capacity_mtpy,\
             steel_capacity_factor,steel_plant_life,levelized_cost_hydrogen,\
-            elec_price,grid_prices_interpolated_USDperMWh,natural_gas_cost,lime_unitcost,
+            elec_price,grid_prices_interpolated_USDperMWh,naturalgas_prices_dict,lime_unitcost,
                 carbon_unitcost,
                 iron_ore_pellet_unitcost,
-                o2_heat_integration)
+                o2_heat_integration,operational_year)
 
     steel_breakeven_price = steel_economics_from_profast.get('price')
 
@@ -2060,7 +2084,7 @@ def steel_LCOS_SMR(
     hydrogen_annual_production,
     lime_unitcost,
     carbon_unitcost,
-    iron_ore_pellet_unitcost, lcoe, policy_option, natural_gas_cost, o2_heat_integration, atb_year, site_name, grid_price_filename
+    iron_ore_pellet_unitcost, lcoe, policy_option, NG_price_case, o2_heat_integration, atb_year, site_name, grid_price_filename
 ):
     # if hopp_dict.save_model_input_yaml:
     #     input_dict = {
@@ -2097,6 +2121,25 @@ def steel_LCOS_SMR(
     steel_plant_life = 30
 
     # Should connect these to something (AEO, Cambium, etc.)
+    if NG_price_case == 'default':
+        ngprice_filename = 'ngprices_base.csv'
+    elif NG_price_case == 'max':
+        ngprice_filename = 'ngprices_max.csv'
+    elif NG_price_case == 'min':
+        ngprice_filename = 'ngprices_min.csv'
+    
+    naturalgas_prices = pd.read_csv(os.path.join("H2_Analysis",ngprice_filename),index_col = None,header = 0,usecols=['Year',site_name])
+    naturalgas_prices = naturalgas_prices.set_index('Year')
+
+    operational_year = atb_year + 5
+    EOL_year = operational_year + steel_plant_life
+
+    # Put natural gas prices into a dictionary and convert to $/GJ
+    naturalgas_prices_dict = {}
+    for year in range(operational_year,EOL_year):
+        naturalgas_prices_dict[year]=naturalgas_prices.loc[year,site_name]*1000
+
+    # Should connect these to something (AEO, Cambium, etc.)
     #electricity_cost = lcoe                    # $/MWh
      # Specify grid cost year for ATB year
     if atb_year == 2020:
@@ -2121,9 +2164,9 @@ def steel_LCOS_SMR(
     steel_economics_from_profast,steel_economics_summary,profast_steel_price_breakdown,steel_annual_capacity,steel_price_breakdown,steel_plant_capex=\
         run_profast_for_steel(max_steel_production_capacity_mtpy,\
             steel_capacity_factor,steel_plant_life,levelized_cost_hydrogen,\
-            elec_price,grid_prices_interpolated_USDperMWh,natural_gas_cost,lime_unitcost,
+            elec_price,grid_prices_interpolated_USDperMWh,naturalgas_prices_dict,lime_unitcost,
                 carbon_unitcost,
-                iron_ore_pellet_unitcost, o2_heat_integration)
+                iron_ore_pellet_unitcost, o2_heat_integration,operational_year)
 
     steel_breakeven_price = steel_economics_from_profast.get('price')
 
@@ -2536,23 +2579,51 @@ def policy_implementation_for_RODeO(grid_connection_scenario,atb_year,site_name,
     lcoh = lcoh - lcoh_reduction_Ren_PTC - lcoh_reduction_H2_PTC
     return(lcoh,lcoh_reduction_Ren_PTC,lcoh_reduction_H2_PTC)
 
-def hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage_type):
+def hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage_type,hydrogen_demand_kgphr):
 
-    hydrogen_average_output_kgprhr = np.mean(H2_Results['hydrogen_hourly_production'])
-    hydrogen_surplus_deficit = H2_Results['hydrogen_hourly_production'] - hydrogen_average_output_kgprhr
+    # hydrogen_average_output_kgprhr = np.mean(H2_Results['hydrogen_hourly_production'])
+    # hydrogen_surplus_deficit = H2_Results['hydrogen_hourly_production'] - hydrogen_average_output_kgprhr
+
+    hydrogen_production_kgphr = H2_Results['hydrogen_hourly_production']
+
+    hydrogen_demand_kgphr = max(hydrogen_demand_kgphr,np.mean(hydrogen_production_kgphr))
+
+    # hydrogen_storage_soc_1 = []
+    # for j in range(len(hydrogen_surplus_deficit)):
+    #     if j == 0:
+    #         hydrogen_storage_soc_1.append(hydrogen_surplus_deficit[j])
+    #     else:
+    #         hydrogen_storage_soc_1.append(hydrogen_storage_soc_1[j-1]+hydrogen_surplus_deficit[j])
+
 
     hydrogen_storage_soc = []
-    for j in range(len(hydrogen_surplus_deficit)):
-        if j == 0:
-            hydrogen_storage_soc.append(hydrogen_surplus_deficit[j])
+    for j in range(len(hydrogen_production_kgphr)):
+        if j==0:
+            hydrogen_storage_soc.append(hydrogen_production_kgphr[j]-hydrogen_demand_kgphr)
         else:
-            hydrogen_storage_soc.append(hydrogen_storage_soc[j-1]+hydrogen_surplus_deficit[j])
+            hydrogen_storage_soc.append(hydrogen_storage_soc[j-1]+hydrogen_production_kgphr[j]-hydrogen_demand_kgphr)
 
     hydrogen_storage_capacity_kg = np.max(hydrogen_storage_soc) - np.min(hydrogen_storage_soc)
     h2_LHV = 119.96
     h2_HHV = 141.88
     hydrogen_storage_capacity_MWh_LHV = hydrogen_storage_capacity_kg*h2_LHV/3600
     hydrogen_storage_capacity_MWh_HHV = hydrogen_storage_capacity_kg*h2_HHV/3600
+
+    # Get max injection/withdrawal rate
+    hydrogen_injection_withdrawal_rate = []
+    for j in range(len(hydrogen_production_kgphr)):
+        hydrogen_injection_withdrawal_rate.append(hydrogen_production_kgphr[j]-hydrogen_demand_kgphr)
+    max_h2_injection_rate_kgphr = max(hydrogen_injection_withdrawal_rate)
+
+    # Get storage compressor capacity and cost
+    compressor_total_capacity_kW = max_h2_injection_rate_kgphr/3600/2.0158*8641.678424
+
+    compressor_max_capacity_kw = 16000
+    n_comps = math.ceil(compressor_total_capacity_kW/compressor_max_capacity_kw)
+
+    compressor_avg_capacity_kw = compressor_total_capacity_kW/n_comps
+
+    compressor_total_installed_cost_USD = 2*n_comps*(6893.2*compressor_avg_capacity_kw**0.7464)*1.16/1.12*607.5/541.7
 
     # Get average electrolyzer efficiency
     electrolyzer_efficiency_while_running = []
@@ -2610,6 +2681,9 @@ def hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage
                 + str(hydrogen_storage_capacity_kg/1000) + ' metric tonnes. \nStorage cost: ' + str(storage_cost_USDprkg) + ' $/kg'
     if hydrogen_storage_capacity_MWh_HHV==0:
         storage_cost_USDprkg=0
-    return(hydrogen_average_output_kgprhr,hydrogen_storage_capacity_kg,hydrogen_storage_capacity_MWh_HHV,hydrogen_storage_duration_hr,storage_cost_USDprkg,status_message)
+
+
+    
+    return(hydrogen_demand_kgphr,hydrogen_storage_capacity_kg,hydrogen_storage_capacity_MWh_HHV,hydrogen_storage_duration_hr,storage_cost_USDprkg,compressor_total_capacity_kW,compressor_total_installed_cost_USD,status_message)
 
 

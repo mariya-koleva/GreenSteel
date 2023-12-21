@@ -17,8 +17,8 @@ from grid_price_profiles import grid_price_interpolation
 dir1 = os.getcwd()
 dirin_el_prices = 'H2_Analysis/'
 el_prices_files = glob.glob(os.path.join(dir1 + dirin_el_prices, 'annual_average_retail_prices.csv'))
-NG_costs_csv = pd.read_csv(dir1 + '\\H2_Analysis\\' + 'Green_steel_regional_NG_prices.csv', header=0,index_col=0) #2020$
-NG_costs_csv = pd.DataFrame(NG_costs_csv, columns = ['Default','Min','Max'],index = ['Indiana',"Texas","Iowa","Mississippi","Minnesota"])
+#NG_costs_csv = pd.read_csv(dir1 + '\\H2_Analysis\\' + 'Green_steel_regional_NG_prices.csv', header=0,index_col=0) #2020$
+#NG_costs_csv = pd.DataFrame(NG_costs_csv, columns = ['Default','Min','Max'],index = ['Indiana',"Texas","Iowa","Mississippi","Minnesota"])
 dircambium = 'H2_Analysis/Cambium_data/Cambium22_MidCase100by2035_hourly_' 
 
 def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG_price_case,CCS_option,grid_price_filename):
@@ -34,7 +34,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     # #["IN","TX","IA","MS"]
     # NG_price_case = 'default'
     # #['default','min','max']
-    NG_cost = 0.00536 # $2019/MJ 
+   #NG_cost = 0.00536 # $2019/MJ 
     
     # Conversions
     #------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
         #owners_n_catalyst_cost = 0.174 * total_plant_cost # Percentage from NETL report
         #total_plant_cost = total_plant_cost + owners_n_catalyst_cost #overnight cost
         energy_demand_NG = 0.51 # 2.01-1.50 # kWh/kgH2
-        NG_consumption = 176 # MJ/kgH2 XXX Using same value as SMR only case for now as a placeholder
+        NG_consumption = 177 # MJ/kgH2 XXX Using same value as SMR only case for now as a placeholder
         total_energy_demand = energy_demand_process_ccs + energy_demand_NG 
         CO2_captured = capacity_factor * h2_plant_capacity_kgpy * ccs_perc_capture * CO2_per_H2/1000 #tonnes CO2 per year
 
@@ -129,7 +129,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
         #owners_n_catalyst_cost = 0.174 * total_plant_cost # Percentage from NETL report
         #total_plant_cost = total_plant_cost + owners_n_catalyst_cost #overnight cost
         energy_demand_NG = 0.51 # 0.64-0.13 kWh/kgH2
-        NG_consumption = 176 # MJ/kgH2
+        NG_consumption = 167 # MJ/kgH2
         total_energy_demand = energy_demand_process + energy_demand_NG    
         CO2_captured = 0
           
@@ -164,39 +164,58 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
         CO2_transport_capex = 27.26#2020$/tonne CO2
         CO2_storage_capex = 25.76 #2020$/tonneCO2
         
+    # Should connect these to something (AEO, Cambium, etc.)
     if NG_price_case == 'default':
-        if site_location == 'Site 1' :
-          NG_cost = NG_costs_csv.at["Indiana","Default"]  
-        elif site_location == 'Site 2':
-           NG_cost = NG_costs_csv.at["Texas","Default"]  
-        elif site_location == 'Site 3':
-            NG_cost = NG_costs_csv.at["Iowa","Default"]  
-        elif site_location == 'Site 4':
-            NG_cost = NG_costs_csv.at["Mississippi","Default"]  
-        elif site_location == 'Site 5':
-           NG_cost =  NG_costs_csv.at["Minnesota","Default"]      
-    elif NG_price_case == 'min':
-        if site_location == 'Site 1' :
-          NG_cost = NG_costs_csv.at["Indiana","Min"]  
-        elif site_location == 'Site 2':
-           NG_cost =  NG_costs_csv.at["Texas","Min"] 
-        elif site_location == 'Site 3':
-          NG_cost =   NG_costs_csv.at["Iowa","Min"]  
-        elif site_location == 'Site 4':
-           NG_cost =  NG_costs_csv.at["Mississippi","Min"] 
-        elif site_location == 'Site 5':
-           NG_cost =  NG_costs_csv.at["Minnesota","Min"]  
+        ngprice_filename = 'ngprices_base.csv'
     elif NG_price_case == 'max':
-        if site_location == 'Site 1' :
-          NG_cost = NG_costs_csv.at["Indiana","Max"] 
-        elif site_location == 'Site 2':
-            NG_cost = NG_costs_csv.at["Texas","Max"] 
-        elif site_location == 'Site 3':
-           NG_cost =  NG_costs_csv.at["Iowa","Max"]  
-        elif site_location == 'Site 4':
-            NG_cost = NG_costs_csv.at["Mississippi","Max"] 
-        elif site_location == 'Site 5':
-            NG_cost = NG_costs_csv.at["Minnesota","Max"]     
+        ngprice_filename = 'ngprices_max.csv'
+    elif NG_price_case == 'min':
+        ngprice_filename = 'ngprices_min.csv'
+    
+    naturalgas_prices = pd.read_csv(os.path.join("H2_Analysis",ngprice_filename),index_col = None,header = 0,usecols=['Year',site_name])
+    naturalgas_prices = naturalgas_prices.set_index('Year')
+
+    operational_year = atb_year + 5
+    EOL_year = operational_year + plant_life
+
+    # Put natural gas prices into a dictionary, keep in $/MJ
+    naturalgas_prices_dict = {}
+    for year in range(operational_year,EOL_year):
+        naturalgas_prices_dict[year]=naturalgas_prices.loc[year,site_name]
+
+    # if NG_price_case == 'default':
+    #     if site_location == 'Site 1' :
+    #       NG_cost = NG_costs_csv.at["Indiana","Default"]  
+    #     elif site_location == 'Site 2':
+    #        NG_cost = NG_costs_csv.at["Texas","Default"]  
+    #     elif site_location == 'Site 3':
+    #         NG_cost = NG_costs_csv.at["Iowa","Default"]  
+    #     elif site_location == 'Site 4':
+    #         NG_cost = NG_costs_csv.at["Mississippi","Default"]  
+    #     elif site_location == 'Site 5':
+    #        NG_cost =  NG_costs_csv.at["Minnesota","Default"]      
+    # elif NG_price_case == 'min':
+    #     if site_location == 'Site 1' :
+    #       NG_cost = NG_costs_csv.at["Indiana","Min"]  
+    #     elif site_location == 'Site 2':
+    #        NG_cost =  NG_costs_csv.at["Texas","Min"] 
+    #     elif site_location == 'Site 3':
+    #       NG_cost =   NG_costs_csv.at["Iowa","Min"]  
+    #     elif site_location == 'Site 4':
+    #        NG_cost =  NG_costs_csv.at["Mississippi","Min"] 
+    #     elif site_location == 'Site 5':
+    #        NG_cost =  NG_costs_csv.at["Minnesota","Min"]  
+    # elif NG_price_case == 'max':
+    #     if site_location == 'Site 1' :
+    #       NG_cost = NG_costs_csv.at["Indiana","Max"] 
+    #     elif site_location == 'Site 2':
+    #         NG_cost = NG_costs_csv.at["Texas","Max"] 
+    #     elif site_location == 'Site 3':
+    #        NG_cost =  NG_costs_csv.at["Iowa","Max"]  
+    #     elif site_location == 'Site 4':
+    #         NG_cost = NG_costs_csv.at["Mississippi","Max"] 
+    #     elif site_location == 'Site 5':
+    #         NG_cost = NG_costs_csv.at["Minnesota","Max"]     
     # Calculations
     #------------------------------------------------------------------------------
     # CAPEX
@@ -219,7 +238,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     grid_cost_pr_yr_USDprkg = grid_price_per_yr*total_energy_demand
     grid_prices_interpolated_USDperkg = dict(zip(grid_cost_keys,grid_cost_pr_yr_USDprkg))
     
-    vom_SMR_NG_perMJ = NG_cost    # $/MJ
+    #vom_SMR_NG_perMJ = naturalgas_prices_dict    # $/MJ
     #other_vom_costs = 0.08938 # $/kgH2
     other_vom_costs = 0.0415 # $/kg, from H2A
     
@@ -461,7 +480,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     #pf.add_feedstock(name='Electricity',usage=total_energy_demand,unit='kWh',cost=electricity_cost,escalation=gen_inflation)
     #pf.add_feedstock(name='Natural Gas',usage=NG_consumption,unit='MJ/kg-H2',cost=NG_cost,escalation=gen_inflation)
     pf.add_feedstock(name='Water Charges',usage=water_consumption,unit='gallons of water per kg-H2',cost=water_cost,escalation=gen_inflation)
-    pf.add_feedstock(name='SMR NG Cost',usage=NG_consumption,unit='$/MJ',cost=vom_SMR_NG_perMJ,escalation=gen_inflation)
+    pf.add_feedstock(name='SMR NG Cost',usage=NG_consumption,unit='$/MJ',cost=naturalgas_prices_dict,escalation=gen_inflation)
     pf.add_feedstock(name='SMR Electricity Cost',usage=1.0,unit='$/kg-H2',cost=grid_prices_interpolated_USDperkg,escalation=gen_inflation)
     pf.add_feedstock(name='SMR VOM Cost',usage=1.0,unit='$/kg-H2',cost=other_vom_costs,escalation=gen_inflation)
     
@@ -544,11 +563,11 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     lcoe = grid_prices_interpolated_USDperkwh
     hydrogen_storage_duration_hr = hydrogen_storage_duration
     price_breakdown_storage = price_breakdown_H2_storage
-    natural_gas_cost = NG_cost
+    #natural_gas_cost = NG_cost
 
     price_breakdown = price_breakdown.drop(columns=['index','Amount'])
 
-    return(hydrogen_annual_production, hydrogen_storage_duration_hr, levelized_cost_hydrogen, lcoh_breakdown, price_breakdown,lcoe,  plant_life, natural_gas_cost,  price_breakdown_storage,price_breakdown_compression,
+    return(hydrogen_annual_production, hydrogen_storage_duration_hr, levelized_cost_hydrogen, lcoh_breakdown, price_breakdown,lcoe,  plant_life,  price_breakdown_storage,price_breakdown_compression,
                          price_breakdown_SMR_plant,\
                          CO2_TnS_unit_cost,\
                          price_breakdown_SMR_FOM, price_breakdown_SMR_VOM,\

@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,1.3402093654148832e-06
 12,Financing cash outflow,Hydrogen Storage,0.00037359900373599005
-13,Operating Expenses,Cash on hand reserve,0.004744985443973513
+13,Operating Expenses,Cash on hand reserve,0.004021264640592291
 14,Financing cash outflow,Compression,0.0054414003044140034
 15,Operating Expenses,Water Charges,0.040900000000000006
 16,Operating Expenses,SMR VOM Cost,0.041499999999999995
-17,Financing cash outflow,Income taxes payable,0.0491111487850924
+17,Financing cash outflow,Income taxes payable,0.046814079522789515
 18,Financing cash outflow,Repayment of debt,0.11627116099371787
-19,Operating Expenses,SMR Electricity Cost,0.13301643498371
+19,Operating Expenses,SMR Electricity Cost,0.13301643498247706
 20,Financing cash outflow,Interest expense,0.19203542610696134
 21,Financing cash outflow,SMR Plant Cost,0.2965518031623389
 22,Operating Expenses,SMR FOM Cost,0.3558621637948067
-23,Financing cash outflow,Dividends paid,0.5752501109783131
-24,Operating Expenses,SMR NG Cost,0.8523500479999999
+23,Financing cash outflow,Dividends paid,0.5690332960110124
+24,Operating Expenses,SMR NG Cost,0.5701931135999999
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,1.3402093654148832e-06
-30,Operating Revenue,Cash on hand recovery,0.004744985443973512
+30,Operating Revenue,Cash on hand recovery,0.004021264640592291
 31,Financing cash inflow,Inflow of debt,0.11627116099371787
-32,Financing cash inflow,Inflow of equity,0.30303543336120675
-33,Financing cash inflow,Monetized tax losses,0.3157221578272284
-34,Operating Revenue,Hydrogen sales,1.923634543930937
+32,Financing cash inflow,Inflow of equity,0.30384134265893215
+33,Financing cash inflow,Monetized tax losses,0.31585930513618554
+34,Operating Revenue,Hydrogen sales,1.632020668693418

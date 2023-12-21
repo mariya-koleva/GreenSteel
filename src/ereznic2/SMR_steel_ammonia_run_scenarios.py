@@ -42,7 +42,12 @@ scenario = dict()
 scenario['Wind PTC'] = 0.0
 SMR_LCOH_dic = {'Year':[], 'Location':[], 'Policy': [], 'NG price case': [], 'LCOH':[], 'LCOA':[], 'LCOS':[]}
 
-atb_years = [2020,2025,2030,2035]
+atb_years = [
+            #2020,
+            2025,
+            2030,
+            2035
+            ]
     
 site_selection = [
                 'Site 1',
@@ -72,11 +77,12 @@ policy_cases = [
     # 'option 5': {'Wind ITC': 50, 'Wind PTC': 0, "H2 PTC": 3},
 #}
 
-NG_price_cases = ['default',
+NG_price_cases = [
+                  'default',
                   'min',
                   'max',
                   ]
-CCS_options = [#'wCCS',
+CCS_options = ['wCCS',
                'woCCS'
              ]
 
@@ -101,7 +107,7 @@ for atb_year in atb_years:
                         grid_price_filename = 'annual_average_retail_prices_mult.csv'
                     site_df = scenario_df[site_location]                
                     site_name = site_df['State']                
-                    hydrogen_annual_production, hydrogen_storage_duration_hr, lcoh, lcoh_breakdown,profast_h2_price_breakdown,lcoe, plant_life, natural_gas_cost,\
+                    hydrogen_annual_production, hydrogen_storage_duration_hr, lcoh, lcoh_breakdown,profast_h2_price_breakdown,lcoe, plant_life,\
                     price_breakdown_storage,price_breakdown_compression,\
                     price_breakdown_SMR_plant,\
                     CO2_TnS_unit_cost,\
@@ -121,11 +127,12 @@ for atb_year in atb_years:
                                                                                                                             lime_unit_cost,
                                                                                                                             carbon_unit_cost,
                                                                                                                             iron_ore_pellets_unit_cost,
-                                                                                                                            lcoe, scenario, natural_gas_cost, o2_heat_integration,atb_year,site_name,grid_price_filename)
+                                                                                                                            lcoe, scenario, NG_price_case, o2_heat_integration,atb_year,site_name,grid_price_filename)
                     
                     cooling_water_cost = 0.00013817 # 2020$/Gal
                     iron_based_catalyst_cost = 28.2805 # 2020$/kg
-                    oxygen_cost = 0.03476   # 2020$/kg 
+                    #oxygen_cost = 0.03476   # 2020$/kg 
+                    oxygen_cost = 0
                     ammonia_economics_from_pyfast, ammonia_economics_summary, profast_ammonia_price_breakdown,ammonia_breakeven_price, ammonia_annual_production_kgpy,ammonia_price_breakdown,ammonia_plant_capex = \
                                                                                     hopp_tools_steel.levelized_cost_of_ammonia_SMR(lcoh,hydrogen_annual_production,
                                                                                                                             cooling_water_cost,

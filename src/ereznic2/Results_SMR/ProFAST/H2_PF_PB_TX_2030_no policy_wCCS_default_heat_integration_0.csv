@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,1.1840537493088503e-06
 12,Financing cash outflow,Hydrogen Storage,0.00037359900373599005
-13,Financing cash outflow,Compression,0.0054414003044140034
-14,Operating Expenses,Cash on hand reserve,0.0058203862204770735
+13,Operating Expenses,Cash on hand reserve,0.004803019163277069
+14,Financing cash outflow,Compression,0.0054414003044140034
 15,Operating Expenses,SMR VOM Cost,0.041499999999999995
 16,Operating Expenses,Water Charges,0.04780000000000001
 17,Financing cash outflow,Repayment of debt,0.11627110094640397
-18,Operating Expenses,SMR Electricity Cost,0.18496408830413003
+18,Operating Expenses,SMR Electricity Cost,0.18496408830287875
 19,Financing cash outflow,Interest expense,0.19203532693179687
-20,Financing cash outflow,Income taxes payable,0.20697553424143866
+20,Financing cash outflow,Income taxes payable,0.2062443191754202
 21,Financing cash outflow,SMR Plant Cost,0.2965518031623389
 22,Operating Expenses,SMR FOM Cost,0.3558621637948067
-23,Financing cash outflow,Dividends paid,0.8056022652649272
-24,Operating Expenses,SMR NG Cost,1.018067424
+23,Operating Expenses,SMR NG Cost,0.6473508497
+24,Financing cash outflow,Dividends paid,0.8052832209655597
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,1.1840537493088503e-06
-30,Operating Revenue,Cash on hand recovery,0.005820386220477075
-31,Financing cash inflow,Monetized tax losses,0.026385775111797058
+30,Operating Revenue,Cash on hand recovery,0.004803019163277069
+31,Financing cash inflow,Monetized tax losses,0.026076547927208954
 32,Financing cash inflow,Inflow of debt,0.11627110094640397
-33,Financing cash inflow,Inflow of equity,0.2846001085839954
-34,Operating Revenue,Hydrogen sales,2.844187721311796
+33,Financing cash inflow,Inflow of equity,0.28549850096197904
+34,Operating Revenue,Hydrogen sales,2.471831722451763

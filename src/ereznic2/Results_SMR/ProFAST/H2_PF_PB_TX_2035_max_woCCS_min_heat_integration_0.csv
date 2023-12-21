@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,1.1840537493088503e-06
 12,Financing cash outflow,Hydrogen Storage,3.2378580323785805e-05
-13,Operating Expenses,Cash on hand reserve,0.002223460548500581
+13,Operating Expenses,Cash on hand reserve,0.0024881768144355597
 14,Financing cash outflow,Compression,0.0054414003044140034
-15,Operating Expenses,SMR Electricity Cost,0.03601910131392
+15,Operating Expenses,SMR Electricity Cost,0.036019101313850846
 16,Operating Expenses,SMR VOM Cost,0.041499999999999995
 17,Financing cash outflow,Repayment of debt,0.04291531776149028
 18,Operating Expenses,Water Charges,0.04780000000000001
 19,Financing cash outflow,Interest expense,0.0708796683752793
-20,Financing cash outflow,Income taxes payable,0.07632649009602083
+20,Financing cash outflow,Income taxes payable,0.07862921639255449
 21,Financing cash outflow,SMR Plant Cost,0.10612816214563145
 22,Operating Expenses,SMR FOM Cost,0.12735379457475773
-23,Financing cash outflow,Dividends paid,0.29701538358590285
-24,Operating Expenses,SMR NG Cost,0.38528758399999996
+23,Financing cash outflow,Dividends paid,0.3021843323471015
+24,Operating Expenses,SMR NG Cost,0.4684105289333334
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,1.1840537493088503e-06
-30,Operating Revenue,Cash on hand recovery,0.0022234605485005813
-31,Financing cash inflow,Monetized tax losses,0.009763378113794144
+30,Operating Revenue,Cash on hand recovery,0.0024881768144355597
+31,Financing cash inflow,Monetized tax losses,0.010085789454199195
 32,Financing cash inflow,Inflow of debt,0.04291531776149028
-33,Financing cash inflow,Inflow of equity,0.10498054691923026
-34,Operating Revenue,Hydrogen sales,1.079040037943226
+33,Financing cash inflow,Inflow of equity,0.10443627933846662
+34,Operating Revenue,Hydrogen sales,1.169856514174581

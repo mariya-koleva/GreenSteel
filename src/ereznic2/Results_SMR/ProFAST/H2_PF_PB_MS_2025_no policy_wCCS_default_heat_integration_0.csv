@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,1.3402093654148832e-06
 12,Financing cash outflow,Hydrogen Storage,0.00037359900373599005
-13,Financing cash outflow,Compression,0.0054414003044140034
-14,Operating Expenses,Cash on hand reserve,0.006473121145442828
+13,Operating Expenses,Cash on hand reserve,0.00496369721773959
+14,Financing cash outflow,Compression,0.0054414003044140034
 15,Operating Expenses,Water Charges,0.040900000000000006
 16,Operating Expenses,SMR VOM Cost,0.041499999999999995
 17,Financing cash outflow,Repayment of debt,0.11627116099371787
-18,Operating Expenses,SMR Electricity Cost,0.17447420808599998
+18,Operating Expenses,SMR Electricity Cost,0.17447420808557168
 19,Financing cash outflow,Interest expense,0.19203542610696134
-20,Financing cash outflow,Income taxes payable,0.20695974841984044
+20,Financing cash outflow,Income taxes payable,0.1984394333780741
 21,Financing cash outflow,SMR Plant Cost,0.2965518031623389
 22,Operating Expenses,SMR FOM Cost,0.3558621637948067
-23,Financing cash outflow,Dividends paid,0.8061201944361405
-24,Operating Expenses,SMR NG Cost,1.2585673759999998
+23,Operating Expenses,SMR NG Cost,0.6943104365000001
+24,Financing cash outflow,Dividends paid,0.7883152757735481
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,1.3402093654148832e-06
-30,Operating Revenue,Cash on hand recovery,0.00647312114544283
-31,Financing cash inflow,Monetized tax losses,0.025936230749055395
+30,Operating Revenue,Cash on hand recovery,0.004963697217739591
+31,Financing cash inflow,Monetized tax losses,0.024391196931364795
 32,Financing cash inflow,Inflow of debt,0.11627116099371787
-33,Financing cash inflow,Inflow of equity,0.2838666426788563
-34,Operating Revenue,Hydrogen sales,3.068983045886327
+33,Financing cash inflow,Inflow of equity,0.2861854374467171
+34,Operating Revenue,Hydrogen sales,2.477627111731369

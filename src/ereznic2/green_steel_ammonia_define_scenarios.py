@@ -33,8 +33,8 @@ floris = False
 # Turn to False to run ProFAST for hydrogen LCOH
 run_RODeO_selector = False
 
-# Grid price scenario ['wholesale','retail-peaks','retail-flat']
-grid_price_scenario = 'retail-flat'
+# Grid price scenario ['wholesale','retail-peaks','retail-flat','retail-hourly']
+grid_price_scenario = 'retail-hourly'
 
 # RODeO requires output directory in this format, os.path does the format for windows&mac
 rodeo_output_dir = os.path.join("examples", "H2_Analysis", "RODeO_files", "Output_test")
@@ -71,24 +71,24 @@ if __name__ == '__main__':
 #-------------------- Define scenarios to run----------------------------------
 
     atb_years = [
-                2020,
-                2025,
+                #2020,
+                #2025,
                 2030,
-                2035
+                #2035
                 ]
 
     policy = {
         'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
-        'base': {'Wind ITC': 0, 'Wind PTC':  0.0055341, "H2 PTC": 0.6, 'Storage ITC': 0.06},
-        'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
+        #'base': {'Wind ITC': 0, 'Wind PTC':  0.0055341, "H2 PTC": 0.6, 'Storage ITC': 0.06},
+        #'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
     }
 
 
     site_selection = [
-                    'Site 1',
-                    'Site 2',
-                    'Site 3',
-                    'Site 4',
+                    #'Site 1',
+                    #'Site 2',
+                    #'Site 3',
+                    #'Site 4',
                     'Site 5'
                     ]
 
@@ -104,9 +104,9 @@ if __name__ == '__main__':
                                 ]
 
     grid_connection_cases = [
-                            #'off-grid',
+                            'off-grid',
                             #'grid-only',
-                            'hybrid-grid'
+                            #'hybrid-grid'
                             ]
 
     storage_capacity_cases = [
@@ -138,6 +138,11 @@ if __name__ == '__main__':
                                     energy_profile_dir = os.path.join(project_path, "Results_sensitivity", "Profiles")
                                     price_breakdown_dir = os.path.join(project_path, "Results_sensitivity", "ProFAST")
 
+                                if run_RODeO_selector == True:
+                                    fin_sum_dir = os.path.join(project_path, "Results_RODeO", "Fin_sum")
+                                    energy_profile_dir = os.path.join(project_path, "Results_RODeO", "Profiles")
+                                    price_breakdown_dir = os.path.join(project_path, "Results_RODeO", "ProFAST") 
+                                    
                                 arg_list.append([policy, i, atb_year, site_location, electrolysis_scale,run_RODeO_selector,floris,\
                                                 grid_connection_scenario,grid_price_scenario,\
                                                 direct_coupling,electrolyzer_cost_case,electrolyzer_degradation_power_increase,wind_plant_degradation_power_decrease,\
