@@ -2621,7 +2621,8 @@ def hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage
     compressor_max_capacity_kw = 16000
     n_comps = math.ceil(compressor_total_capacity_kW/compressor_max_capacity_kw)
 
-    compressor_avg_capacity_kw = compressor_total_capacity_kW/n_comps
+    small_positive = 1e-6
+    compressor_avg_capacity_kw = compressor_total_capacity_kW/(n_comps+small_positive)
 
     compressor_total_installed_cost_USD = 2*n_comps*(6893.2*compressor_avg_capacity_kw**0.7464)*1.16/1.12*607.5/541.7
 

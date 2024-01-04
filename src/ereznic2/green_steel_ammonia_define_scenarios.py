@@ -72,15 +72,15 @@ if __name__ == '__main__':
 
     atb_years = [
                 #2020,
-                #2025,
-                2030,
+                2025,
+                #2030,
                 #2035
                 ]
 
     policy = {
-        'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
+        #'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
         #'base': {'Wind ITC': 0, 'Wind PTC':  0.0055341, "H2 PTC": 0.6, 'Storage ITC': 0.06},
-        #'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
+        'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
     }
 
 
@@ -104,9 +104,9 @@ if __name__ == '__main__':
                                 ]
 
     grid_connection_cases = [
-                            'off-grid',
+                            #'off-grid',
                             #'grid-only',
-                            #'hybrid-grid'
+                            'hybrid-grid'
                             ]
 
     storage_capacity_cases = [

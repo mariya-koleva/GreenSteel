@@ -909,11 +909,12 @@ def batch_generator_kernel(arg_list):
     #Make sure there is enough wind capacity for storage compressor; if not, add wind capacity. Because we round up
     #to the nearest turbine size it is possible that there is already enough wind capacity; this bit just makes sure
     # that there will always be enough.
-    wind_capacity_required_MW = electrolyzer_capacity_EOL_MW + storage_compressor_total_capacity_kW/1000
-    if wind_capacity_required_MW > wind_size_mw:
-        n_turbines = int(np.ceil(np.ceil(wind_capacity_required_MW)/turbine_rating))
-        wind_size_mw = turbine_rating*n_turbines
-        renewable_plant_cost['wind']['size_mw']=wind_size_mw
+    if grid_connection_scenario != 'grid-only':
+        wind_capacity_required_MW = electrolyzer_capacity_EOL_MW + storage_compressor_total_capacity_kW/1000
+        if wind_capacity_required_MW > wind_size_mw:
+            n_turbines = int(np.ceil(np.ceil(wind_capacity_required_MW)/turbine_rating))
+            wind_size_mw = turbine_rating*n_turbines
+            renewable_plant_cost['wind']['size_mw']=wind_size_mw
 
 
 
