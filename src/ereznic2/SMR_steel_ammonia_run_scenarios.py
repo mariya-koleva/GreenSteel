@@ -104,7 +104,7 @@ for atb_year in atb_years:
                     elif NG_price_case == 'min':
                         grid_price_filename = 'annual_average_ws_prices.csv'
                     elif NG_price_case == 'max':
-                        grid_price_filename = 'annual_average_retail_prices_mult.csv'
+                        grid_price_filename = 'annual_average_retail_prices_adder.csv'
                     site_df = scenario_df[site_location]                
                     site_name = site_df['State']                
                     hydrogen_annual_production, hydrogen_storage_duration_hr, lcoh, lcoh_breakdown,profast_h2_price_breakdown,lcoe, plant_life,\

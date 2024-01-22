@@ -20,7 +20,7 @@
 18,Operating Expenses,Lime,2.2519535999999993
 19,Operating Expenses,Natural Gas,2.320136307722258
 20,Financing cash outflow,"Buildings, Storage, Water Service",2.368448848681997
-21,Operating Expenses,Cash on hand reserve,2.384288832577997
+21,Operating Expenses,Cash on hand reserve,2.3842888325780027
 22,Financing cash outflow,Shaft Furnace,3.5343225303367887
 23,Operating Expenses,Maintenance Labor Cost,4.512346615587342
 24,Financing cash outflow,EAF & Casting,6.557112210606703
@@ -32,11 +32,11 @@
 30,Operating Expenses,Carbon,11.211919999999996
 31,Financing cash outflow,Interest expense,15.86288728102885
 32,Operating Expenses,Administrative & Support Labor Cost,21.492390509273847
-33,Financing cash outflow,Income taxes payable,35.94274742888771
+33,Financing cash outflow,Income taxes payable,35.94274742888766
 34,Operating Expenses,Electricity,37.903533687284224
 35,Operating Expenses,Annual Operating Labor Cost,81.45721542150804
-36,Financing cash outflow,Dividends paid,105.50795630310066
-37,Operating Expenses,Hydrogen,120.10689776099397
+36,Financing cash outflow,Dividends paid,105.50795630310054
+37,Operating Expenses,Hydrogen,120.10689776099596
 38,Operating Expenses,Iron Ore,431.08854929999995
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
@@ -44,8 +44,8 @@
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.03150406504065282
-45,Operating Revenue,Cash on hand recovery,2.384288832577997
-46,Financing cash inflow,Monetized tax losses,4.139455150007691
+45,Operating Revenue,Cash on hand recovery,2.3842888325780023
+46,Financing cash inflow,Monetized tax losses,4.139455150007693
 47,Financing cash inflow,Inflow of debt,9.604458709875745
-48,Financing cash inflow,Inflow of equity,21.271720387215982
-49,Operating Revenue,Steel sales,894.4065375755572
+48,Financing cash inflow,Inflow of equity,21.271720387215986
+49,Operating Revenue,Steel sales,894.4065375755588

@@ -19,7 +19,7 @@
 17,Financing cash outflow,Piping,1.6046267313730436
 18,Operating Expenses,Lime,2.0654987999999994
 19,Financing cash outflow,"Buildings, Storage, Water Service",2.368448848681997
-20,Operating Expenses,Cash on hand reserve,2.59070828491622
+20,Operating Expenses,Cash on hand reserve,2.590708284916219
 21,Operating Expenses,Natural Gas,2.6244599139889133
 22,Financing cash outflow,Shaft Furnace,3.5343225303367887
 23,Operating Expenses,Maintenance Labor Cost,4.512346615587342
@@ -32,11 +32,11 @@
 30,Operating Expenses,Carbon,12.309439999999999
 31,Financing cash outflow,Interest expense,15.868828135620259
 32,Operating Expenses,Administrative & Support Labor Cost,21.492390509273847
-33,Financing cash outflow,Income taxes payable,35.88755815414565
+33,Financing cash outflow,Income taxes payable,35.88755815414542
 34,Operating Expenses,Electricity,50.475760854159994
 35,Operating Expenses,Annual Operating Labor Cost,81.45721542150804
-36,Financing cash outflow,Dividends paid,105.29813547584514
-37,Operating Expenses,Hydrogen,173.9001006088622
+36,Financing cash outflow,Dividends paid,105.29813547584449
+37,Operating Expenses,Hydrogen,173.90010060886223
 38,Operating Expenses,Iron Ore,431.57733029999986
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
@@ -44,8 +44,8 @@
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.03150406504065282
-45,Operating Revenue,Cash on hand recovery,2.59070828491622
-46,Financing cash inflow,Monetized tax losses,4.09850911380885
+45,Operating Revenue,Cash on hand recovery,2.590708284916219
+46,Financing cash inflow,Monetized tax losses,4.098509113808859
 47,Financing cash inflow,Inflow of debt,9.608055702756909
-48,Financing cash inflow,Inflow of equity,21.112345492806064
-49,Operating Revenue,Steel sales,962.4267432140837
+48,Financing cash inflow,Inflow of equity,21.112345492806103
+49,Operating Revenue,Steel sales,962.4267432140829

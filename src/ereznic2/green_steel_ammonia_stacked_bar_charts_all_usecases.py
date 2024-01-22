@@ -113,7 +113,7 @@ locations = [
             'MN'
              ]
 years = [
-    '2020',
+    #'2020',
     '2025',
     '2030',
     '2035'
@@ -355,12 +355,12 @@ for site in locations:
         installation_cost = np.array(site_year_combined['Steel price: Installation Cost ($/tonne)'].values.tolist())
         total_cap_cost = eaf_cap_cost+shaftfurnace_cap_cost+oxsupply_cap_cost+h2preheat_cap_cost+coolingtower_cap_cost\
             +piping_cap_cost+elecinstr_cap_cost+buildingsstorwater_cap_cost+misc_cap_cost+installation_cost\
-            -np.array(site_year_combined['Steel price: O2 Sales & Thermal Integration Savings ($/tonne)'].values.tolist())
+            #-np.array(site_year_combined['Steel price: O2 Sales & Thermal Integration Savings ($/tonne)'].values.tolist())
         
         annoplabor_cost = np.array(site_year_combined['Steel price: Annual Operating Labor Cost ($/tonne)'].values.tolist())
         maintenancelabor_cost = np.array(site_year_combined['Steel price: Maintenance Labor Cost ($/tonne)'].values.tolist())
         adminsupportlabor_cost = np.array(site_year_combined['Steel price: Administrative & Support Labor Cost ($/tonne)'].values.tolist())
-        fixedom_cost = annoplabor_cost+maintenancelabor_cost+adminsupportlabor_cost - np.array(site_year_combined['Steel price: Labor savings ($/tonne)'].values.tolist())
+        fixedom_cost = annoplabor_cost+maintenancelabor_cost+adminsupportlabor_cost# - np.array(site_year_combined['Steel price: Labor savings ($/tonne)'].values.tolist())
 
         maintmaterials_cost = np.array(site_year_combined['Steel price: Maintenance Materials ($/tonne)'].values.tolist())
         water_cost = np.array(site_year_combined['Steel price: Raw Water Withdrawal ($/tonne)'].values.tolist())
@@ -417,8 +417,8 @@ for site in locations:
         barbottom=barbottom+taxes_financial_costs
         #ax.bar(labels,policy_savings,width,bottom=barbottom,label='Policy Savings',color='white', edgecolor = 'sandybrown',hatch='.....')
         #barbottom=barbottom+policy_savings
-        ax.bar(labels,integration_savings,width,bottom=barbottom,label = 'Integration Savings',color='white', edgecolor = 'darkgray',hatch='.....')
-        barbottom = barbottom+integration_savings
+        #ax.bar(labels,integration_savings,width,bottom=barbottom,label = 'Integration Savings',color='white', edgecolor = 'darkgray',hatch='.....')
+        #barbottom = barbottom+integration_savings
         #ax.errorbar(labels,barbottom-integration_savings-policy_savings,yerr=[error_low,error_high], fmt='none',elinewidth=[0,0,0,0,0,1],ecolor='none',capsize=6,markeredgewidth=1)  
         #ax.errorbar(labels[5],barbottom[5]-integration_savings[5]-policy_savings[5],yerr=[[error_low[5]],[error_high[5]]],fmt='none',elinewidth=1,capsize=6,markeredgewidth=1,ecolor='black')                                        
 

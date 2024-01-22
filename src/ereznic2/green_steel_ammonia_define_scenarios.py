@@ -22,9 +22,9 @@ project_path = os.path.abspath('')
 hopp_path = os.path.dirname(os.path.abspath(hopp.__file__))
 
 results_dir = os.path.join(project_path, "H2_Analysis", "results")
-fin_sum_dir = os.path.join(project_path, "Results", "Fin_sum")
-energy_profile_dir = os.path.join(project_path, "Results", "Profiles")
-price_breakdown_dir = os.path.join(project_path, "Results", "ProFAST")
+fin_sum_dir = os.path.join(project_path, "Results_main", "Fin_sum")
+energy_profile_dir = os.path.join(project_path, "Results_main", "Profiles")
+price_breakdown_dir = os.path.join(project_path, "Results_main", "ProFAST")
 floris_dir = os.path.join(project_path, "floris_input_files")
 orbit_path = os.path.join(project_path, "H2_Analysis", "OSW_H2_sites_turbines_and_costs.xlsx")
 renewable_cost_path = os.path.join(project_path, "H2_Analysis", "green_steel_site_renewable_costs_ATB_aug2023.xlsx")
@@ -34,7 +34,7 @@ floris = False
 run_RODeO_selector = False
 
 # Grid price scenario ['wholesale','retail-peaks','retail-flat','retail-hourly']
-grid_price_scenario = 'retail-hourly'
+grid_price_scenario = 'retail-flat'
 
 # RODeO requires output directory in this format, os.path does the format for windows&mac
 rodeo_output_dir = os.path.join("examples", "H2_Analysis", "RODeO_files", "Output_test")
@@ -73,22 +73,22 @@ if __name__ == '__main__':
     atb_years = [
                 #2020,
                 2025,
-                #2030,
-                #2035
+                2030,
+                2035
                 ]
 
     policy = {
-        #'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
+        'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
         #'base': {'Wind ITC': 0, 'Wind PTC':  0.0055341, "H2 PTC": 0.6, 'Storage ITC': 0.06},
-        'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
+        #'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
     }
 
 
     site_selection = [
-                    #'Site 1',
-                    #'Site 2',
-                    #'Site 3',
-                    #'Site 4',
+                    'Site 1',
+                    'Site 2',
+                    'Site 3',
+                    'Site 4',
                     'Site 5'
                     ]
 
@@ -99,14 +99,14 @@ if __name__ == '__main__':
 
     electrolyzer_cost_cases = [
                                 #'Low',
-                                'Mid',
-                                #'High'
+                                #'Mid',
+                                'High'
                                 ]
 
     grid_connection_cases = [
-                            #'off-grid',
+                            'off-grid',
                             #'grid-only',
-                            'hybrid-grid'
+                            #'hybrid-grid'
                             ]
 
     storage_capacity_cases = [
@@ -116,7 +116,7 @@ if __name__ == '__main__':
                             ]
 
     num_pem_stacks= 6 # Doesn't actually do anything
-    run_solar_param_sweep=False
+    run_solar_param_sweep=True
 #---- Create list of arguments to pass to batch generator kernel --------------
     arg_list = []
     for i in policy:
@@ -131,12 +131,16 @@ if __name__ == '__main__':
                                 elif electrolyzer_cost_case == 'Low':
                                     grid_price_filename = 'annual_average_ws_prices.csv'
                                 elif electrolyzer_cost_case == 'High':
-                                    grid_price_filename = 'annual_average_retail_prices_mult.csv'
+                                    grid_price_filename = 'annual_average_retail_prices_adder.csv' # Removing grid cost from high sensitivity case
                                 
                                 if electrolyzer_cost_case != 'Mid':
                                     fin_sum_dir = os.path.join(project_path, "Results_sensitivity", "Fin_sum")
                                     energy_profile_dir = os.path.join(project_path, "Results_sensitivity", "Profiles")
                                     price_breakdown_dir = os.path.join(project_path, "Results_sensitivity", "ProFAST")
+                                else:
+                                    fin_sum_dir = os.path.join(project_path, "Results_main", "Fin_sum")
+                                    energy_profile_dir = os.path.join(project_path, "Results_main", "Profiles")
+                                    price_breakdown_dir = os.path.join(project_path, "Results_main", "ProFAST")
 
                                 if run_RODeO_selector == True:
                                     fin_sum_dir = os.path.join(project_path, "Results_RODeO", "Fin_sum")
@@ -149,9 +153,9 @@ if __name__ == '__main__':
                                                     steel_annual_production_rate_target_tpy,project_path,results_dir,fin_sum_dir,energy_profile_dir,price_breakdown_dir,rodeo_output_dir,floris_dir,renewable_cost_path,\
                                                 save_hybrid_plant_yaml,save_model_input_yaml,save_model_output_yaml,num_pem_stacks,run_solar_param_sweep,electrolyzer_degradation_penalty,\
                                                     pem_control_type,storage_capacity_multiplier,solar_ITC,grid_price_filename])
-    for runs in range(len(arg_list)):
-        batch_generator_kernel(arg_list[runs])
-    []
+    # for runs in range(len(arg_list)):
+    #     batch_generator_kernel(arg_list[runs])
+    # []
 # ------------------ Run HOPP-RODeO/PyFAST Framework to get LCOH ---------------
-    # with Pool(processes=4,maxtasksperchild=1) as pool:
-    #         pool.map(batch_generator_kernel, arg_list)
+    with Pool(processes=8,maxtasksperchild=1) as pool:
+            pool.map(batch_generator_kernel, arg_list)

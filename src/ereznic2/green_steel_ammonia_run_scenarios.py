@@ -137,6 +137,9 @@ def batch_generator_kernel(arg_list):
     #storage_sizes_mw=[0]
     #storage_sizes_mwh = [0]
     if grid_connection_scenario == 'off-grid':
+        #solar_sizes_mw=[750]
+        #storage_sizes_mw=[0]
+        #storage_sizes_mwh = [0]
         solar_sizes_mw=[0,100,250,500,750]
         storage_sizes_mw=[0,100,100,200]
         storage_sizes_mwh = [0,100,400,400]
@@ -502,9 +505,17 @@ def batch_generator_kernel(arg_list):
             #
             lcoh,hopp_dict,best_result_data,param_sweep_tracker,combined_pv_wind_power_production_hopp,combined_pv_wind_storage_power_production_hopp,\
             combined_pv_wind_curtailment_hopp,energy_shortfall_hopp,energy_to_electrolyzer,hybrid_plant,solar_size_mw,wind_size_mw,\
-            storage_size_mw,storage_size_mwh,renewable_plant_cost,lcoe,cost_to_buy_from_grid, profit_from_selling_to_grid,\
+            storage_size_mw,storage_size_mwh,electrolyzer_size_mw,renewable_plant_cost,lcoe,cost_to_buy_from_grid, profit_from_selling_to_grid,\
             cf_wind_annuals,cf_solar_annuals,wind_itc_total=solar_storage_param_sweep(project_path,inputs_for_sweep,save_param_sweep_best_case,save_param_sweep_general_info,solar_sizes_mw,storage_sizes_mw,storage_sizes_mwh)
             []
+
+            kw_continuous = electrolyzer_size_mw * 1000
+            load = [kw_continuous for x in
+                    range(0, 8760)]  # * (sin(x) + pi) Set desired/required load profile for plant
+            if battery_for_minimum_electrolyzer_op:
+                battery_dispatch_load = list(0.1*np.array(load))
+            else:
+                battery_dispatch_load = list(np.array(load))
 
             # Might not need everything below
             capex_multiplier = site_df['CapEx Multiplier']
@@ -908,13 +919,14 @@ def batch_generator_kernel(arg_list):
 
     #Make sure there is enough wind capacity for storage compressor; if not, add wind capacity. Because we round up
     #to the nearest turbine size it is possible that there is already enough wind capacity; this bit just makes sure
-    # that there will always be enough.
+    # that there will always be enough. Don't need to do this for wind+pv cases because they have already had it done
     if grid_connection_scenario != 'grid-only':
-        wind_capacity_required_MW = electrolyzer_capacity_EOL_MW + storage_compressor_total_capacity_kW/1000
-        if wind_capacity_required_MW > wind_size_mw:
-            n_turbines = int(np.ceil(np.ceil(wind_capacity_required_MW)/turbine_rating))
-            wind_size_mw = turbine_rating*n_turbines
-            renewable_plant_cost['wind']['size_mw']=wind_size_mw
+        if run_pv_battery_sweep == False:
+            wind_capacity_required_MW = electrolyzer_capacity_EOL_MW + storage_compressor_total_capacity_kW/1000
+            if wind_capacity_required_MW > wind_size_mw:
+                n_turbines = int(np.ceil(np.ceil(wind_capacity_required_MW)/turbine_rating))
+                wind_size_mw = turbine_rating*n_turbines
+                renewable_plant_cost['wind']['size_mw']=wind_size_mw
 
 
 

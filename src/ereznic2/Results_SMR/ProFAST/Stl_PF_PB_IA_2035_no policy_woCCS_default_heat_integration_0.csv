@@ -18,7 +18,7 @@
 16,Financing cash outflow,Other Miscellaneous Costs,1.0697515815796057
 17,Financing cash outflow,Piping,1.6046267313730436
 18,Operating Expenses,Lime,2.096121599999999
-19,Operating Expenses,Cash on hand reserve,2.106841457154027
+19,Operating Expenses,Cash on hand reserve,2.1068414571540264
 20,Financing cash outflow,"Buildings, Storage, Water Service",2.368448848681997
 21,Operating Expenses,Natural Gas,2.7215171483080773
 22,Financing cash outflow,Shaft Furnace,3.5343225303367887
@@ -32,11 +32,11 @@
 30,Operating Expenses,Carbon,11.228597999999998
 31,Financing cash outflow,Interest expense,15.5867533374131
 32,Operating Expenses,Administrative & Support Labor Cost,21.492390509273847
-33,Financing cash outflow,Income taxes payable,34.78118343167765
+33,Financing cash outflow,Income taxes payable,34.78118343167751
 34,Operating Expenses,Electricity,46.437261998142496
 35,Operating Expenses,Annual Operating Labor Cost,81.45721542150804
-36,Operating Expenses,Hydrogen,88.66663361187204
-37,Financing cash outflow,Dividends paid,102.46990383246637
+36,Operating Expenses,Hydrogen,88.66663361187213
+37,Financing cash outflow,Dividends paid,102.46990383246597
 38,Operating Expenses,Iron Ore,366.16213979999986
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
@@ -44,8 +44,8 @@
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.03150406504065282
-45,Operating Revenue,Cash on hand recovery,2.106841457154027
-46,Financing cash inflow,Monetized tax losses,4.15121429712769
+45,Operating Revenue,Cash on hand recovery,2.1068414571540264
+46,Financing cash inflow,Monetized tax losses,4.151214297127698
 47,Financing cash inflow,Inflow of debt,9.437268650911863
-48,Financing cash inflow,Inflow of equity,21.183924824855414
-49,Operating Revenue,Steel sales,802.0013201601762
+48,Financing cash inflow,Inflow of equity,21.18392482485544
+49,Operating Revenue,Steel sales,802.0013201601757

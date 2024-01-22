@@ -184,11 +184,11 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
             component_scales_centralized = {'Stack':2000,'Power Electronics':18000,'BOP':18000,'H2 Conditioning':18000}
             component_scales_distributed = {'Stack':2000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'Mid' or electrolyzer_cost_case == 'mid':
-            component_costs_centralized = {'Stack':274.9,'Power Electronics':113.8,'BOP':136.0,'H2 Conditioning':41.2}
+            component_costs_centralized = {'Stack':276.9,'Power Electronics':113.0,'BOP':135.0,'H2 Conditioning':41.0}
             component_scales_centralized = {'Stack':2000,'Power Electronics':9000,'BOP':9000,'H2 Conditioning':9000}
             component_scales_distributed = {'Stack':2000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'High' or electrolyzer_cost_case == 'high':
-            component_costs_centralized = {'Stack':336.1,'Power Electronics':167.0,'BOP':205.8,'H2 Conditioning':75.5}
+            component_costs_centralized = {'Stack':352.5,'Power Electronics':167.0,'BOP':205.8,'H2 Conditioning':75.5}
             component_scales_centralized = {'Stack':1000,'Power Electronics':2000,'BOP':2000,'H2 Conditioning':2000}
             component_scales_distributed = {'Stack':1000,'Power Electronics':2000,'BOP':2000,'H2 Conditioning':2000}
 
@@ -208,11 +208,11 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
             component_scales_centralized = {'Stack':10000,'Power Electronics':40000,'BOP':40000,'H2 Conditioning':40000}
             component_scales_distributed = {'Stack':turbine_rating*1000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'Mid' or electrolyzer_cost_case == 'mid':
-            component_costs_centralized = {'Stack':168.6,'Power Electronics':69.7,'BOP':80.0,'H2 Conditioning':21.2}
+            component_costs_centralized = {'Stack':178.3,'Power Electronics':65.7,'BOP':75.0,'H2 Conditioning':20.5}
             component_scales_centralized = {'Stack':2000,'Power Electronics':40000,'BOP':40000,'H2 Conditioning':40000}
             component_scales_distributed = {'Stack':2000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'High' or electrolyzer_cost_case == 'high':
-            component_costs_centralized = {'Stack':225.4,'Power Electronics':90.9,'BOP':106.7,'H2 Conditioning':29.5}
+            component_costs_centralized = {'Stack':249.2,'Power Electronics':90.9,'BOP':106.7,'H2 Conditioning':29.5}
             component_scales_centralized = {'Stack':2000,'Power Electronics':20000,'BOP':20000,'H2 Conditioning':20000}
             component_scales_distributed = {'Stack':2000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
 
@@ -232,11 +232,11 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
             component_scales_centralized = {'Stack':10000,'Power Electronics':40000,'BOP':40000,'H2 Conditioning':40000}
             component_scales_distributed = {'Stack':turbine_rating*1000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'Mid' or electrolyzer_cost_case == 'mid':
-            component_costs_centralized = {'Stack':122.1,'Power Electronics':64.3,'BOP':73.2,'H2 Conditioning':20.3}
+            component_costs_centralized = {'Stack':132.9,'Power Electronics':59.8,'BOP':67.7,'H2 Conditioning':19.5}
             component_scales_centralized = {'Stack':10000,'Power Electronics':40000,'BOP':40000,'H2 Conditioning':40000}
             component_scales_distributed = {'Stack':turbine_rating*1000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'High' or electrolyzer_cost_case == 'high':
-            component_costs_centralized = {'Stack':177.3,'Power Electronics':87.9,'BOP':102.8,'H2 Conditioning':28.9}
+            component_costs_centralized = {'Stack':200.5,'Power Electronics':87.9,'BOP':102.8,'H2 Conditioning':28.9}
             component_scales_centralized = {'Stack':5000,'Power Electronics':20000,'BOP':20000,'H2 Conditioning':20000}
             component_scales_distributed = {'Stack':turbine_rating*1000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
 

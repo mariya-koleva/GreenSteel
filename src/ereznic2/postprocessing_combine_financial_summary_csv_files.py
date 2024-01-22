@@ -14,11 +14,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 warnings.simplefilter("ignore",UserWarning)
 
-#Scenario1 = 'Green_steel_ammonia_electrolysis'
-Scenario1 = 'Green_steel_ammonia_smr'
+Scenario1 = 'Green_steel_ammonia_electrolysis'
+#Scenario1 = 'Green_steel_ammonia_smr'
 
+dir0 = 'Results_main\\Fin_sum\\'
 #dir0 = 'Results_sensitivity\\Fin_sum\\' 
-dir0 = 'Results_SMR\\Fin_sum\\'
+#dir0 = 'Results_SMR\\Fin_sum\\'
 #dir0 = 'examples\\H2_Analysis\\Phase1B\\Fin_sum_sens\\' 
 #dir0 = 'examples\\H2_Analysis\\Phase1B\\Fin_sum_mid\\' 
 #dir0 = 'examples\\H2_Analysis\\Financial_summary_TX_2020_revised_EC_costs_dist_sensitivity\\' 
@@ -48,7 +49,7 @@ for files2load in os.listdir(dir1):
             #int1[-2]=int1[-2].replace(' ','-')
             int1[-1] = int1[-1].replace('.csv', '')
             files2load_summary_title[c0[2]] = int1
-        files2load_title_header = ['Site','Year','Turbine Size','Electrolysis case','Electrolysis cost case','Policy Option','Grid case','Renewables case','Wind model','Degradation modeled?','Stack optimized?','NPC string','Num pem clusters','Storage string','Storage multiplier']
+        files2load_title_header = ['Site','Year','Turbine Size','Electrolysis case','Electrolysis cost case','Policy Option','Grid case','Renewables case','Wind model','Degradation modeled?','Stack optimized?','NPC string','Num pem clusters','Storage string','Storage multiplier','H2 Model']
         
     if Scenario1=='Green_steel_ammonia_smr':
 
@@ -90,8 +91,9 @@ if 1==1:            # This section captures the scenario table from summary file
                                              'NPC string' text,
                                              'Num pem clusters' text,
                                              'Storage string' text,
-                                             'Storage multiplier' text)''')    
-        sql = "INSERT INTO Scenarios VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+                                             'Storage multiplier' text,
+                                              'H2 Model' text)''')    
+        sql = "INSERT INTO Scenarios VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
         params=list()
         for i0 in range(len(files2load_summary)):    
             params.insert(i0,tuple(list([str(i0+1)])+files2load_summary_title[i0+1]))

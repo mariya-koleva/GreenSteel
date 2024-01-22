@@ -38,20 +38,20 @@ elif retail_string == 'wholesale':
 
 # Note that if you set this to 'Distributed', you must only run 'off-grid' for grid-cases
 electrolysis_cases = [
-                    #'Centralized',
-                    'Distributed'
+                    'Centralized',
+                    #'Distributed'
                     ]
 
 grid_cases = [
-    #'grid-only-'+retail_string,
-    #'hybrid-grid-'+retail_string,
+    'grid-only-'+retail_string,
+    'hybrid-grid-'+retail_string,
     'off-grid'
     ]
 
     # Select hybrids case 'Wind' or 'Wind+PV+bat'
 hybrids_cases = [
             'Wind',
-            #'Wind+PV+bat',
+            'Wind+PV+bat',
                 ]
 
 locations = [
@@ -106,6 +106,11 @@ for electrolysis_case in electrolysis_cases:
             fin_sum_usecase = fin_sum_usecase.loc[fin_sum_usecase['Policy Option']=='no-policy']
             
             labels  = pd.unique(fin_sum_usecase['ATB Year']).astype(int).astype(str).tolist()    
+
+            if 2020 in labels:
+                plot_xaxis = [0,1,2,3]
+            else:
+                plot_xaxis = [0,1,2]
             
     #----------------------------- Preallocate dictionaries with LCOH categories and plot each one--------------------------------------------------------------------------------------------
             storage_compression_cost = {}
@@ -192,8 +197,8 @@ for electrolysis_case in electrolysis_cases:
                 lcoh_base_policy_savings[site] = np.array(fin_sum_usecase.loc[fin_sum_usecase['Site']==site,'LCOH: Base policy savings ($/kg)'].values.tolist())
                 lcoh_max_policy_savings[site] = np.array(fin_sum_usecase.loc[fin_sum_usecase['Site']==site,'LCOH: Max policy savings ($/kg)'].values.tolist())
 
-                ax.plot([0,1,2,3], lcoh_nopolicy[site]-lcoh_base_policy_savings[site], color='black', marker='o', linestyle='none', markersize=4,label='Base Policy')
-                ax.plot([0,1,2,3], lcoh_nopolicy[site]-lcoh_max_policy_savings[site], color='dimgray', marker='s', linestyle='none', markersize=4,label='Max Policy')
+                ax.plot(plot_xaxis, lcoh_nopolicy[site]-lcoh_base_policy_savings[site], color='black', marker='o', linestyle='none', markersize=4,label='Base Policy')
+                ax.plot(plot_xaxis, lcoh_nopolicy[site]-lcoh_max_policy_savings[site], color='dimgray', marker='s', linestyle='none', markersize=4,label='Max Policy')
                 arrow_top = np.zeros(len(labels))
                 ax.errorbar(labels,lcoh_nopolicy[site],yerr=[arrow_top,arrow_top], fmt='none',elinewidth=1,ecolor='black',capsize=10,markeredgewidth=1.25) 
                 for j in range(len(labels)): 
@@ -273,8 +278,8 @@ for electrolysis_case in electrolysis_cases:
                     barbottom=barbottom+taxes_and_financial[site]
 
                     # Plot policy savings
-                    ax[axi1,axi2].plot([0,1,2,3], lcoh_nopolicy[site]-lcoh_base_policy_savings[site], color='black', marker='o', linestyle='none', markersize=4,label='Base Policy')
-                    ax[axi1,axi2].plot([0,1,2,3], lcoh_nopolicy[site]-lcoh_max_policy_savings[site], color='dimgray', marker='s', linestyle='none', markersize=4,label='Max Policy')
+                    ax[axi1,axi2].plot(plot_xaxis, lcoh_nopolicy[site]-lcoh_base_policy_savings[site], color='black', marker='o', linestyle='none', markersize=4,label='Base Policy')
+                    ax[axi1,axi2].plot(plot_xaxis, lcoh_nopolicy[site]-lcoh_max_policy_savings[site], color='dimgray', marker='s', linestyle='none', markersize=4,label='Max Policy')
                     arrow_top = np.zeros(len(labels))
                     ax[axi1,axi2].errorbar(labels,lcoh_nopolicy[site],yerr=[arrow_top,arrow_top], fmt='none',elinewidth=1,ecolor='black',capsize=10,markeredgewidth=1.25) 
                     for j in range(len(labels)): 

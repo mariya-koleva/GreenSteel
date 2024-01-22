@@ -312,21 +312,31 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
 
             if grid_connection_scenario == 'off-grid':
                 wind_size_mw_calc = (electricity_production_target_MWhpyr/8760-solar_size_mw*solar_cf_est)/wind_cf_est
-            else:
-                wind_size_mw_calc = wind_size_mw
+                #else:
+                #wind_size_mw_calc = wind_size_mw
 
-            n_turbines = int(np.ceil(np.ceil(wind_size_mw_calc)/turbine_rating))
-            wind_size_mw = turbine_rating*n_turbines
+                n_turbines = int(np.ceil(np.ceil(wind_size_mw_calc)/turbine_rating))
+                wind_size_mw = turbine_rating*n_turbines
 
-            combined_vre_power_mWh = solar_power_norm*solar_size_mw +wind_power_norm*wind_size_mw
+                combined_vre_power_mWh = solar_power_norm*solar_size_mw +wind_power_norm*wind_size_mw
 
-            electrolyzer_capacity_BOL_MW = max(max(combined_vre_power_mWh),wind_size_mw_calc/(1+electrolyzer_degradation_power_increase))
-            n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
-            electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
-            #print('Solar size: ' +str(solar_size_mw) + ' MW')
-            #print('Wind size: ' +str(wind_size_mw) + ' MW')
-            #print('Electrolyzer size: ' +str(electrolyzer_size_mw)+ ' MW')
-            #print('Battery size: ' + str(storage_size_mw) + ' MW, ' + str(storage_size_mwh) + ' MWh')
+                #electrolyzer_capacity_EOL_MW = max(max(combined_vre_power_mWh),wind_size_mw_calc/(1+electrolyzer_degradation_power_increase))
+                electrolyzer_capacity_EOL_MW = max(max(combined_vre_power_mWh),wind_size_mw_calc)
+                electrolyzer_capacity_BOL_MW = electrolyzer_capacity_EOL_MW/(1+electrolyzer_degradation_power_increase)
+                n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
+                electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
+                #print('Solar size: ' +str(solar_size_mw) + ' MW')
+                #print('Wind size: ' +str(wind_size_mw) + ' MW')
+                #print('Electrolyzer size: ' +str(electrolyzer_size_mw)+ ' MW')
+                #print('Battery size: ' + str(storage_size_mw) + ' MW, ' + str(storage_size_mwh) + ' MWh')
+
+                kw_continuous = electrolyzer_size_mw * 1000
+                load = [kw_continuous for x in
+                        range(0, 8760)]  # * (sin(x) + pi) Set desired/required load profile for plant
+                if battery_for_minimum_electrolyzer_op:
+                    battery_dispatch_load = list(0.15*np.array(load))
+                else:
+                    battery_dispatch_load = list(np.array(load))
 
             # Run HOPP
             hopp_dict, plant_power_production, plant_shortfall_hopp, plant_curtailment_hopp, hybrid_plant, wind_size_mw, solar_size_mw, lcoe = \
@@ -542,11 +552,21 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             #Make sure there is enough wind capacity for storage compressor; if not, add wind capacity. Because we round up
             #to the nearest turbine size it is possible that there is already enough wind capacity; this bit just makes sure
             # that there will always be enough.
-            wind_capacity_required_MW = electrolyzer_capacity_EOL_MW + storage_compressor_total_capacity_kW/1000
-            if wind_capacity_required_MW > wind_size_mw:
-                n_turbines = int(np.ceil(np.ceil(wind_capacity_required_MW)/turbine_rating))
-                wind_size_mw = turbine_rating*n_turbines
-                renewable_plant_cost['wind']['size_mw']=wind_size_mw
+
+            if grid_connection_scenario == 'off-grid':
+                combined_VRE_capacity_required_MW = electrolyzer_capacity_EOL_MW + storage_compressor_total_capacity_kW/1000
+
+                combined_VRE_capacity_deficit = combined_VRE_capacity_required_MW - max(combined_vre_power_mWh)
+
+                if combined_VRE_capacity_deficit > 0:
+                    n_turbines_extra = int(np.ceil(combined_VRE_capacity_deficit/turbine_rating))
+                    wind_size_mw = wind_size_mw + turbine_rating*n_turbines_extra
+                    renewable_plant_cost['wind']['size_mw']=wind_size_mw
+
+            # if wind_capacity_required_MW > wind_size_mw:
+            #     n_turbines = int(np.ceil(np.ceil(wind_capacity_required_MW)/turbine_rating))
+            #     wind_size_mw = turbine_rating*n_turbines
+            #     renewable_plant_cost['wind']['size_mw']=wind_size_mw
 
             # Apply storage multiplier
             hydrogen_storage_capacity_kg = hydrogen_storage_capacity_kg*storage_capacity_multiplier
@@ -674,6 +694,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 combined_pv_wind_curtailment_hopp_best = combined_pv_wind_curtailment_hopp
                 energy_shortfall_hopp_best = hopp_dict.main_dict["Models"]["grid"]["ouput_dict"]['energy_from_the_grid']
                 energy_to_electrolyzer_best = energy_to_electrolyzer
+                electrolyzer_size_mw_best = electrolyzer_size_mw
                 hybrid_plant_best = hybrid_plant
                 solar_size_mw_best = solar_size_mw
                 wind_size_mw_best = wind_size_mw
@@ -735,5 +756,5 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
     return lcoh_2return,best_hopp_dict,best_result_data,param_sweep_tracked_df,\
             combined_pv_wind_power_production_hopp_best,combined_pv_wind_storage_power_production_hopp_best,\
             combined_pv_wind_curtailment_hopp_best,energy_shortfall_hopp_best,energy_to_electrolyzer_best,\
-            hybrid_plant_best,solar_size_mw_best,wind_size_mw_best,storage_size_mw_best,storage_size_mwh_best,renewable_plant_cost_best,lcoe_best,\
+            hybrid_plant_best,solar_size_mw_best,wind_size_mw_best,storage_size_mw_best,storage_size_mwh_best,electrolyzer_size_mw_best,renewable_plant_cost_best,lcoe_best,\
             cost_to_buy_from_grid_best,profit_from_selling_to_grid_best,cf_wind_annuals,cf_solar_annuals_best,wind_itc_total

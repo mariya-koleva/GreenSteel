@@ -67,7 +67,7 @@ policy_options = [
 # Electrolysis case 
 electrolysis_case = 'Centralized'
 
-electrolysis_cost_case = 'low'
+electrolysis_cost_case = 'mid'
 
 locations = [
             'IN',
@@ -79,7 +79,7 @@ locations = [
 
 
 years = [
-    '2020',
+    #'2020',
     '2025',
     '2030',
     '2035'

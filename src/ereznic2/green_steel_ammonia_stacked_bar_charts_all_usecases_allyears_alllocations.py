@@ -183,7 +183,6 @@ for axi1,site in enumerate(locations):
             site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') & (site_year_smr['NG price case']=='max'),'Ammonia price: Total ($/kg)'].values - site_year_smr.loc[(site_year_smr['Policy Option']=='no-policy') &(site_year_smr['NG price case']=='default'),'Ammonia price: Total ($/kg)'].values
         
 
-
         site_year_smr = site_year_smr.loc[site_year_smr['NG price case']=='default']
         site_year_smr_sensitivity = site_year_smr.loc[site_year_smr['Policy Option']=='no-policy']
 
@@ -334,7 +333,7 @@ for axi1,site in enumerate(locations):
             ax[axi1,axi2].arrow(j,lcoh_nopolicy[j],0,-1*lcoh_base_policy_savings[j],head_width=0.1,head_length=0.25,length_includes_head=True,color='black',linestyle='-')
             ax[axi1,axi2].arrow(j,lcoh_nopolicy[j]-lcoh_base_policy_savings[j],0,-1*(lcoh_max_policy_savings[j]-lcoh_base_policy_savings[j]),head_width=0.1,head_length=0.25,length_includes_head=True,color='dimgray')
         ax[axi1,axi2].axhline(y=0, color='k', linestyle='-',linewidth=1.5)
-        ax[axi1,axi2].axhline(y=lcoh_nopolicy[0], color='k', linestyle='--',linewidth=1.5)
+        #ax[axi1,axi2].axhline(y=lcoh_nopolicy[0], color='k', linestyle='--',linewidth=1.5)
         barbottom = lcoh_nopolicy
 
         # Decorations
@@ -389,12 +388,12 @@ for axi1,site in enumerate(locations):
         installation_cost = np.array(site_year_combined['Steel price: Installation Cost ($/tonne)'].values.tolist())
         total_cap_cost = eaf_cap_cost+shaftfurnace_cap_cost+oxsupply_cap_cost+h2preheat_cap_cost+coolingtower_cap_cost\
             +piping_cap_cost+elecinstr_cap_cost+buildingsstorwater_cap_cost+misc_cap_cost+installation_cost\
-            -np.array(site_year_combined['Steel price: O2 Sales & Thermal Integration Savings ($/tonne)'].values.tolist())
+           # -np.array(site_year_combined['Steel price: O2 Sales & Thermal Integration Savings ($/tonne)'].values.tolist())
         
         annoplabor_cost = np.array(site_year_combined['Steel price: Annual Operating Labor Cost ($/tonne)'].values.tolist())
         maintenancelabor_cost = np.array(site_year_combined['Steel price: Maintenance Labor Cost ($/tonne)'].values.tolist())
         adminsupportlabor_cost = np.array(site_year_combined['Steel price: Administrative & Support Labor Cost ($/tonne)'].values.tolist())
-        fixedom_cost = annoplabor_cost+maintenancelabor_cost+adminsupportlabor_cost - np.array(site_year_combined['Steel price: Labor savings ($/tonne)'].values.tolist())
+        fixedom_cost = annoplabor_cost+maintenancelabor_cost+adminsupportlabor_cost# - np.array(site_year_combined['Steel price: Labor savings ($/tonne)'].values.tolist())
 
         maintmaterials_cost = np.array(site_year_combined['Steel price: Maintenance Materials ($/tonne)'].values.tolist())
         water_cost = np.array(site_year_combined['Steel price: Raw Water Withdrawal ($/tonne)'].values.tolist())
@@ -448,8 +447,8 @@ for axi1,site in enumerate(locations):
         barbottom=barbottom+taxes_financial_costs
         #ax.bar(labels,policy_savings,width,bottom=barbottom,label='Policy Savings',color='white', edgecolor = 'sandybrown',hatch='.....')
         #barbottom=barbottom+policy_savings
-        ax1[axi1,axi2].bar(labels,integration_savings,width,bottom=barbottom,label = 'Integration Savings',color='white', edgecolor = 'darkgray',hatch='.....')
-        barbottom = barbottom+integration_savings
+        #ax1[axi1,axi2].bar(labels,integration_savings,width,bottom=barbottom,label = 'Integration Savings',color='white', edgecolor = 'darkgray',hatch='.....')
+        #barbottom = barbottom+integration_savings
         #ax.errorbar(labels,barbottom-integration_savings-policy_savings,yerr=[error_low,error_high], fmt='none',elinewidth=[0,0,0,0,0,1],ecolor='none',capsize=6,markeredgewidth=1)  
         #ax.errorbar(labels[5],barbottom[5]-integration_savings[5]-policy_savings[5],yerr=[[error_low[5]],[error_high[5]]],fmt='none',elinewidth=1,capsize=6,markeredgewidth=1,ecolor='black')                                        
 
@@ -465,7 +464,7 @@ for axi1,site in enumerate(locations):
             ax1[axi1,axi2].arrow(j,barbottom[j],0,-1*steel_price_base_policy_savings[j],head_width=0.1,head_length=35,length_includes_head=True,color='black')
             ax1[axi1,axi2].arrow(j,barbottom[j]-steel_price_base_policy_savings[j],0,-1*(steel_price_max_policy_savings[j]-steel_price_base_policy_savings[j]),head_width=0.1,head_length=35,length_includes_head=True,color='dimgray')
 
-        ax1[axi1,axi2].axhline(y=barbottom[0], color='k', linestyle='--',linewidth=1.5)
+        #ax1[axi1,axi2].axhline(y=barbottom[0], color='k', linestyle='--',linewidth=1.5)
 
         # error_high = np.zeros(len(labels))
         # ax.errorbar(labels,lcoh_withpolicy,yerr=[error_high,error_high], fmt='none',elinewidth=1,ecolor='black',capsize=10,markeredgewidth=1.25) 
@@ -589,7 +588,7 @@ for axi1,site in enumerate(locations):
         #ax.errorbar(labels,barbottom-policy_savings_ammonia,yerr=[error_low,error_high], fmt='none',elinewidth=[0,0,0,0,0,1],ecolor='none',capsize=6,markeredgewidth=1)                                        
         #ax.errorbar(labels[5],barbottom[5]-policy_savings_ammonia[5],yerr=[[error_low[5]],[error_high[5]]],fmt='none',elinewidth=1,capsize=6,markeredgewidth=1,ecolor='black')                                        
         ax2[axi1,axi2].axhline(y=0.0, color='k', linestyle='-',linewidth=1.5)
-        ax2[axi1,axi2].axhline(y=barbottom[0], color='k', linestyle='--',linewidth=1.5)
+        #ax2[axi1,axi2].axhline(y=barbottom[0], color='k', linestyle='--',linewidth=1.5)
 
         
         # Decorations

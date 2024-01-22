@@ -25,9 +25,9 @@
 23,Operating Expenses,Property tax and insurance,0.0047317057424990285
 24,Financing cash outflow,Interest expense,0.005873762444078221
 25,Operating Expenses,Electricity,0.006716450457465753
-26,Financing cash outflow,Income taxes payable,0.007694781198786471
+26,Financing cash outflow,Income taxes payable,0.007694781198786494
 27,Operating Expenses,Labor Cost,0.01816724857229333
-28,Financing cash outflow,Dividends paid,0.027063846961225404
+28,Financing cash outflow,Dividends paid,0.027063846961225477
 29,Operating Expenses,Hydrogen,0.37504782044495133
 30,Operating Revenue,Take or pay revenue,0.0
 31,Operating Revenue,Incidental revenue,0.0
@@ -35,8 +35,8 @@
 33,Financing cash inflow,One time capital incentive,0.0
 34,Financing cash inflow,Annual operating incentives,0.0
 35,Operating Revenue,Sale of non-depreciable assets,0.0002279996550330838
-36,Financing cash inflow,Monetized tax losses,0.00046401428633802036
+36,Financing cash inflow,Monetized tax losses,0.00046401428633801776
 37,Operating Revenue,Cash on hand recovery,0.0011856191456412594
 38,Financing cash inflow,Inflow of debt,0.0035563707833463935
-39,Financing cash inflow,Inflow of equity,0.007337375239891437
-40,Operating Revenue,Ammonia sales,0.4533940261712154
+39,Financing cash inflow,Inflow of equity,0.007337375239891435
+40,Operating Revenue,Ammonia sales,0.4533940261712155

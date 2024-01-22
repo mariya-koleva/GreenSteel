@@ -18,7 +18,7 @@
 16,Financing cash outflow,Other Miscellaneous Costs,1.0697515815796057
 17,Financing cash outflow,Piping,1.6046267313730436
 18,Operating Expenses,Lime,2.0654987999999994
-19,Operating Expenses,Cash on hand reserve,2.3276961861810204
+19,Operating Expenses,Cash on hand reserve,2.3276961861810213
 20,Financing cash outflow,"Buildings, Storage, Water Service",2.368448848681997
 21,Operating Expenses,Natural Gas,2.6024522740928506
 22,Financing cash outflow,Shaft Furnace,3.5343225303367887
@@ -32,11 +32,11 @@
 30,Operating Expenses,Carbon,12.309439999999999
 31,Financing cash outflow,Interest expense,15.868828135620259
 32,Operating Expenses,Administrative & Support Labor Cost,21.492390509273847
-33,Financing cash outflow,Income taxes payable,35.446382412329704
+33,Financing cash outflow,Income taxes payable,35.44638241232984
 34,Operating Expenses,Electricity,50.438367265837
 35,Operating Expenses,Annual Operating Labor Cost,81.45721542150804
-36,Operating Expenses,Hydrogen,85.34562650110635
-37,Financing cash outflow,Dividends paid,104.30167152232139
+36,Operating Expenses,Hydrogen,85.34562650110638
+37,Financing cash outflow,Dividends paid,104.30167152232174
 38,Operating Expenses,Iron Ore,431.57733029999986
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
@@ -44,8 +44,8 @@
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.03150406504065282
-45,Operating Revenue,Cash on hand recovery,2.3276961861810204
-46,Financing cash inflow,Monetized tax losses,4.05501240872233
+45,Operating Revenue,Cash on hand recovery,2.327696186181021
+46,Financing cash inflow,Monetized tax losses,4.055012408722326
 47,Financing cash inflow,Inflow of debt,9.608055702756909
-48,Financing cash inflow,Inflow of equity,21.26318710523131
-49,Operating Revenue,Steel sales,872.2678832754304
+48,Financing cash inflow,Inflow of equity,21.26318710523128
+49,Operating Revenue,Steel sales,872.2678832754309

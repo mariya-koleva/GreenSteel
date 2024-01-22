@@ -102,9 +102,10 @@ geothermal_capex_EI = 20.71 # g CO2e/kWh
 
 smr_NG_combust = 56.2 # Natural gas combustion (g CO2e/MJ)
 smr_NG_consume = 167  # Natural gas consumption (MJ/kg H2)
+smr_NG_consume_CCS = 177.1 # Natural gas consumption (MJ-LHV/kg-H2) for SMR+CCS
 smr_PO_consume = 0.13    # Power consumption in SMR plant (kWh/kg H2)
 smr_ccs_PO_consume = 1.5 # Power consumption in SMR CCS plant (kWh/kg H2)
-smr_steam_prod = 17.4 # Steam production on SMR site (MJ/kg H2)
+smr_steam_prod = 25.6 # Steam production on SMR site (MJ/kg H2)
 smr_HEX_eff    = 0.9  # Heat exchanger efficiency (-)
 smr_NG_supply  = 9    # Natural gas extraction and supply to SMR plant assuming 2% CH4 leakage rate (g CO2e/MJ)
 ccs_PO_consume = 0   # Power consumption for CCS (kWh/kg CO2)
@@ -123,7 +124,7 @@ ely_PO_consume = 55        # kWh/kg H2
 # Ammonia
 #------------------------------------------------------------------------------
 
-NH3_PO_consume = 0.53      # Electricity usage (kWh/kg NH3)
+NH3_PO_consume =  0.1207      # Electricity usage (kWh/kg NH3)
 NH3_H2_consume = 0.2       # Hydrogen consumption (kg H2/kg NH3)
 NH3_boiler_EI  = 0.5       # Boiler combustion of methane (kg CO2e/kg NH3)
 
@@ -140,7 +141,7 @@ steel_H2O_consume = 0.8037 # metric tonnes of H2O per tonne of steel
 steel_CH4_prod = 39.29	# kg of CO2e emission/metric tonne of annual steel slab production 
 steel_CO2_prod = 174.66	# kg of CO2 emission/metric tonne of annual steel slab production 
 
-steel_NG_supply_EI  = 9    # Natural gas extraction and supply to plant assuming 2% CH4 leakage rate (g CO2e/MJ)
+steel_NG_supply_EI  = 13    # Natural gas extraction and supply to plant assuming 2% CH4 leakage rate (g CO2e/MJ)
 steel_lime_EI = 1.28   # kg CO2e/kg lime
 steel_iron_ore_EI = 0.048 # kg CO2e/kg iron ore
 steel_H2O_EI = 0.00013 # kg CO2e/gal H2O
@@ -384,9 +385,9 @@ for i0 in range(len(files2load_results)):
             steel_smr_total_EI  = steel_smr_Scope1_EI + steel_smr_Scope2_EI + steel_smr_Scope3_EI
             
             # Calculate SMR + CCS emissions
-            smr_ccs_Scope3_EI = smr_NG_supply * (smr_NG_consume - smr_steam_prod/smr_HEX_eff) * g_to_kg_conv + (smr_ccs_PO_consume +  ccs_PO_consume) * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+            smr_ccs_Scope3_EI = smr_NG_supply * (smr_NG_consume_CCS - smr_steam_prod/smr_HEX_eff) * g_to_kg_conv + (smr_ccs_PO_consume +  ccs_PO_consume) * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
             smr_ccs_Scope2_EI = (smr_ccs_PO_consume +  ccs_PO_consume) * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
-            smr_ccs_Scope1_EI = (1-ccs_perc_capture)* smr_NG_combust * (smr_NG_consume - smr_steam_prod/smr_HEX_eff) * g_to_kg_conv # kg CO2e/kg H2
+            smr_ccs_Scope1_EI = (1-ccs_perc_capture)* smr_NG_combust * (smr_NG_consume_CCS - smr_steam_prod/smr_HEX_eff) * g_to_kg_conv # kg CO2e/kg H2
             smr_ccs_total_EI  = smr_ccs_Scope1_EI + smr_ccs_Scope2_EI + smr_ccs_Scope3_EI    
             
             # Calculate ammonia emissions via SMR with CCS process

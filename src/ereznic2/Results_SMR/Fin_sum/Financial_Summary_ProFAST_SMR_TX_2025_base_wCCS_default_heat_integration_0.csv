@@ -8,17 +8,17 @@ Hydrogen production total CAPEX ($),598322009.1164659
 Hydrogen transmission total CAPEX ($),0.0
 Steel Plant Total CAPEX ($),428750341.3304222
 Ammonia Plant Total CAPEX ($),71189690.86394492
-LCOH: Hydrogen Storage ($/kg),0.0011661456835445915
-LCOH: Compression ($/kg),0.016984695927922615
-LCOH: SMR plant CAPEX ($/kg),0.9256518399323896
+LCOH: Hydrogen Storage ($/kg),0.001166145683544592
+LCOH: Compression ($/kg),0.01698469592792262
+LCOH: SMR plant CAPEX ($/kg),0.9256518399323901
 LCOH: CO2 transportation and storage ($/kg),0.30043255999999996
 LCOH: SMR plant FOM ($/kg),0.3558621637948067
 LCOH: SMR plant VOM ($/kg),0.041499999999999995
 LCOH: Natural gas charges ($/kg),0.6345328283
 LCOH: Electricity charges ($/kg),0.1829065059281317
-LCOH: Taxes ($/kg),0.08357800088146206
+LCOH: Taxes ($/kg),0.08357800088146217
 LCOH: Water charges ($/kg),0.04780000000000001
-LCOH: Financial ($/kg),0.0
+LCOH: Financial ($/kg),-8.673617379884035e-19
 Steel annual production (tonne steel/year),899997.8646149181
 Ammonia annual production (kgNH3/year),300904979.04185563
 Steel price: EAF and Casting CAPEX ($/tonne),6.557112210606703

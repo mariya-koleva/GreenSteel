@@ -19,7 +19,7 @@
 17,Financing cash outflow,Piping,1.6046267313730436
 18,Operating Expenses,Lime,2.2519535999999993
 19,Financing cash outflow,"Buildings, Storage, Water Service",2.368448848681997
-20,Operating Expenses,Cash on hand reserve,2.558914973760891
+20,Operating Expenses,Cash on hand reserve,2.5269675732867913
 21,Financing cash outflow,Shaft Furnace,3.5343225303367887
 22,Operating Expenses,Natural Gas,4.321410242891423
 23,Operating Expenses,Maintenance Labor Cost,4.512346615587342
@@ -32,11 +32,11 @@
 30,Operating Expenses,Carbon,11.211919999999996
 31,Financing cash outflow,Interest expense,15.86288728102885
 32,Operating Expenses,Administrative & Support Labor Cost,21.492390509273847
-33,Financing cash outflow,Income taxes payable,36.01318750258305
-34,Operating Expenses,Electricity,54.39913160510917
+33,Financing cash outflow,Income taxes payable,35.8888592327597
+34,Operating Expenses,Electricity,47.965586582562146
 35,Operating Expenses,Annual Operating Labor Cost,81.45721542150804
-36,Financing cash outflow,Dividends paid,105.69574211821555
-37,Operating Expenses,Hydrogen,152.81886651616077
+36,Financing cash outflow,Dividends paid,105.36790532815616
+37,Operating Expenses,Hydrogen,151.23208930915962
 38,Operating Expenses,Iron Ore,431.08854929999995
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
@@ -44,8 +44,8 @@
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.03150406504065282
-45,Operating Revenue,Cash on hand recovery,2.558914973760891
-46,Financing cash inflow,Monetized tax losses,4.040403766474151
+45,Operating Revenue,Cash on hand recovery,2.5269675732867913
+46,Financing cash inflow,Monetized tax losses,4.0546416797664655
 47,Financing cash inflow,Inflow of debt,9.604458709875745
-48,Financing cash inflow,Inflow of equity,20.970522689750567
-49,Operating Revenue,Steel sales,946.2738531535272
+48,Financing cash inflow,Inflow of equity,21.042449876310013
+49,Operating Revenue,Steel sales,937.7152007642444

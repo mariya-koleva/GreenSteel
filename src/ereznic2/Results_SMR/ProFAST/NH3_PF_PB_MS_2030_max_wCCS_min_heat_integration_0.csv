@@ -15,7 +15,7 @@
 13,Operating Expenses,Maintenance Cost,0.000657173698877296
 14,Financing cash outflow,Boiler and Steam Turbine,0.0007095637864968247
 15,Operating Expenses,Installation cost,0.0011343189126373611
-16,Operating Expenses,Cash on hand reserve,0.001146821213184445
+16,Operating Expenses,Cash on hand reserve,0.0011468212131844615
 17,Financing cash outflow,Haber Bosch,0.0018712786293733294
 18,Financing cash outflow,Air Separation by Cryogenic,0.002259058937527576
 19,Financing cash outflow,Depreciable Nonequipment,0.002564553232949081
@@ -27,8 +27,8 @@
 25,Financing cash outflow,Income taxes payable,0.007705720767965534
 26,Operating Expenses,Electricity,0.00840758446250013
 27,Operating Expenses,Labor Cost,0.01816724857229333
-28,Financing cash outflow,Dividends paid,0.02710099517076869
-29,Operating Expenses,Hydrogen,0.35923616769193034
+28,Financing cash outflow,Dividends paid,0.027100995170768676
+29,Operating Expenses,Hydrogen,0.35923616769193634
 30,Operating Revenue,Take or pay revenue,0.0
 31,Operating Revenue,Incidental revenue,0.0
 32,Operating Revenue,Oxygen byproduct,0.0
@@ -36,7 +36,7 @@
 34,Financing cash inflow,Annual operating incentives,0.0
 35,Operating Revenue,Sale of non-depreciable assets,0.0002279996550330838
 36,Financing cash inflow,Monetized tax losses,0.0004748228314662659
-37,Operating Revenue,Cash on hand recovery,0.001146821213184445
+37,Operating Revenue,Cash on hand recovery,0.0011468212131844615
 38,Financing cash inflow,Inflow of debt,0.0035563707833463935
-39,Financing cash inflow,Inflow of equity,0.007374145444539092
-40,Operating Revenue,Ammonia sales,0.43927401645217523
+39,Financing cash inflow,Inflow of equity,0.007374145444539074
+40,Operating Revenue,Ammonia sales,0.4392740164521812
