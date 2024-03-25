@@ -1,14 +1,28 @@
 # GreenSteel
-Repository for the project specific code and analysis related to the Green Steel project
+Repository for NREL's green steel technoeconomic publication.
 
-## Project vs Software
+Requires NREL's HOPP model to run. The version of HOPP used for this study can be found at https://github.com/ereznicek/HOPP and selecting the branch titled "green_steel_publication". 
 
-In brief, project code uses software code to conduct computational analysis.  The Green Steel project utilizes HOPP and other software.  Scripts and analysis that are used once and specifically relate to its project are designated project code.  These scripts should be stored and aggregated into this repository.  Further instructions on the organization of this repo are exhibited below.  Scripts and code that are for general use and designed to be reused shall be designated software code.  These scripts should not be stored in this repository and should be implemented into software code with a pull request in the respective software.
+Please note that the latest version of HOPP can be found at github.com/NREL/HOPP.
 
-## Workflow
-Clone the GreenSteel repository directly.  No fork is needed as user should only work on their respective files.  Before pushing changes, make sure to pull from Git.  This will avoid conflicts.  Finally, push changes directly to main.
+All of the code required for the analysis can be found in src/ereznic2. The primary scripts used to perform the analysis are as follows:
+-src/ereznic2/green_steel_ammonia_define_scenarios.py (sets up electrolysis scenarios to run and runs them)
+-src/ereznic2/SMR_steel_ammonia_run_scenarios.py (runs SMR scenarios)
+-src/ereznic2/postprocessing_combine_financial_summary_csv_files.py (combines results into databases for easier plotting)
 
-## Collaboration
-Collaboration in Green Steel shall be stored in the source directory.  Individual's codes and analysis will be stored here under their name and numbered.  To accomplish this, create a personal directory in src labeled with user's NREL Git ID, then scripts and analysis shall be placed in user's directory and numbered.  For example, the path should look like `GreenSteel/src/<NREL Git Username>/01-h2-vs-rotor-diameter`.  An example of the organization style desired is in src under ckiefer.
-                
+Primary plotting scripts are as follows:
+-src/ereznic2/green_steel_ammonia_stacked_bar_charts_all_usecases_allyears_alllocations.py
+-src/ereznic2/green_steel_ammonia_LCOH_stacked_bar_charts_vs_time.py (creates LCOH plots in supplemental info)
+-src/ereznic2/green_steel_ammonia_regionalsensitivity_allusecases_allyears.py
+-src/ereznic2/green_steel_ammonia_LCA_barcharts_all_usecases_allyears_alllocations.py
+-src/ereznic2/windvshybrid_comparison_barcharts.py
 
+Results can be found in the following folders:
+-src/ereznic2/Results_main (electrolysis production route primary cases)
+-src/ereznic2/Results_sensitivity (electrolysis production route sensitivity cases)
+-src/ereznic2/Results_SMR (SMR production route primary and sensitivity cases)
+
+Plots can be found in src/ereznic2/Plots
+
+
+ 
