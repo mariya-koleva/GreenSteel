@@ -21,10 +21,12 @@ from green_steel_ammonia_run_scenarios import batch_generator_kernel
 project_path = os.path.abspath('')
 hopp_path = os.path.dirname(os.path.abspath(hopp.__file__))
 
+results_dir_name = 'Results_test'
+
 results_dir = os.path.join(project_path, "H2_Analysis", "results")
-fin_sum_dir = os.path.join(project_path, "Results_main", "Fin_sum")
-energy_profile_dir = os.path.join(project_path, "Results_main", "Profiles")
-price_breakdown_dir = os.path.join(project_path, "Results_main", "ProFAST")
+fin_sum_dir = os.path.join(project_path, results_dir_name, "Fin_sum")
+energy_profile_dir = os.path.join(project_path, results_dir_name, "Profiles")
+price_breakdown_dir = os.path.join(project_path, results_dir_name, "ProFAST")
 floris_dir = os.path.join(project_path, "floris_input_files")
 orbit_path = os.path.join(project_path, "H2_Analysis", "OSW_H2_sites_turbines_and_costs.xlsx")
 renewable_cost_path = os.path.join(project_path, "H2_Analysis", "green_steel_site_renewable_costs_ATB_aug2023.xlsx")
@@ -73,8 +75,8 @@ if __name__ == '__main__':
     atb_years = [
                 #2020,
                 2025,
-                2030,
-                2035
+                #2030,
+                #2035
                 ]
 
     policy = {
@@ -99,8 +101,8 @@ if __name__ == '__main__':
 
     electrolyzer_cost_cases = [
                                 #'Low',
-                                #'Mid',
-                                'High'
+                                'Mid',
+                                #'High'
                                 ]
 
     grid_connection_cases = [
@@ -138,9 +140,9 @@ if __name__ == '__main__':
                                     energy_profile_dir = os.path.join(project_path, "Results_sensitivity", "Profiles")
                                     price_breakdown_dir = os.path.join(project_path, "Results_sensitivity", "ProFAST")
                                 else:
-                                    fin_sum_dir = os.path.join(project_path, "Results_main", "Fin_sum")
-                                    energy_profile_dir = os.path.join(project_path, "Results_main", "Profiles")
-                                    price_breakdown_dir = os.path.join(project_path, "Results_main", "ProFAST")
+                                    fin_sum_dir = os.path.join(project_path, results_dir_name, "Fin_sum")
+                                    energy_profile_dir = os.path.join(project_path, results_dir_name, "Profiles")
+                                    price_breakdown_dir = os.path.join(project_path, results_dir_name, "ProFAST")
 
                                 if run_RODeO_selector == True:
                                     fin_sum_dir = os.path.join(project_path, "Results_RODeO", "Fin_sum")

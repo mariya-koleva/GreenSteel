@@ -2004,7 +2004,8 @@ def steel_LCOS(
     hydrogen_consumption_for_steel = 0.06596              # metric tonnes of hydrogen/metric tonne of steel production
     # Could be good to make this more conservative, but it is probably fine if demand profile is flat
 
-    max_steel_production_capacity_mtpy = min(steel_annual_production_rate_target_tpy/steel_capacity_factor,hydrogen_annual_production/1000/hydrogen_consumption_for_steel)
+    #max_steel_production_capacity_mtpy = min(steel_annual_production_rate_target_tpy/steel_capacity_factor,hydrogen_annual_production/1000/hydrogen_consumption_for_steel)
+    max_steel_production_capacity_mtpy = steel_annual_production_rate_target_tpy/steel_capacity_factor
 
     # Should connect these to something (AEO, Cambium, etc.)
     if electrolyzer_cost_case == 'Mid':

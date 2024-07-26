@@ -137,12 +137,12 @@ def batch_generator_kernel(arg_list):
     #storage_sizes_mw=[0]
     #storage_sizes_mwh = [0]
     if grid_connection_scenario == 'off-grid':
-        #solar_sizes_mw=[750]
-        #storage_sizes_mw=[0]
-        #storage_sizes_mwh = [0]
-        solar_sizes_mw=[0,100,250,500,750]
-        storage_sizes_mw=[0,100,100,200]
-        storage_sizes_mwh = [0,100,400,400]
+        solar_sizes_mw=[0]
+        storage_sizes_mw=[0]
+        storage_sizes_mwh = [0]
+        #solar_sizes_mw=[0,100,250,500,750]
+        #storage_sizes_mw=[0,100,100,200]
+        #storage_sizes_mwh = [0,100,400,400]
         #storage_sizes_mw=[0,100,100,200]
         #storage_sizes_mwh = [0,100,400,400]
     else:
@@ -334,6 +334,8 @@ def batch_generator_kernel(arg_list):
     steel_ammonia_plant_cf = 0.9
     hydrogen_production_target_kgpy = steel_annual_production_rate_target_tpy*1000*hydrogen_consumption_for_steel/steel_ammonia_plant_cf
 
+    print('Annual hydrogen production target (kg/yr): ' + str(hydrogen_production_target_kgpy))
+
     hydrogen_demand_kgphr = hydrogen_production_target_kgpy/8760
 
     # Calculate equivalent ammona production target
@@ -353,14 +355,19 @@ def batch_generator_kernel(arg_list):
             # For PySAM, use probable wind capacity factors by location if off-grid
             if site_location == 'Site 1':
                 cf_estimate = 0.402
+                solar_cf_estimate = 0.1743
             elif site_location == 'Site 2':
-                cf_estimate = 0.492
+                cf_estimate = 0.368
+                solar_cf_estimate = 0.2452
             elif site_location == 'Site 3':
-                cf_estimate = 0.395
+                cf_estimate = 0.362
+                solar_cf_estimate = 0.1831
             elif site_location == 'Site 4':
                 cf_estimate = 0.303
+                solar_cf_estimate = 0.1838
             elif site_location == 'Site 5':
-                cf_estimate = 0.399
+                cf_estimate = 0.353
+                solar_cf_estimate = 0.1661
 
         else:
             # If grid-connected, base capacity off of constant full-power operation (steel/ammonia plant CF is incorporated above)
@@ -371,6 +378,8 @@ def batch_generator_kernel(arg_list):
 
         # Annual electricity requirement estimate
         electricity_production_target_MWhpyr = hydrogen_production_target_kgpy*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
+
+        print('Annual electricity target (MWhpyr): ' + str(electricity_production_target_MWhpyr))
 
         # Electrolyzer power requirement at BOL - namplate capacity in MWe?
         electrolyzer_capacity_BOL_MW = hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
@@ -397,6 +406,10 @@ def batch_generator_kernel(arg_list):
         # # into account here (where it will influence amount of electricity available for hydrogen production)
         # wind_size_mw = electrolyzer_capacity_BOL_MW
         # #wind_size_mw = electrolyzer_capacity_EOL_MW*1.08
+        
+        solar_hydrogen_production_capacity_required_kgphr = hydrogen_production_target_kgpy/(8760*solar_cf_estimate)
+        solar_electrolyzer_capacity_BOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
+        solar_electrolyzer_capacity_EOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
     else:
         wind_size_mw = nTurbs*turbine_rating
         electrolyzer_capacity_EOL_MW = wind_size_mw
@@ -407,7 +420,6 @@ def batch_generator_kernel(arg_list):
         # else:
         hydrogen_production_capacity_required_kgphr = electrolyzer_capacity_BOL_MW*1000/electrolyzer_energy_kWh_per_kg_estimate_BOL
 
-
     interconnection_size_mw = wind_size_mw # this makes sense because wind_size_mw captures extra electricity needed by electrolzyer at end of life
     #electrolyzer_size_mw = np.ceil(electrolyzer_capacity_EOL_MW)
     #electrolyzer_size_mw = np.ceil(electrolyzer_capacity_BOL_MW)
@@ -415,13 +427,17 @@ def batch_generator_kernel(arg_list):
     n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
     electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
 
+    solar_size_mw_max = math.ceil(solar_electrolyzer_capacity_EOL_MW)
+
     #n_pem_clusters = 12
     if electrolysis_scale == 'Distributed':
         n_pem_clusters = 1
     elif electrolysis_scale == 'Centralized':
         n_pem_clusters = n_pem_clusters_max
 
-
+    solar_size_num_steps = 5
+    if grid_connection_scenario == 'off-grid':
+        solar_sizes_mw=np.linspace(0,solar_size_mw_max,solar_size_num_steps).tolist()
 
         # if grid_connection_scenario == 'off-grid':
 
@@ -500,7 +516,7 @@ def batch_generator_kernel(arg_list):
             electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg,time_between_replacement,\
             user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
             electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC,grid_price_filename,\
-            gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector]
+            gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector,hydrogen_production_target_kgpy]
             #if solar and battery size lists are set to 'None' then defaults will be used
             #
             lcoh,hopp_dict,best_result_data,param_sweep_tracker,combined_pv_wind_power_production_hopp,combined_pv_wind_storage_power_production_hopp,\
@@ -704,6 +720,21 @@ def batch_generator_kernel(arg_list):
                 kw_continuous,
                 plot_grid,
             )
+
+            electrolyzer_capacity_EOL_MW = max(energy_to_electrolyzer)/1000
+            electrolyzer_capacity_BOL_MW = electrolyzer_capacity_EOL_MW/(1+electrolyzer_degradation_power_increase)
+            n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
+            electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
+
+            kw_continuous = electrolyzer_size_mw * 1000
+            load = [kw_continuous for x in
+                    range(0, 8760)]  # * (sin(x) + pi) Set desired/required load profile for plant
+            if battery_for_minimum_electrolyzer_op:
+                battery_dispatch_load = list(0.15*np.array(load))
+            else:
+                battery_dispatch_load = list(np.array(load))
+
+            []
 
     # else:
     elif grid_connection_scenario == 'grid-only':
