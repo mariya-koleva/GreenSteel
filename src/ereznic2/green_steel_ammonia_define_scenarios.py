@@ -87,11 +87,11 @@ if __name__ == '__main__':
 
 
     site_selection = [
-                    'Site 1',
-                    'Site 2',
+                    #'Site 1',
+                    #'Site 2',
                     'Site 3',
-                    'Site 4',
-                    'Site 5'
+                    #'Site 4',
+                    #'Site 5'
                     ]
 
     electrolysis_cases = [
@@ -155,9 +155,9 @@ if __name__ == '__main__':
                                                     steel_annual_production_rate_target_tpy,project_path,results_dir,fin_sum_dir,energy_profile_dir,price_breakdown_dir,rodeo_output_dir,floris_dir,renewable_cost_path,\
                                                 save_hybrid_plant_yaml,save_model_input_yaml,save_model_output_yaml,num_pem_stacks,run_solar_param_sweep,electrolyzer_degradation_penalty,\
                                                     pem_control_type,storage_capacity_multiplier,solar_ITC,grid_price_filename])
-    # for runs in range(len(arg_list)):
-    #     batch_generator_kernel(arg_list[runs])
-    # []
+    for runs in range(len(arg_list)):
+        batch_generator_kernel(arg_list[runs])
+    []
 # ------------------ Run HOPP-RODeO/PyFAST Framework to get LCOH ---------------
-    with Pool(processes=8,maxtasksperchild=1) as pool:
-            pool.map(batch_generator_kernel, arg_list)
+    # with Pool(processes=8,maxtasksperchild=1) as pool:
+    #         pool.map(batch_generator_kernel, arg_list)

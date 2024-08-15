@@ -106,7 +106,7 @@ def batch_generator_kernel(arg_list):
     useful_life = 30
     critical_load_factor = 1
     run_reopt_flag = False
-    custom_powercurve = True    #A flag that is applicable when using PySam WindPower (not FLORIS)
+    custom_powercurve = False    #A flag that is applicable when using PySam WindPower (not FLORIS)
     storage_used = False
     battery_can_grid_charge = False
     grid_connected_hopp = False
@@ -408,8 +408,8 @@ def batch_generator_kernel(arg_list):
         # #wind_size_mw = electrolyzer_capacity_EOL_MW*1.08
         
         solar_hydrogen_production_capacity_required_kgphr = hydrogen_production_target_kgpy/(8760*solar_cf_estimate)
-        solar_electrolyzer_capacity_BOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
-        solar_electrolyzer_capacity_EOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
+        solar_electrolyzer_AC_capacity_BOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
+        solar_electrolyzer_AC_capacity_EOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
     else:
         wind_size_mw = nTurbs*turbine_rating
         electrolyzer_capacity_EOL_MW = wind_size_mw
@@ -427,7 +427,7 @@ def batch_generator_kernel(arg_list):
     n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
     electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
 
-    solar_size_mw_max = math.ceil(solar_electrolyzer_capacity_EOL_MW)
+    solar_size_mw_AC_max = math.ceil(solar_electrolyzer_AC_capacity_EOL_MW)
 
     #n_pem_clusters = 12
     if electrolysis_scale == 'Distributed':
@@ -437,7 +437,8 @@ def batch_generator_kernel(arg_list):
 
     solar_size_num_steps = 5
     if grid_connection_scenario == 'off-grid':
-        solar_sizes_mw=np.linspace(0,solar_size_mw_max,solar_size_num_steps).tolist()
+        #solar_sizes_mw=np.linspace(0,solar_size_mw_max,solar_size_num_steps).tolist()
+        solar_sizes_mw_AC = [500,1000]
 
         # if grid_connection_scenario == 'off-grid':
 
@@ -522,7 +523,7 @@ def batch_generator_kernel(arg_list):
             lcoh,hopp_dict,best_result_data,param_sweep_tracker,combined_pv_wind_power_production_hopp,combined_pv_wind_storage_power_production_hopp,\
             combined_pv_wind_curtailment_hopp,energy_shortfall_hopp,energy_to_electrolyzer,hybrid_plant,solar_size_mw,wind_size_mw,\
             storage_size_mw,storage_size_mwh,electrolyzer_size_mw,renewable_plant_cost,lcoe,cost_to_buy_from_grid, profit_from_selling_to_grid,\
-            cf_wind_annuals,cf_solar_annuals,wind_itc_total=solar_storage_param_sweep(project_path,inputs_for_sweep,save_param_sweep_best_case,save_param_sweep_general_info,solar_sizes_mw,storage_sizes_mw,storage_sizes_mwh)
+            cf_wind_annuals,cf_solar_annuals,wind_itc_total=solar_storage_param_sweep(project_path,inputs_for_sweep,save_param_sweep_best_case,save_param_sweep_general_info,solar_sizes_mw_AC,storage_sizes_mw,storage_sizes_mwh)
             []
 
             kw_continuous = electrolyzer_size_mw * 1000

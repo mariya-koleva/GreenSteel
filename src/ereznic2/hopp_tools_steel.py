@@ -116,6 +116,7 @@ def set_site_info(hopp_dict, site_df, sample_site):
     lon = float(lon)
     sample_site['lat'] = lat
     sample_site['lon'] = lon
+    sample_site['year'] = 2013
     # if solar_size_mw>0:
     #     sample_site['solar'] = True
     # else:
@@ -341,7 +342,7 @@ def set_turbine_model(hopp_dict, turbine_model, scenario, parent_path, floris_di
         tower_height = 115
         rotor_diameter = 170
 
-    custom_powercurve_path = '2020ATB_NREL_Reference_7MW_200.csv'
+    #custom_powercurve_path = '2020ATB_NREL_Reference_7MW_200.csv'
 
     # # Scaled from reference 15MW turbine: https://github.com/IEAWindTask37/IEA-15-240-RWT
     # if turbine_model == '12MW':
@@ -383,7 +384,7 @@ def set_turbine_model(hopp_dict, turbine_model, scenario, parent_path, floris_di
 
     scenario['Tower Height'] = tower_height
     scenario['Turbine Rating'] = turbine_rating_mw
-    scenario['Powercurve File'] = custom_powercurve_path
+    #scenario['Powercurve File'] = custom_powercurve_path
     scenario['Rotor Diameter'] = rotor_diameter
 
     # print("Powercurve Path: ", custom_powercurve_path)
@@ -394,7 +395,7 @@ def set_turbine_model(hopp_dict, turbine_model, scenario, parent_path, floris_di
                 'turbine_model': turbine_model,
                 'Tower Height': tower_height,
                 'Turbine Rating': turbine_rating_mw,
-                'Powercurve File': custom_powercurve_path,
+                #'Powercurve File': custom_powercurve_path,
                 'Rotor Diameter': rotor_diameter,
             },
         'nTurbs': nTurbs,
@@ -675,7 +676,7 @@ def run_HOPP(
             #                     'system_capacity_kw': storage_size_mw * 1000
             #                     }
                             # }
-        custom_powercurve=True
+        custom_powercurve=False
         hybrid_plant, combined_pv_wind_power_production_hopp, combined_pv_wind_curtailment_hopp, \
            energy_shortfall_hopp,\
            annual_energies, wind_plus_solar_npv, npvs, lcoe, lcoe_nom =  \

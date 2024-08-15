@@ -27,7 +27,7 @@ from grid_price_profiles import grid_price_interpolation
 #import hopp_tools_run_wind_solar
 #from hybrid.PEM_Model_2Push import run_PEM_master
 
-def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,save_param_sweep_summary,solar_test_sizes_mw=None,battery_sizes_mw=None,battery_sizes_mwh=None):
+def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,save_param_sweep_summary,solar_test_sizes_mw_AC=None,battery_sizes_mw=None,battery_sizes_mwh=None):
 
     # Read in arguments
     # [policy, i, atb_year, site_location, electrolysis_scale,run_RODeO_selector,floris,\
@@ -90,10 +90,10 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
     # 'BOL Eff [kWh/kg-H2]':BOL_kWh_per_kg,
     # 'Modify EOL Degradation Value':user_defined_electrolyzer_EOL_eff_drop,
     # 'EOL Rated Efficiency Drop':EOL_eff_drop}
-    if solar_test_sizes_mw is None:
-        solar_sizes_mw=[0,50,100,250,500,750]
+    if solar_test_sizes_mw_AC is None:
+        solar_sizes_mw_AC=[0,50,100,250,500,750]
     else:
-        solar_sizes_mw=solar_test_sizes_mw
+        solar_sizes_mw_AC=solar_test_sizes_mw_AC
     if battery_sizes_mw is None:
         storage_sizes_mw_temp=[0,50,100,200]
     else:
@@ -203,25 +203,31 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
     elec_cf_tracker=[]
     plant_cf_tracker=[]
     best_result_data={}
-    print('Running solar and battery parameter sweep with {} solar sizes and {} battery sizes...'.format(len(solar_sizes_mw),len(battery_sizes_mw)))
+    print('Running solar and battery parameter sweep with {} solar sizes and {} battery sizes...'.format(len(solar_sizes_mw_AC),len(battery_sizes_mw)))
     #start=time.perf_counter()
-    for si,solar_size_mw in enumerate(solar_sizes_mw):
-        solar_desc='{}MW_Solar'.format(solar_size_mw)
+    for si,solar_size_mw_AC in enumerate(solar_sizes_mw_AC):
+        solar_desc='{}MW_Solar'.format(solar_size_mw_AC)
         #print(solar_desc)
         renewable_plant_cost['wind']={'o&m_per_kw':wind_om_cost_kw,'capex_per_kw':wind_cost_kw,'size_mw':wind_size_mw}
 
-        if solar_size_mw>0:
-            solar_cost_kw = copy.copy(solar_main_cost_kw)
-            solar_om_cost_kw = copy.copy(solar_main_om_cost_kw)
+        if solar_size_mw_AC>0:
+            solar_cost_kw_AC = copy.copy(solar_main_cost_kw)
+            solar_om_cost_kw_AC = copy.copy(solar_main_om_cost_kw)
         else:
-            solar_om_cost_kw=0
-            solar_cost_kw=0
-        hopp_dict.main_dict['Configuration']['solar_size']=solar_size_mw
-        hopp_dict.main_dict['Configuration']['solar_cost_kw']=solar_cost_kw
-        hopp_dict.main_dict['Configuration']['solar_om_cost_kw']=solar_om_cost_kw
-        renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw,
-        'capex_per_kw':solar_cost_kw,
-        'size_mw':solar_size_mw}
+            solar_om_cost_kw_AC=0
+            solar_cost_kw_AC=0
+
+        solar_DC_AC_ratio = 1.3
+        solar_size_mw_DC = solar_size_mw_AC*solar_DC_AC_ratio
+        solar_cost_kw_DC = solar_cost_kw_AC/solar_DC_AC_ratio
+        solar_om_cost_kw_DC = solar_om_cost_kw_AC/solar_DC_AC_ratio
+
+        hopp_dict.main_dict['Configuration']['solar_size']=solar_size_mw_AC
+        hopp_dict.main_dict['Configuration']['solar_cost_kw']=solar_cost_kw_AC
+        hopp_dict.main_dict['Configuration']['solar_om_cost_kw']=solar_om_cost_kw_AC
+        renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw_AC,
+        'capex_per_kw':solar_cost_kw_AC,
+        'size_mw':solar_size_mw_AC}
 
         for bi,storage_size_mw in enumerate(storage_sizes_mw):
         #     if si==0 and bi==0:
@@ -247,7 +253,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             if save_param_sweep_summary:
                 solar_case_tracker.append(solar_desc)
                 battery_case_tracker.append(battery_desc)
-                solar_size_tracker.append(solar_size_mw)
+                solar_size_tracker.append(solar_size_mw_AC)
                 battery_hour_tracker.append(storage_hours)
                 battery_chargeRate_tracker.append(storage_size_mw)
 
@@ -266,7 +272,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
 
             # Estimate revised sizing of things
             # Run HOPP
-            hopp_dict_cfest, plant_power_production_cfest, plant_shortfall_hopp_cfest, plant_curtailment_hopp_cfest, hybrid_plant_cfest, wind_size_mw_cfest, solar_size_mw_cfest, lcoe_cfest = \
+            hopp_dict_cfest, plant_power_production_cfest, plant_shortfall_hopp_cfest, plant_curtailment_hopp_cfest, hybrid_plant_cfest, wind_size_mw_cfest, solar_size_mw_DC_cfest, lcoe_cfest = \
                 hopp_tools_steel.run_HOPP(
                             project_path,
                             hopp_dict,
@@ -274,19 +280,19 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                             site,
                             sample_site,
                             forced_sizes,
-                            solar_size_mw,
+                            solar_size_mw_DC,
                             wind_size_mw,
                             storage_size_mw,
                             storage_size_mwh,
                             wind_cost_kw,
-                            solar_cost_kw,
+                            solar_cost_kw_DC,
                             storage_cost_kw,
                             storage_cost_kwh,
                             kw_continuous,
                             load,
                             electrolyzer_size_mw,
                             wind_om_cost_kw,
-                            solar_om_cost_kw,
+                            solar_om_cost_kw_DC,
                             nTurbs,
                             floris_config,
                             floris,
@@ -294,10 +300,12 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                         )
 
             # Get estimates of solar and wind CFs
-            if solar_size_mw > 0:
-                solar_cf_est = hybrid_plant_cfest.pv.capacity_factor/100
+            if solar_size_mw_AC > 0:
+                solar_cf_DC_est = hybrid_plant_cfest.pv.capacity_factor/100
             else:
-                solar_cf_est = 0
+                solar_cf_DC_est = 0
+
+            solar_cf_AC_est = solar_cf_DC_est*solar_DC_AC_ratio
 
             if wind_size_mw > 0:
                 wind_cf_est = hybrid_plant_cfest.wind.capacity_factor/100
@@ -305,26 +313,26 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 wind_cf_est = 0
 
             wind_power_norm = np.array(hybrid_plant_cfest.wind.generation_profile[:8760])/(wind_size_mw*1000)
-            if solar_size_mw > 0:
-                solar_power_norm = np.array(hybrid_plant_cfest.pv.generation_profile[:8760])/(solar_size_mw*1000)
+            if solar_size_mw_AC > 0:
+                solar_power_norm = np.array(hybrid_plant_cfest.pv.generation_profile[:8760])/(solar_size_mw_DC*1000)
             else: 
                 solar_power_norm = np.zeros(8760)
 
             if grid_connection_scenario == 'off-grid':
 
-                wind_size_mw_calc = (electricity_production_target_MWhpyr/8760-solar_size_mw*solar_cf_est)/wind_cf_est
+                wind_size_mw_calc = (electricity_production_target_MWhpyr/8760-solar_size_mw_AC*solar_cf_AC_est)/wind_cf_est
                 #else:
                 #wind_size_mw_calc = wind_size_mw
 
                 n_turbines = int(np.ceil(np.ceil(wind_size_mw_calc)/turbine_rating))
 
-                if solar_size_mw == solar_sizes_mw[-1]:
+                if solar_size_mw_AC == solar_sizes_mw_AC[-1]:
                     wind_size_mw = 0
                     run_wind_plant = False
                 else:
                     wind_size_mw = turbine_rating*n_turbines
 
-                combined_vre_power_mWh = solar_power_norm*solar_size_mw +wind_power_norm*wind_size_mw
+                combined_vre_power_mWh = solar_power_norm*solar_size_mw_AC +wind_power_norm*wind_size_mw
 
                 #electrolyzer_capacity_EOL_MW = max(max(combined_vre_power_mWh),wind_size_mw_calc/(1+electrolyzer_degradation_power_increase))
                 #electrolyzer_capacity_EOL_MW = max(max(combined_vre_power_mWh),wind_size_mw,solar_size_mw)
@@ -332,7 +340,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 electrolyzer_capacity_BOL_MW = electrolyzer_capacity_EOL_MW/(1+electrolyzer_degradation_power_increase)
                 n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
                 electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
-                print('Solar size: ' +str(solar_size_mw) + ' MW')
+                print('Solar size: ' +str(solar_size_mw_AC) + ' MW')
                 print('Wind size: ' +str(wind_size_mw) + ' MW')
                 print('Electrolyzer size: ' +str(electrolyzer_size_mw)+ ' MW')
                 print('Estimated annual electricity production (MWh): '+ str(sum(combined_vre_power_mWh)))
@@ -347,7 +355,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                     battery_dispatch_load = list(np.array(load))
 
             # Run HOPP
-            hopp_dict, plant_power_production, plant_shortfall_hopp, plant_curtailment_hopp, hybrid_plant, wind_size_mw, solar_size_mw, lcoe = \
+            hopp_dict, plant_power_production, plant_shortfall_hopp, plant_curtailment_hopp, hybrid_plant, wind_size_mw, solar_size_mw_DC, lcoe = \
                 hopp_tools_steel.run_HOPP(
                             project_path,
                             hopp_dict,
@@ -355,19 +363,19 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                             site,
                             sample_site,
                             forced_sizes,
-                            solar_size_mw,
+                            solar_size_mw_DC,
                             wind_size_mw,
                             storage_size_mw,
                             storage_size_mwh,
                             wind_cost_kw,
-                            solar_cost_kw,
+                            solar_cost_kw_DC,
                             storage_cost_kw,
                             storage_cost_kwh,
                             kw_continuous,
                             load,
                             electrolyzer_size_mw,
                             wind_om_cost_kw,
-                            solar_om_cost_kw,
+                            solar_om_cost_kw_DC,
                             nTurbs,
                             floris_config,
                             floris,
