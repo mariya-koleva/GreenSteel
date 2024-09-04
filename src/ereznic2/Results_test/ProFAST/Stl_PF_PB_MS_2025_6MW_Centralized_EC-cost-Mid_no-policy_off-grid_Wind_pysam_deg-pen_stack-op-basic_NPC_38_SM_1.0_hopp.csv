@@ -20,7 +20,7 @@
 18,Operating Expenses,Lime,2.2519536
 19,Financing cash outflow,"Buildings, Storage, Water Service",2.3190617110567566
 20,Operating Expenses,Natural Gas,2.8410463669574564
-21,Operating Expenses,Cash on hand reserve,3.3404056863998033
+21,Operating Expenses,Cash on hand reserve,3.159285247836023
 22,Financing cash outflow,Shaft Furnace,3.492643247616326
 23,Operating Expenses,Maintenance Labor Cost,4.34381082538769
 24,Financing cash outflow,EAF & Casting,6.1918436335910485
@@ -32,11 +32,11 @@
 30,Operating Expenses,Carbon,11.21192
 31,Financing cash outflow,Interest expense,15.307214049215947
 32,Operating Expenses,Administrative & Support Labor Cost,19.90776393490161
-33,Financing cash outflow,Income taxes payable,35.195335786899165
+33,Financing cash outflow,Income taxes payable,35.033743192900864
 34,Operating Expenses,Electricity,47.96558658256215
 35,Operating Expenses,Annual Operating Labor Cost,75.28724491421873
-36,Financing cash outflow,Dividends paid,102.68439019910895
-37,Operating Expenses,Hydrogen,428.4833743483952
+36,Financing cash outflow,Dividends paid,102.3510734088889
+37,Operating Expenses,Hydrogen,369.24329676112654
 38,Operating Expenses,Iron Ore,431.08854930000007
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
@@ -44,8 +44,8 @@
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.03150406504064822
-45,Operating Revenue,Cash on hand recovery,3.3404056863998037
-46,Financing cash inflow,Monetized tax losses,3.8137346509117838
+45,Operating Revenue,Cash on hand recovery,3.1592852478360234
+46,Financing cash inflow,Monetized tax losses,3.8195683185651528
 47,Financing cash inflow,Inflow of debt,9.268016767335252
-48,Financing cash inflow,Inflow of equity,19.440771838343423
-49,Operating Revenue,Steel sales,1202.207349403891
+48,Financing cash inflow,Inflow of equity,19.590480463440063
+49,Operating Revenue,Steel sales,1142.3168201396543

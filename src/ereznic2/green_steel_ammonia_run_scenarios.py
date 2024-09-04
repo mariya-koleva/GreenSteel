@@ -106,7 +106,7 @@ def batch_generator_kernel(arg_list):
     useful_life = 30
     critical_load_factor = 1
     run_reopt_flag = False
-    custom_powercurve = False    #A flag that is applicable when using PySam WindPower (not FLORIS)
+    custom_powercurve = True    #A flag that is applicable when using PySam WindPower (not FLORIS)
     storage_used = False
     battery_can_grid_charge = False
     grid_connected_hopp = False
@@ -155,7 +155,9 @@ def batch_generator_kernel(arg_list):
     save_param_sweep_general_info=False
     save_param_sweep_best_case=False
     #THESE ARE WORKING VARIABLES NOW
-    solar_size_mw = 0
+    solar_size_mw_AC = 0
+    solar_DC_AC_ratio = 1.3
+    solar_size_mw_DC = solar_size_mw_AC*solar_DC_AC_ratio
     storage_size_mw = 0
     storage_size_mwh = 0
     battery_for_minimum_electrolyzer_op=True#If true, then dispatch battery (if on) to supply minimum power for operation to PEM, otherwise use it for rated PEM power
@@ -261,7 +263,7 @@ def batch_generator_kernel(arg_list):
         'forced_sizes': forced_sizes,
         'force_electrolyzer_cost': force_electrolyzer_cost,
         #'wind_size': wind_size_mw,
-        'solar_size': solar_size_mw,
+        'solar_size': solar_size_mw_AC,
         'storage_size_mw': storage_size_mw,
         'storage_size_mwh': storage_size_mwh,
         'solar_cost_kw': solar_cost_kw,
@@ -354,20 +356,20 @@ def batch_generator_kernel(arg_list):
         if grid_connection_scenario =='off-grid':
             # For PySAM, use probable wind capacity factors by location if off-grid
             if site_location == 'Site 1':
-                cf_estimate = 0.402
-                solar_cf_estimate = 0.1743
+                cf_estimate = 0.3947
+                solar_cf_estimate = 0.2266
             elif site_location == 'Site 2':
-                cf_estimate = 0.368
-                solar_cf_estimate = 0.2452
+                cf_estimate = 0.4819
+                solar_cf_estimate = 0.2889
             elif site_location == 'Site 3':
-                cf_estimate = 0.362
-                solar_cf_estimate = 0.1831
+                cf_estimate = 0.4319
+                solar_cf_estimate = 0.2351
             elif site_location == 'Site 4':
-                cf_estimate = 0.303
-                solar_cf_estimate = 0.1838
+                cf_estimate = 0.3525
+                solar_cf_estimate = 0.2390
             elif site_location == 'Site 5':
-                cf_estimate = 0.353
-                solar_cf_estimate = 0.1661
+                cf_estimate = 0.4014
+                solar_cf_estimate = 0.2171
 
         else:
             # If grid-connected, base capacity off of constant full-power operation (steel/ammonia plant CF is incorporated above)
@@ -427,7 +429,11 @@ def batch_generator_kernel(arg_list):
     n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
     electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
 
-    solar_size_mw_AC_max = math.ceil(solar_electrolyzer_AC_capacity_EOL_MW)
+    solar_size_step_mw_AC = 100
+    n_solar_size_steps = int(np.ceil(np.ceil(solar_electrolyzer_AC_capacity_EOL_MW)/solar_size_step_mw_AC))
+    #solar_size_mw_AC_max = math.ceil(solar_electrolyzer_AC_capacity_EOL_MW)
+    solar_size_mw_AC_max = solar_size_step_mw_AC*n_solar_size_steps
+    n_solar_size_steps = n_solar_size_steps + 1 # Add one for zero
 
     #n_pem_clusters = 12
     if electrolysis_scale == 'Distributed':
@@ -435,10 +441,11 @@ def batch_generator_kernel(arg_list):
     elif electrolysis_scale == 'Centralized':
         n_pem_clusters = n_pem_clusters_max
 
-    solar_size_num_steps = 5
+    #solar_size_num_steps = 5
     if grid_connection_scenario == 'off-grid':
         #solar_sizes_mw=np.linspace(0,solar_size_mw_max,solar_size_num_steps).tolist()
-        solar_sizes_mw_AC = [500,1000]
+        #solar_sizes_mw_AC = np.linspace(0,solar_size_mw_AC_max,n_solar_size_steps+1)
+        solar_sizes_mw_AC = [500,1250,solar_size_mw_AC_max]
 
         # if grid_connection_scenario == 'off-grid':
 
@@ -521,7 +528,7 @@ def batch_generator_kernel(arg_list):
             #if solar and battery size lists are set to 'None' then defaults will be used
             #
             lcoh,hopp_dict,best_result_data,param_sweep_tracker,combined_pv_wind_power_production_hopp,combined_pv_wind_storage_power_production_hopp,\
-            combined_pv_wind_curtailment_hopp,energy_shortfall_hopp,energy_to_electrolyzer,hybrid_plant,solar_size_mw,wind_size_mw,\
+            combined_pv_wind_curtailment_hopp,energy_shortfall_hopp,energy_to_electrolyzer,hybrid_plant,solar_size_mw_AC,wind_size_mw,\
             storage_size_mw,storage_size_mwh,electrolyzer_size_mw,renewable_plant_cost,lcoe,cost_to_buy_from_grid, profit_from_selling_to_grid,\
             cf_wind_annuals,cf_solar_annuals,wind_itc_total=solar_storage_param_sweep(project_path,inputs_for_sweep,save_param_sweep_best_case,save_param_sweep_general_info,solar_sizes_mw_AC,storage_sizes_mw,storage_sizes_mwh)
             []
@@ -541,15 +548,15 @@ def batch_generator_kernel(arg_list):
             hopp_dict.main_dict['Configuration']['wind_cost_kw']=wind_cost_kw
             renewable_plant_cost['wind']={'o&m_per_kw':wind_om_cost_kw,'capex_per_kw':wind_cost_kw,'size_mw':wind_size_mw}
             #renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw,'capex_per_kw':solar_cost_kw,'size_mw':solar_size_mw}
-            if solar_size_mw>0:
-                solar_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']/1.34
+            if solar_size_mw_AC>0:
+                solar_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']
                 solar_capex_multiplier=site_df['PV Capex Multiplier']
-                solar_capex=site_df[str(atb_year) + ' PV base installed cost']/1.34
+                solar_capex=site_df[str(atb_year) + ' PV base installed cost']
                 solar_cost_kw=solar_capex * solar_capex_multiplier
-                hopp_dict.main_dict['Configuration']['solar_size']=solar_size_mw
+                hopp_dict.main_dict['Configuration']['solar_size']=solar_size_mw_AC
                 hopp_dict.main_dict['Configuration']['solar_cost_kw']=solar_cost_kw
                 hopp_dict.main_dict['Configuration']['solar_om_cost_kw']=solar_om_cost_kw
-            renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw,'capex_per_kw':solar_cost_kw,'size_mw':solar_size_mw}
+            renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw,'capex_per_kw':solar_cost_kw,'size_mw':solar_size_mw_AC}
 
             if storage_size_mw>0:
                 storage_hours = storage_size_mwh/storage_size_mw
@@ -575,15 +582,15 @@ def batch_generator_kernel(arg_list):
             hopp_dict.main_dict['Configuration']['wind_cost_kw']=wind_cost_kw
             renewable_plant_cost['wind']={'o&m_per_kw':wind_om_cost_kw,'capex_per_kw':wind_cost_kw,'size_mw':wind_size_mw}
             #renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw,'capex_per_kw':solar_cost_kw,'size_mw':solar_size_mw}
-            if solar_size_mw>0:
-                solar_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']/1.34
+            if solar_size_mw_AC>0:
+                solar_om_cost_kw=site_df[str(atb_year) + ' PV OpEx']
                 solar_capex_multiplier=site_df['PV Capex Multiplier']
-                solar_capex=site_df[str(atb_year) + ' PV base installed cost']/1.34
+                solar_capex=site_df[str(atb_year) + ' PV base installed cost']
                 solar_cost_kw=solar_capex * solar_capex_multiplier
-                hopp_dict.main_dict['Configuration']['solar_size']=solar_size_mw
+                hopp_dict.main_dict['Configuration']['solar_size']=solar_size_mw_AC
                 hopp_dict.main_dict['Configuration']['solar_cost_kw']=solar_cost_kw
                 hopp_dict.main_dict['Configuration']['solar_om_cost_kw']=solar_om_cost_kw
-            renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw,'capex_per_kw':solar_cost_kw,'size_mw':solar_size_mw}
+            renewable_plant_cost['pv']={'o&m_per_kw':solar_om_cost_kw,'capex_per_kw':solar_cost_kw,'size_mw':solar_size_mw_AC}
             if storage_size_mw>0:
                 storage_hours = storage_size_mwh/storage_size_mw
             else:
@@ -625,7 +632,7 @@ def batch_generator_kernel(arg_list):
             # ## skip running renewables if grid-only
             #if True: #grid_connection_scenario != 'grid-only':
                 # Run HOPP
-            hopp_dict, combined_pv_wind_power_production_hopp, energy_shortfall_hopp, combined_pv_wind_curtailment_hopp, hybrid_plant, wind_size_mw, solar_size_mw, lcoe = \
+            hopp_dict, combined_pv_wind_power_production_hopp, energy_shortfall_hopp, combined_pv_wind_curtailment_hopp, hybrid_plant, wind_size_mw, solar_size_mw_DC, lcoe = \
                 hopp_tools_steel.run_HOPP(
                             project_path,
                             hopp_dict,
@@ -633,7 +640,7 @@ def batch_generator_kernel(arg_list):
                             site,
                             sample_site,
                             forced_sizes,
-                            solar_size_mw,
+                            solar_size_mw_DC,
                             wind_size_mw,
                             storage_size_mw,
                             storage_size_mwh,
@@ -651,9 +658,11 @@ def batch_generator_kernel(arg_list):
                             floris,
                             run_wind_plant
                     )
+            
+            solar_size_mw_AC = solar_size_mw_DC/solar_DC_AC_ratio
 
             cf_wind_annuals = hybrid_plant.wind._financial_model.Outputs.cf_annual_costs
-            if solar_size_mw >0:
+            if solar_size_mw_AC >0:
                 cf_solar_annuals = hybrid_plant.pv._financial_model.Outputs.cf_annual_costs
             else:
                 cf_solar_annuals = np.zeros(30)
@@ -770,12 +779,14 @@ def batch_generator_kernel(arg_list):
     # Calculate capacity factor of electricity. For now  basing off wind size because we are setting electrolyzer capacity = wind capacity,
     # but in future may want to adjust this
     cf_electricity = sum(energy_to_electrolyzer)/(electrolyzer_size_mw*8760*1000)
-    if solar_size_mw > 0:
-        cf_solar = hybrid_plant.pv.capacity_factor/100
+    if solar_size_mw_AC > 0:
+        cf_solar_DC = hybrid_plant.pv.capacity_factor/100
         solar_annual_energy_MWh = hybrid_plant.annual_energies['pv']/1000
     else:
-        cf_solar = 0
+        cf_solar_DC = 0
         solar_annual_energy_MWh = 0
+
+    cf_solar_AC = cf_solar_DC*solar_DC_AC_ratio
 
     if wind_size_mw > 0:
         cf_wind = hybrid_plant.wind.capacity_factor/100
@@ -1023,7 +1034,7 @@ def batch_generator_kernel(arg_list):
     h2_solution,h2_summary,profast_h2_price_breakdown,lcoh_breakdown,electrolyzer_installed_cost_kw,elec_cf,ren_frac,electrolysis_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,h2_production_capex,\
         hydrogen_storage_cost_USDprkg,hydrogen_storage_duration_hr,hydrogen_storage_capacity_kg,electrolyzer_size_mw = run_profast_for_hydrogen. run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
                                     electrolyzer_capex_kw,time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,storage_compressor_total_capacity_kW,storage_compressor_total_installed_cost_USD,hydrogen_storage_duration_hr,\
-                                    desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
+                                    desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw_AC,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
                                     grid_connection_scenario,atb_year, site_name, policy_option, policy[i],electrical_generation_timeseries, combined_pv_wind_storage_power_production_hopp,combined_pv_wind_curtailment_hopp,\
                                     energy_shortfall_hopp,elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC,gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector)
 
@@ -1168,7 +1179,7 @@ def batch_generator_kernel(arg_list):
                         wind_cost_kw,
                         solar_cost_kw,
                         wind_size_mw,
-                        solar_size_mw,
+                        solar_size_mw_AC,
                         storage_size_mw,
                         storage_hours,
                         electrolyzer_size_mw,
@@ -1184,7 +1195,7 @@ def batch_generator_kernel(arg_list):
                         lcoe,
                         cf_electricity,
                         cf_wind,
-                        cf_solar,
+                        cf_solar_AC,
                         wind_annual_energy_MWh,
                         solar_annual_energy_MWh,
                         run_RODeO_selector,

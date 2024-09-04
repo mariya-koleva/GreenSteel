@@ -318,7 +318,8 @@ def set_turbine_model(hopp_dict, turbine_model, scenario, parent_path, floris_di
         turbine_rating_mw = float(re.findall('[0-9]+', turbine_type)[0])
     else:
         floris_config = 0
-        turbine_rating_mw = float(re.findall('[0-9]+', turbine_model)[0])
+        #turbine_rating_mw = float(re.findall('[0-9]+', turbine_model)[0])
+        turbine_rating_mw = float(re.findall('[0-9,.]+',turbine_model)[0])
         # TODO: replace nTurbs placeholder value with real value
         nTurbs = 0
 
@@ -343,7 +344,8 @@ def set_turbine_model(hopp_dict, turbine_model, scenario, parent_path, floris_di
         rotor_diameter = 170
 
     #custom_powercurve_path = '2020ATB_NREL_Reference_7MW_200.csv'
-
+    custom_powercurve_path = '2023NREL_Bespoke_' + str(turbine_rating_mw)+'MW_'+str(rotor_diameter) + '.csv'
+    []
     # # Scaled from reference 15MW turbine: https://github.com/IEAWindTask37/IEA-15-240-RWT
     # if turbine_model == '12MW':
     #     custom_powercurve_path = '2022atb_osw_12MW.csv'
@@ -384,10 +386,10 @@ def set_turbine_model(hopp_dict, turbine_model, scenario, parent_path, floris_di
 
     scenario['Tower Height'] = tower_height
     scenario['Turbine Rating'] = turbine_rating_mw
-    #scenario['Powercurve File'] = custom_powercurve_path
+    scenario['Powercurve File'] = custom_powercurve_path
     scenario['Rotor Diameter'] = rotor_diameter
 
-    # print("Powercurve Path: ", custom_powercurve_path)
+    print("Powercurve Path: ", custom_powercurve_path)
 
     sub_dict = {
         'scenario':
@@ -395,7 +397,7 @@ def set_turbine_model(hopp_dict, turbine_model, scenario, parent_path, floris_di
                 'turbine_model': turbine_model,
                 'Tower Height': tower_height,
                 'Turbine Rating': turbine_rating_mw,
-                #'Powercurve File': custom_powercurve_path,
+                'Powercurve File': custom_powercurve_path,
                 'Rotor Diameter': rotor_diameter,
             },
         'nTurbs': nTurbs,
@@ -676,7 +678,7 @@ def run_HOPP(
             #                     'system_capacity_kw': storage_size_mw * 1000
             #                     }
                             # }
-        custom_powercurve=False
+        custom_powercurve=True
         hybrid_plant, combined_pv_wind_power_production_hopp, combined_pv_wind_curtailment_hopp, \
            energy_shortfall_hopp,\
            annual_energies, wind_plus_solar_npv, npvs, lcoe, lcoe_nom =  \
@@ -732,7 +734,7 @@ def run_HOPP(
         #                     }}
 
         from hopp.to_organize.H2_Analysis.hopp_for_h2_floris import hopp_for_h2_floris
-        custom_powercurve=False
+        custom_powercurve=True
         hybrid_plant, combined_pv_wind_power_production_hopp, combined_pv_wind_curtailment_hopp,\
                 energy_shortfall_hopp, annual_energies, wind_plus_solar_npv, npvs, lcoe, lcoe_nom =  \
                     hopp_for_h2_floris(site, scenario, technologies,
