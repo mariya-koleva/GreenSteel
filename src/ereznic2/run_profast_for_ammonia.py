@@ -25,8 +25,12 @@ def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life
     # iron_based_catalyist_cost = 23.19977341 # $/kg
     # oxygen_price = 0.0285210891617726       # $/kg
 
-    model_year_CEPCI = 596.2
+    model_year_CEPCI = 816
     equation_year_CEPCI = 541.7
+
+    cpi_equationyear = 271
+    cpi_modelyear = 292.7
+    cpi_ratio = cpi_modelyear/cpi_equationyear
     
     ammonia_production_kgpy = plant_capacity_kgpy*plant_capacity_factor #=  416,090,714      
     
@@ -50,7 +54,7 @@ def run_profast_for_ammonia(plant_capacity_kgpy,plant_capacity_factor,plant_life
     
     # O&M Cost
     scaling_factor_labor = 0.25
-    labor_cost = 57 * 50 * 2080 * scaling_ratio**scaling_factor_labor
+    labor_cost = cpi_ratio*57 * 50 * 2080 * scaling_ratio**scaling_factor_labor
     general_administration_cost = labor_cost * 0.2
     property_tax_insurance = capex_total * 0.02
     maintenance_cost = capex_direct * 0.005 * \

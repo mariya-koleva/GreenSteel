@@ -42,7 +42,11 @@ def run_profast_for_steel(plant_capacity_mtpy,plant_capacity_factor,\
     # iron_ore_pellet_unitcost = 230.52
 
     model_year_CEPCI = 596.2
-    equation_year_CEPCI = 708.8
+    equation_year_CEPCI = 816
+
+    cpi_equationyear = 271
+    cpi_modelyear = 292.7
+    cpi_ratio = cpi_modelyear/cpi_equationyear
     
     steel_production_mtpy = plant_capacity_mtpy*plant_capacity_factor
     
@@ -77,23 +81,23 @@ def run_profast_for_steel(plant_capacity_mtpy,plant_capacity_factor,\
     
     #-------------------------------Fixed O&M Costs------------------------------
     
-    labor_cost_annual_operation = 69375996.9*((plant_capacity_mtpy/365*1000)**0.25242)\
+    labor_cost_annual_operation = cpi_ratio*69375996.9*((plant_capacity_mtpy/365*1000)**0.25242)\
                                 /((1162077/365*1000)**0.25242)
-    labor_cost_maintenance = 0.00863*total_plant_cost
-    labor_cost_admin_support = 0.25*(labor_cost_annual_operation + labor_cost_maintenance)
+    labor_cost_maintenance = cpi_ratio*0.00863*total_plant_cost
+    labor_cost_admin_support = cpi_ratio*0.25*(labor_cost_annual_operation + labor_cost_maintenance)
     
-    property_tax_insurance = 0.02*total_plant_cost
+    property_tax_insurance = cpi_ratio*0.02*total_plant_cost
     
     total_fixed_operating_cost = labor_cost_annual_operation + labor_cost_maintenance\
                                + labor_cost_admin_support + property_tax_insurance
     
     #-------------------------- Feedstock and Waste Costs -------------------------
     
-    maintenance_materials_unitcost = 7.72       # $/metric tonne of annual steel slab production at real CF
-    raw_water_unitcost = 0.59289                # $/metric tonne of raw water
+    maintenance_materials_unitcost = cpi_ratio*7.72       # $/metric tonne of annual steel slab production at real CF
+    raw_water_unitcost = cpi_ratio*0.59289                # $/metric tonne of raw water
     lime_unitcost = lime_unitcost                         # $/metric tonne of lime
     carbon_unitcost = carbon_unitcost                    # $/metric tonne of Carbon
-    slag_disposal_unitcost = 37.63              # $ metric tonne of Slag
+    slag_disposal_unitcost = cpi_ratio*37.63              # $ metric tonne of Slag
     iron_ore_pellet_unitcost = iron_ore_pellet_unitcost          # $/metric tone of Ore 
     
     # ---------------Feedstock Consumtion and Waste/Emissions Production-----------

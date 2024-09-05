@@ -978,23 +978,25 @@ def batch_generator_kernel(arg_list):
     #print(storage_status_message)
 
     # Run ProFAST to get LCOH
-
+    cpi_equationyear = 271
+    cpi_modelyear = 292.7
+    cpi_ratio = cpi_modelyear/cpi_equationyear
     # Municipal water rates and wastewater treatment rates combined ($/gal)
     if site_location == 'Site 1': # Site 1 - Indiana
         #water_cost = 0.00612
-        water_cost = 0.0045
+        water_cost = cpi_ratio*0.0045
     elif site_location == 'Site 2': # Site 2 - Texas
         #water_cost = 0.00811
-        water_cost = 0.00478
+        water_cost = cpi_ratio*0.00478
     elif site_location == 'Site 3': # Site 3 - Iowa
         #water_cost = 0.00634
-        water_cost = 0.00291
+        water_cost = cpi_ratio*0.00291
     elif site_location == 'Site 4': # Site 4 - Mississippi
         #water_cost = 0.00844
-        water_cost = 0.00409
+        water_cost = cpi_ratio*0.00409
     elif site_location =='Site 5': # Site 5 - MN, assuming same as IA for now
         #water_cost=0.00634 
-        water_cost = 0.00291
+        water_cost = cpi_ratio*0.00291
 
     electrolyzer_efficiency_while_running = []
     water_consumption_while_running = []

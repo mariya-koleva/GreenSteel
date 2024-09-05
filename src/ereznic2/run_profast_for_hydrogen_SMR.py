@@ -59,8 +59,17 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     
     # Data
     #------------------------------------------------------------------------------  
+
+    model_year_CEPCI = 816
+    year2018_CEPCI = 603.1
+    year2020_CEPCI = 596.2 
+
+    cpi_equationyear = 271
+    cpi_modelyear = 292.7
+    cpi_ratio = cpi_modelyear/cpi_equationyear
+
     plant_life = 30
-    hydrogen_storage_cost_USDprkg = 540
+    hydrogen_storage_cost_USDprkg = model_year_CEPCI/year2018_CEPCI*540
     land_cost = 0 # $/acre
     water_cost = 0 # $/gal H2O
     CO2_credit = {} # $/ton CO2
@@ -76,10 +85,8 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     hydrogen_storage_duration = 4 # hours, which have been chosen based on RODeO runs with grid connection
     lhv_h2 = 33 # kWh/kg H2
     water_consumption = 10 # gal H2O/kg H2 - for feedstock and process water
-    compressor_capex_USDprkWe = 39 # $/kWe
-    model_year_CEPCI = 607.5
-    year2018_CEPCI = 603.1
-    year2020_CEPCI = 596.2 
+    compressor_capex_USDprkWe = model_year_CEPCI/year2018_CEPCI*39 # $/kWe
+ 
     # policy credit
     #CO2_per_H2 = 8.3 # kg CO2e/kg H2 -> change if the capture rate is changed
     CO2_per_H2 = 9.56 # From H2A
@@ -93,6 +100,8 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     total_energy_demand =  0.64 # kWh/kgH2
     CO2_TnS_unit_cost = 0
     grid_price_per_yr = []
+
+
     
     h2prod_life_sum = hydrogen_production_kgpy * plant_life
                 
@@ -115,7 +124,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     # Energy demand and plant costs
     if CCS_option == 'wCCS':
         energy_demand_process_ccs = 1.5 # kWh/kgH2
-        total_plant_cost = 1740537 * (h2_plant_capacity_kgpd**0.4767)  # 2020$ ; the correlation takes daily capacity
+        total_plant_cost = model_year_CEPCI/year2020_CEPCI*1740537 * (h2_plant_capacity_kgpd**0.4767)  # 2020$ ; the correlation takes daily capacity
         #owners_n_catalyst_cost = 0.174 * total_plant_cost # Percentage from NETL report
         #total_plant_cost = total_plant_cost + owners_n_catalyst_cost #overnight cost
         energy_demand_NG = 0.51 # 2.01-1.50 # kWh/kgH2
@@ -125,7 +134,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
 
     elif CCS_option == 'woCCS':
         energy_demand_process = 0.13 # kWh/kgH2
-        total_plant_cost = 909491 * (h2_plant_capacity_kgpd**0.4457) # 2020$
+        total_plant_cost = model_year_CEPCI/year2020_CEPCI*909491 * (h2_plant_capacity_kgpd**0.4457) # 2020$
         #owners_n_catalyst_cost = 0.174 * total_plant_cost # Percentage from NETL report
         #total_plant_cost = total_plant_cost + owners_n_catalyst_cost #overnight cost
         energy_demand_NG = 0.51 # 0.64-0.13 kWh/kgH2
@@ -135,34 +144,34 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
           
     # Indirect capital cost as a percentage of installed capital cost
     if site_location == 'Site 1': # Indiana
-        land_cost = 7072 # $2020/acre 
-        water_cost = 0.0045 #$/gal
-        CO2_transport_capex = 10.37 #2020$/tonne CO2
-        CO2_storage_capex = 12.95 #2020$/tonneCO2
+        land_cost = cpi_ratio*7072 # $2020/acre 
+        water_cost = cpi_ratio*0.0045 #$/gal
+        CO2_transport_capex = model_year_CEPCI/year2020_CEPCI*10.37 #2020$/tonne CO2
+        CO2_storage_capex = model_year_CEPCI/year2020_CEPCI*12.95 #2020$/tonneCO2
     elif site_location == 'Site 2': # Texas
-        land_cost = 2343 # $2020/acre
-        water_cost = 0.00478 #2020$/gal
-        CO2_transport_capex = 15.02 #2020$/tonne CO2
-        CO2_storage_capex = 18.06 #2020$/tonneCO2
+        land_cost = cpi_ratio*2343 # $2020/acre
+        water_cost = cpi_ratio*0.00478 #2020$/gal
+        CO2_transport_capex = model_year_CEPCI/year2020_CEPCI*15.02 #2020$/tonne CO2
+        CO2_storage_capex = model_year_CEPCI/year2020_CEPCI*18.06 #2020$/tonneCO2
     elif site_location == 'Site 3': # Iowa
-        land_cost = 8310 # $2020/acre
-        water_cost = 0.00291 #2020$/gal
-        CO2_transport_capex = 17.06 #2020$/tonne CO2
-        CO2_storage_capex = 13.32 #2020$/tonneCO2
+        land_cost = cpi_ratio*8310 # $2020/acre
+        water_cost = cpi_ratio*0.00291 #2020$/gal
+        CO2_transport_capex = model_year_CEPCI/year2020_CEPCI*17.06 #2020$/tonne CO2
+        CO2_storage_capex = model_year_CEPCI/year2020_CEPCI*13.32 #2020$/tonneCO2
     elif site_location == 'Site 4': # Mississippi
-        land_cost = 2652 # $2020/acre
-        water_cost = 0.00409 #2020$/gal
-        CO2_transport_capex = 2.80 #2020$/tonne CO2
-        CO2_storage_capex = 12.99 #2020$/tonneCO2
+        land_cost = cpi_ratio*2652 # $2020/acre
+        water_cost = cpi_ratio*0.00409 #2020$/gal
+        CO2_transport_capex = model_year_CEPCI/year2020_CEPCI*2.80 #2020$/tonne CO2
+        CO2_storage_capex = model_year_CEPCI/year2020_CEPCI*12.99 #2020$/tonneCO2
     # elif site_name == 'WY': # Wyoming
     #     land_cost =751 #$2020/acre
     #     water_cost = 0.00376 # 2020$/gal
     #     electricity_cost = electricity_prices['WY'] #$/MWh
     elif site_location == 'Site 5': # Minnesota 
-        land_cost = 5437# $2020/acre
-        water_cost=0.00291 #$/gal
-        CO2_transport_capex = 27.26#2020$/tonne CO2
-        CO2_storage_capex = 25.76 #2020$/tonneCO2
+        land_cost = cpi_ratio*5437# $2020/acre
+        water_cost=cpi_ratio*0.00291 #$/gal
+        CO2_transport_capex = model_year_CEPCI/year2020_CEPCI*27.26#2020$/tonne CO2
+        CO2_storage_capex = model_year_CEPCI/year2020_CEPCI*25.76 #2020$/tonneCO2
         
     # Should connect these to something (AEO, Cambium, etc.)
     if NG_price_case == 'default':
@@ -223,10 +232,10 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     # Calculate storage capital costs. Storage duration arbitrarily chosen at 4 hours capacity
     if CCS_option == 'wCCS': 
         hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process_ccs * hydrogen_production_kgpy / (hrs_in_year  * lhv_h2)
-        CO2_TnS_unit_cost = (CO2_transport_capex + CO2_storage_capex)* CO2_captured/(h2_plant_capacity_kgpy * capacity_factor) #$2020/kgH2
+        CO2_TnS_unit_cost = (CO2_transport_capex + CO2_storage_capex)* CO2_captured/(h2_plant_capacity_kgpy * capacity_factor) 
     elif CCS_option == 'woCCS': 
         hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process * hydrogen_production_kgpy / (hrs_in_year  * lhv_h2)
-        CO2_TnS_unit_cost = 0 #$2020/kgH2
+        CO2_TnS_unit_cost = 0
     capex_storage_installed = hydrogen_storage_capacity_kg * hydrogen_storage_cost_USDprkg
     capex_compressor_installed = compressor_capex_USDprkWe * h2_plant_capacity_kgpy * lhv_h2 / hrs_in_year 
  
@@ -240,7 +249,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     
     #vom_SMR_NG_perMJ = naturalgas_prices_dict    # $/MJ
     #other_vom_costs = 0.08938 # $/kgH2
-    other_vom_costs = 0.0415 # $/kg, from H2A
+    other_vom_costs = cpi_ratio*0.0415 # $/kg, from H2A
     
     smr_total_EI_all = []
     smr_ccs_total_EI_all = []

@@ -58,15 +58,19 @@ def run_profast_for_h2_transmission(project_dir, max_hydrogen_production_rate_kg
     else:
         pipeline_compressor_cost_data = pipeline_compressor_cost_data.loc[pipeline_compressor_cost_data['Production Volume']=='Mid']
 
+    model_year_CEPCI = 816
+    equation_year_CEPCI = 596.2
+    CEPCI_ratio = model_year_CEPCI/equation_year_CEPCI
+
     # Interpolate compressor and pipe costs based on capacity. Note that it would be preferable to interpolate the scaling factor and then apply the scaling factor,
     # but this will take more time. Could do it at some point
     pipe_capex_USDperkm =  np.interp(hydrogen_flow_capacity_kg_yr,pipeline_pipe_cost_data['Capacity (kg/yr)'].to_numpy(),pipeline_pipe_cost_data[region].to_numpy())
-    pipeline_capex = pipe_capex_USDperkm*pipeline_length_km
+    pipeline_capex = CEPCI_ratio*pipe_capex_USDperkm*pipeline_length_km
     pipe_fixedopex_percentperyear=  np.interp(hydrogen_flow_capacity_kg_yr,pipeline_pipe_fixedopex_data['Capacity (kg/yr)'].to_numpy(),pipeline_pipe_fixedopex_data[region].to_numpy())
-    pipeline_FOM_USD_yr = pipe_fixedopex_percentperyear*pipeline_capex
-    compressor_capex = np.interp(hydrogen_flow_capacity_kg_yr,pipeline_compressor_cost_data['Nameplate Capacity [kg/yr]'].to_numpy(),pipeline_compressor_cost_data['Capital Cost [$]'].to_numpy())
+    pipeline_FOM_USD_yr = CEPCI_ratio*pipe_fixedopex_percentperyear*pipeline_capex
+    compressor_capex = CEPCI_ratio*np.interp(hydrogen_flow_capacity_kg_yr,pipeline_compressor_cost_data['Nameplate Capacity [kg/yr]'].to_numpy(),pipeline_compressor_cost_data['Capital Cost [$]'].to_numpy())
     compressor_FOM_frac = np.interp(hydrogen_flow_capacity_kg_yr,pipeline_compressor_cost_data['Nameplate Capacity [kg/yr]'].to_numpy(),pipeline_compressor_cost_data['Fixed Operating Cost [fraction of CapCost/y]'].to_numpy())
-    compressor_FOM_USD_yr = compressor_FOM_frac*compressor_capex
+    compressor_FOM_USD_yr = CEPCI_ratio*compressor_FOM_frac*compressor_capex
 
     compressor_energy_usage_kwhperkw = np.interp(hydrogen_flow_capacity_kg_yr,pipeline_compressor_cost_data['Nameplate Capacity [kg/yr]'].to_numpy(),pipeline_compressor_cost_data['Electricity Use (kWh/kg)'].to_numpy())
 

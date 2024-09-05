@@ -9,7 +9,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-aeo_dir = '../../../Cost data/AEO Data/'
+#aeo_dir = '../../../Cost data/AEO Data/'
+aeo_dir = 'H2_Analysis/'
 dircambium = 'H2_Analysis/Cambium_data/' 
 final_retail_price_directory = 'H2_Analysis/RODeO_files/Data_files/TXT_files/Elec_prices/Elec_purch_price_MWh_MC100by35_'
 
@@ -17,6 +18,10 @@ plot_directory = 'Plots'
 plot_subdirectory = 'Grid_Prices'
 
 write_output_tofile = True
+
+cpi_datayear = 258.8
+cpi_modelyear = 292.7
+cpi_ratio = cpi_modelyear/cpi_datayear
 
 #---------------- Calculate Cambium average wholesale prices ------------------
 
@@ -41,12 +46,12 @@ for year in years_cambium:
  
  
     # Calculate average annual Cambium wholesale prices
-    cambium_ws_prices_IN_avg.append(np.mean(cambium_ws_prices_IN['total_cost_enduse']))
-    cambium_ws_prices_IA_avg.append(np.mean(cambium_ws_prices_IA['total_cost_enduse']))
-    cambium_ws_prices_TX_avg.append(np.mean(cambium_ws_prices_TX['total_cost_enduse']))
-    cambium_ws_prices_MS_avg.append(np.mean(cambium_ws_prices_MS['total_cost_enduse']))    
-    cambium_ws_prices_WY_avg.append(np.mean(cambium_ws_prices_WY['total_cost_enduse']))
-    cambium_ws_prices_MN_avg.append(np.mean(cambium_ws_prices_MN['total_cost_enduse']))
+    cambium_ws_prices_IN_avg.append(cpi_ratio*np.mean(cambium_ws_prices_IN['total_cost_enduse']))
+    cambium_ws_prices_IA_avg.append(cpi_ratio*np.mean(cambium_ws_prices_IA['total_cost_enduse']))
+    cambium_ws_prices_TX_avg.append(cpi_ratio*np.mean(cambium_ws_prices_TX['total_cost_enduse']))
+    cambium_ws_prices_MS_avg.append(cpi_ratio*np.mean(cambium_ws_prices_MS['total_cost_enduse']))    
+    cambium_ws_prices_WY_avg.append(cpi_ratio*np.mean(cambium_ws_prices_WY['total_cost_enduse']))
+    cambium_ws_prices_MN_avg.append(cpi_ratio*np.mean(cambium_ws_prices_MN['total_cost_enduse']))
 
 #----------------- Get AEO projected retail prices for 2022 -------------------
 
@@ -55,12 +60,12 @@ aeo_projected_retail_prices = pd.read_csv(aeo_dir + 'aeo_2022_retail_rates'+'.cs
     
 # Calculate future retail prices using 2022 AEO retail prices and Cambium wholesale prices    
 # Get 2022 AEO projected retail prices
-retail_price_aeo_2022_IN = aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Indiana'].tolist()[0]
-retail_price_aeo_2022_IA = aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Iowa'].tolist()[0]    
-retail_price_aeo_2022_TX = aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Texas'].tolist()[0]
-retail_price_aeo_2022_MS = aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Mississippi'].tolist()[0] 
-retail_price_aeo_2022_WY = aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Wyoming'].tolist()[0]   
-retail_price_aeo_2022_MN = aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Iowa'].tolist()[0]  
+retail_price_aeo_2022_IN = cpi_ratio*aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Indiana'].tolist()[0]
+retail_price_aeo_2022_IA = cpi_ratio*aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Iowa'].tolist()[0]    
+retail_price_aeo_2022_TX = cpi_ratio*aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Texas'].tolist()[0]
+retail_price_aeo_2022_MS = cpi_ratio*aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Mississippi'].tolist()[0] 
+retail_price_aeo_2022_WY = cpi_ratio*aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Wyoming'].tolist()[0]   
+retail_price_aeo_2022_MN = cpi_ratio*aeo_projected_retail_prices.loc[aeo_projected_retail_prices['Year']==2022,'Iowa'].tolist()[0]  
 
 # Calculate ratio of AEO 2022 retail prices to Cambium 2022 Wholesale prices
 ratios_retail_ws = {'IN':retail_price_aeo_2022_IN/cambium_ws_prices_IN_avg[0],
@@ -334,9 +339,9 @@ future_ws_prices_dict = {'IN':cambium_ws_price_IN_combined_dict,'IA':cambium_ws_
 future_retail_prices_df_mult = pd.DataFrame.from_dict(future_retail_prices_dict_mult,orient='columns')
 future_retail_prices_df_adder = pd.DataFrame.from_dict(future_retail_prices_dict_adder,orient='columns')
 future_ws_prices_df = pd.DataFrame.from_dict(future_ws_prices_dict,orient='columns')
-#future_retail_prices_df_mult.to_csv('H2_Analysis/annual_average_retail_prices_mult.csv',sep = ',')
-#future_retail_prices_df_adder.to_csv('H2_Analysis/annual_average_retail_prices_adder.csv',sep = ',')
-#future_ws_prices_df.to_csv('H2_Analysis/annual_average_ws_prices.csv',sep=',')
+future_retail_prices_df_mult.to_csv('H2_Analysis/annual_average_retail_prices_mult.csv',sep = ',')
+future_retail_prices_df_adder.to_csv('H2_Analysis/annual_average_retail_prices_adder.csv',sep = ',')
+future_ws_prices_df.to_csv('H2_Analysis/annual_average_ws_prices.csv',sep=',')
 
 years_cambium.append(2050)
 # Plot combined future retail prices vs AEO projections

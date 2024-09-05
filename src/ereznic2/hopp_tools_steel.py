@@ -155,6 +155,11 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
     #     electrolyzer_replacement_scenario = 'Conservative'
 
     #TODO: hard-coding this for now since we are using degradation model
+    model_year_CEPCI = 816
+    equation_year_CEPCI = 596.2
+    CEPCI_ratio = model_year_CEPCI/equation_year_CEPCI
+
+
     electrolyzer_replacement_scenario = 'Standard'
 
     component_scaling_factors = {'Stack':0.89,'Power Electronics':0.75,'BOP':0.73,'H2 Conditioning':0.6}
@@ -165,7 +170,7 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
         electrolyzer_energy_kWh_per_kg = 54.61
 
         # Centralized costs and scales for 2020
-        component_costs_centralized = {'Stack':450,'Power Electronics':200,'BOP':250,'H2 Conditioning':100}
+        component_costs_centralized = {'Stack':450*CEPCI_ratio,'Power Electronics':200*CEPCI_ratio,'BOP':250*CEPCI_ratio,'H2 Conditioning':100*CEPCI_ratio}
         component_scales_centralized = {'Stack':1000,'Power Electronics':1000,'BOP':1000,'H2 Conditioning':1000}
         component_scales_distributed = {'Stack':1000,'Power Electronics':1000,'BOP':1000,'H2 Conditioning':1000}
 
@@ -181,15 +186,15 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
 
         # Centralized costs and scales for 2025
         if electrolyzer_cost_case == 'Low' or electrolyzer_cost_case == 'low':
-            component_costs_centralized = {'Stack':200.1,'Power Electronics':94.8,'BOP':111.6,'H2 Conditioning':31.0}
+            component_costs_centralized = {'Stack':200.1*CEPCI_ratio,'Power Electronics':94.8*CEPCI_ratio,'BOP':111.6*CEPCI_ratio,'H2 Conditioning':31.0*CEPCI_ratio}
             component_scales_centralized = {'Stack':2000,'Power Electronics':18000,'BOP':18000,'H2 Conditioning':18000}
             component_scales_distributed = {'Stack':2000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'Mid' or electrolyzer_cost_case == 'mid':
-            component_costs_centralized = {'Stack':276.9,'Power Electronics':113.0,'BOP':135.0,'H2 Conditioning':41.0}
+            component_costs_centralized = {'Stack':276.9*CEPCI_ratio,'Power Electronics':113.0*CEPCI_ratio,'BOP':135.0*CEPCI_ratio,'H2 Conditioning':41.0*CEPCI_ratio}
             component_scales_centralized = {'Stack':2000,'Power Electronics':9000,'BOP':9000,'H2 Conditioning':9000}
             component_scales_distributed = {'Stack':2000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'High' or electrolyzer_cost_case == 'high':
-            component_costs_centralized = {'Stack':352.5,'Power Electronics':167.0,'BOP':205.8,'H2 Conditioning':75.5}
+            component_costs_centralized = {'Stack':352.5*CEPCI_ratio,'Power Electronics':167.0*CEPCI_ratio,'BOP':205.8*CEPCI_ratio,'H2 Conditioning':75.5*CEPCI_ratio}
             component_scales_centralized = {'Stack':1000,'Power Electronics':2000,'BOP':2000,'H2 Conditioning':2000}
             component_scales_distributed = {'Stack':1000,'Power Electronics':2000,'BOP':2000,'H2 Conditioning':2000}
 
@@ -205,15 +210,15 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
 
         # Centralized costs and scales for 2025
         if electrolyzer_cost_case == 'Low' or electrolyzer_cost_case == 'low':
-            component_costs_centralized = {'Stack':47.9,'Power Electronics':49.5,'BOP':55.1,'H2 Conditioning':17.5}
+            component_costs_centralized = {'Stack':47.9*CEPCI_ratio,'Power Electronics':49.5*CEPCI_ratio,'BOP':55.1*CEPCI_ratio,'H2 Conditioning':17.5*CEPCI_ratio}
             component_scales_centralized = {'Stack':10000,'Power Electronics':40000,'BOP':40000,'H2 Conditioning':40000}
             component_scales_distributed = {'Stack':turbine_rating*1000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'Mid' or electrolyzer_cost_case == 'mid':
-            component_costs_centralized = {'Stack':178.3,'Power Electronics':65.7,'BOP':75.0,'H2 Conditioning':20.5}
+            component_costs_centralized = {'Stack':178.3*CEPCI_ratio,'Power Electronics':65.7*CEPCI_ratio,'BOP':75.0*CEPCI_ratio,'H2 Conditioning':20.5*CEPCI_ratio}
             component_scales_centralized = {'Stack':2000,'Power Electronics':40000,'BOP':40000,'H2 Conditioning':40000}
             component_scales_distributed = {'Stack':2000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'High' or electrolyzer_cost_case == 'high':
-            component_costs_centralized = {'Stack':249.2,'Power Electronics':90.9,'BOP':106.7,'H2 Conditioning':29.5}
+            component_costs_centralized = {'Stack':249.2*CEPCI_ratio,'Power Electronics':90.9*CEPCI_ratio,'BOP':106.7*CEPCI_ratio,'H2 Conditioning':29.5*CEPCI_ratio}
             component_scales_centralized = {'Stack':2000,'Power Electronics':20000,'BOP':20000,'H2 Conditioning':20000}
             component_scales_distributed = {'Stack':2000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
 
@@ -229,15 +234,15 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
 
         # Centralized costs and scales for 2025
         if electrolyzer_cost_case == 'Low' or electrolyzer_cost_case == 'low':
-            component_costs_centralized = {'Stack':40.1,'Power Electronics':44.5,'BOP':49.0,'H2 Conditioning':16.4}
+            component_costs_centralized = {'Stack':40.1*CEPCI_ratio,'Power Electronics':44.5*CEPCI_ratio,'BOP':49.0*CEPCI_ratio,'H2 Conditioning':16.4*CEPCI_ratio}
             component_scales_centralized = {'Stack':10000,'Power Electronics':40000,'BOP':40000,'H2 Conditioning':40000}
             component_scales_distributed = {'Stack':turbine_rating*1000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'Mid' or electrolyzer_cost_case == 'mid':
-            component_costs_centralized = {'Stack':132.9,'Power Electronics':59.8,'BOP':67.7,'H2 Conditioning':19.5}
+            component_costs_centralized = {'Stack':132.9*CEPCI_ratio,'Power Electronics':59.8*CEPCI_ratio,'BOP':67.7*CEPCI_ratio,'H2 Conditioning':19.5*CEPCI_ratio}
             component_scales_centralized = {'Stack':10000,'Power Electronics':40000,'BOP':40000,'H2 Conditioning':40000}
             component_scales_distributed = {'Stack':turbine_rating*1000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
         elif electrolyzer_cost_case == 'High' or electrolyzer_cost_case == 'high':
-            component_costs_centralized = {'Stack':200.5,'Power Electronics':87.9,'BOP':102.8,'H2 Conditioning':28.9}
+            component_costs_centralized = {'Stack':200.5*CEPCI_ratio,'Power Electronics':87.9*CEPCI_ratio,'BOP':102.8*CEPCI_ratio,'H2 Conditioning':28.9*CEPCI_ratio}
             component_scales_centralized = {'Stack':5000,'Power Electronics':20000,'BOP':20000,'H2 Conditioning':20000}
             component_scales_distributed = {'Stack':turbine_rating*1000,'Power Electronics':turbine_rating*1000,'BOP':turbine_rating*1000,'H2 Conditioning':turbine_rating*1000}
 
@@ -2598,7 +2603,8 @@ def hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage
     #         hydrogen_storage_soc_1.append(hydrogen_surplus_deficit[j])
     #     else:
     #         hydrogen_storage_soc_1.append(hydrogen_storage_soc_1[j-1]+hydrogen_surplus_deficit[j])
-
+    equation_year_CEPCI = 596.2
+    model_year_CEPCI = 816
 
     hydrogen_storage_soc = []
     for j in range(len(hydrogen_production_kgphr)):
@@ -2628,7 +2634,7 @@ def hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage
     small_positive = 1e-6
     compressor_avg_capacity_kw = compressor_total_capacity_kW/(n_comps+small_positive)
 
-    compressor_total_installed_cost_USD = 2*n_comps*(6893.2*compressor_avg_capacity_kw**0.7464)*1.16/1.12*607.5/541.7
+    compressor_total_installed_cost_USD = 2*n_comps*(6893.2*compressor_avg_capacity_kw**0.7464)*1.16/1.12*model_year_CEPCI/541.7
 
     # Get average electrolyzer efficiency
     electrolyzer_efficiency_while_running = []
@@ -2640,8 +2646,7 @@ def hydrogen_storage_capacity_cost_calcs(H2_Results,electrolyzer_size_mw,storage
     # Calculate storage durationhyd
     hydrogen_storage_duration_hr = hydrogen_storage_capacity_MWh_LHV/electrolyzer_size_mw/electrolyzer_average_efficiency_HHV
 
-    equation_year_CEPCI = 596.2
-    model_year_CEPCI = 607.5
+
 
     if storage_type == 'Salt cavern' or storage_type == 'salt cavern' or storage_type == 'salt' or storage_type == 'Salt':
         if hydrogen_storage_capacity_MWh_HHV <= 120293:
