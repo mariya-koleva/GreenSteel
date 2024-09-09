@@ -40,7 +40,7 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     # Conversions
     #------------------------------------------------------------------------------
     mt_tokg_conv = 1000 # Metric tonne to kg conversion 
-    hrs_in_year = 8760
+    hrs_in_year = 8760 # Hours in a non-leap year
     kg_to_MT_conv = 0.001 # Converion from kg to metric tonnes
     g_to_kg_conv  = 0.001  # Conversion from grams to kilograms
     kWh_to_MWh_conv = 0.001 # Conversion from kWh to MWh
@@ -67,7 +67,6 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     year2022_CPI = 292.7
     
     plant_life = 30
-    # hydrogen_storage_cost_USDprkg = 540 * year2022_CEPCI/year2020_CEPCI # 2022$
     land_cost = 0 # $/acre
     water_cost = 0 # $/gal H2O
     CO2_credit = {} # $/ton CO2
@@ -82,9 +81,9 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     electricity_cost = 0.076 # $/kWh; If electricity prices file missing, this is the cost which will be taken
     hydrogen_storage_duration = 4 # hours, which have been chosen based on RODeO runs with grid connection
     lhv_h2 = 33 # kWh/kg H2
+    hhv_h2 = 39 # kWh/kg H2
+    h2_HHV = 141.88 # MJ/kg H2
     water_consumption = 8.116 # gal H2O/kg H2 - for feedstock and process water
-
-    h2_HHV = 141.88 #MJ/kg
     # Get storage compressor capacity and cost
     max_h2_injection_rate_kgphr = hydrogen_production_kgpd/24
     compressor_total_capacity_kW = max_h2_injection_rate_kgphr/3600/2.0158*8641.678424
@@ -105,7 +104,7 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     energy_demand_process = 0 # kWh/kgH2 defaulted to ATR without CCS
     energy_demand_process_ccs = 3.495 # kWh/kg H2
     total_plant_cost = 0
-    NG_consumption = 167 # MJ-LHV/kgH2
+    NG_consumption = 167 # MJ-HHV/kgH2
     energy_demand_NG = 0
     total_energy_demand =  0 # kWh/kgH2
     CO2_TnS_unit_cost = 0
@@ -136,7 +135,7 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
         #owners_n_catalyst_cost = 0.174 * total_plant_cost # Percentage from NETL report
         #total_plant_cost = total_plant_cost + owners_n_catalyst_cost #overnight cost
         energy_demand_NG = 0 # 2.01-1.50 # kWh/kgH2
-        NG_consumption = 167 # MJ/kgH2 XXX Using same value as ATR only case for now as a placeholder
+        NG_consumption = 167 # MJ/kgH2 
         total_energy_demand = energy_demand_process_ccs + energy_demand_NG 
         CO2_captured = capacity_factor * h2_plant_capacity_kgpy * ccs_perc_capture * CO2_per_H2/1000 #tonnes CO2 per year
 
@@ -205,10 +204,10 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     #------------------------------------------------------------------------------
     # Calculate storage capital costs. Storage duration arbitrarily chosen at 4 hours capacity
     if CCS_option == 'wCCS': 
-        hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process_ccs * hydrogen_production_kgpy / (hrs_in_year  * lhv_h2)
+        hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process_ccs * hydrogen_production_kgpy / (hrs_in_year  * hhv_h2)
         CO2_TnS_unit_cost = (CO2_transport_capex + CO2_storage_capex)* CO2_captured/(h2_plant_capacity_kgpy * capacity_factor) #$2022/kgH2
     elif CCS_option == 'woCCS': # this option shouldn't be used
-        hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process * hydrogen_production_kgpy / (hrs_in_year  * lhv_h2)
+        hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process * hydrogen_production_kgpy / (hrs_in_year  * hhv_h2)
         CO2_TnS_unit_cost = 0 #$2022/kgH2
        # Get hydrogen storage cost
     if hydrogen_storage_capacity_MWh_HHV <= 4085:
@@ -233,7 +232,7 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     
     #vom_ATR_NG_perMJ = naturalgas_prices_dict    # $/MJ
     #other_vom_costs = 0.08938 # $/kgH2
-    other_vom_costs = 0.0415 # $/kg, from H2A
+    other_vom_costs = 0.258 * year2022_CPI/year2020_CPI # 2022$/kg H2 from H2A
     
     ATR_total_EI_all = []
     ATR_ccs_total_EI_all = []
