@@ -7,6 +7,7 @@ import glob
 #sys.path.insert(1,'../PyFAST/')
 import pandas as pd
 import numpy as np
+import math
 
 #sys.path.append('../PyFAST/')
 #import src.PyFAST as PyFAST
@@ -69,7 +70,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     cpi_ratio = cpi_modelyear/cpi_equationyear
 
     plant_life = 30
-    hydrogen_storage_cost_USDprkg = model_year_CEPCI/year2018_CEPCI*540
+    #hydrogen_storage_cost_USDprkg = model_year_CEPCI/year2018_CEPCI*540
     land_cost = 0 # $/acre
     water_cost = 0 # $/gal H2O
     CO2_credit = {} # $/ton CO2
@@ -85,7 +86,21 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     hydrogen_storage_duration = 4 # hours, which have been chosen based on RODeO runs with grid connection
     lhv_h2 = 33 # kWh/kg H2
     water_consumption = 10 # gal H2O/kg H2 - for feedstock and process water
-    compressor_capex_USDprkWe = model_year_CEPCI/year2018_CEPCI*39 # $/kWe
+    #compressor_capex_USDprkWe = model_year_CEPCI/year2018_CEPCI*39 # $/kWe
+    h2_HHV = 141.88 #MJ/kg
+    
+
+
+    # Get storage compressor capacity and cost
+    max_h2_injection_rate_kgphr = hydrogen_production_kgpd/24
+    compressor_total_capacity_kW = max_h2_injection_rate_kgphr/3600/2.0158*8641.678424
+
+    compressor_max_capacity_kw = 16000
+    n_comps = math.ceil(compressor_total_capacity_kW/compressor_max_capacity_kw)
+
+    small_positive = 1e-6
+    compressor_avg_capacity_kw = compressor_total_capacity_kW/(n_comps+small_positive)
+    storage_compressor_total_installed_cost_USD = 2*n_comps*(6893.2*compressor_avg_capacity_kw**0.7464)*1.16/1.12*model_year_CEPCI/541.7
  
     # policy credit
     #CO2_per_H2 = 8.3 # kg CO2e/kg H2 -> change if the capture rate is changed
@@ -100,8 +115,6 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     total_energy_demand =  0.64 # kWh/kgH2
     CO2_TnS_unit_cost = 0
     grid_price_per_yr = []
-
-
     
     h2prod_life_sum = hydrogen_production_kgpy * plant_life
                 
@@ -236,10 +249,22 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     elif CCS_option == 'woCCS': 
         hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process * hydrogen_production_kgpy / (hrs_in_year  * lhv_h2)
         CO2_TnS_unit_cost = 0
-    capex_storage_installed = hydrogen_storage_capacity_kg * hydrogen_storage_cost_USDprkg
-    capex_compressor_installed = compressor_capex_USDprkWe * h2_plant_capacity_kgpy * lhv_h2 / hrs_in_year 
- 
     
+    hydrogen_storage_capacity_MWh_HHV = hydrogen_storage_capacity_kg*h2_HHV/3600
+    # Get hydrogen storage cost
+    if hydrogen_storage_capacity_MWh_HHV <= 4085:
+        base_capacity_MWh_HHV = 4085
+        base_cost_USDprkg = 521.34
+        scaling_factor = 0.9592
+        hydrogen_storage_cost_USDprkg = model_year_CEPCI/year2020_CEPCI*base_capacity_MWh_HHV*base_cost_USDprkg*(hydrogen_storage_capacity_MWh_HHV/base_capacity_MWh_HHV)**scaling_factor/hydrogen_storage_capacity_MWh_HHV
+        status_message = 'Hydrogen storage model complete'
+    else:
+        hydrogen_storage_cost_USDprkg = model_year_CEPCI/year2020_CEPCI*521.34
+        status_message = 'Hydrogen storage model complete.\nStorage capacity: ' + str(hydrogen_storage_capacity_kg/1000) + ' metric tonnes. \nStorage cost: ' + str(hydrogen_storage_cost_USDprkg) + ' $/kg'
+
+    capex_storage_installed = hydrogen_storage_capacity_kg * hydrogen_storage_cost_USDprkg
+    capex_compressor_installed = storage_compressor_total_installed_cost_USD#compressor_capex_USDprkWe * h2_plant_capacity_kgpy * lhv_h2 / hrs_in_year 
+
     # Fixed and variable costs
     #------------------------------------------------------------------------------
     fom_SMR_total = fom_SMR_perc * total_plant_cost # $/year
