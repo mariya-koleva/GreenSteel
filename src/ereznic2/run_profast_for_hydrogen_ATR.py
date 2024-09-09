@@ -7,6 +7,7 @@ import glob
 #sys.path.insert(1,'../PyFAST/')
 import pandas as pd
 import numpy as np
+import math
 
 #sys.path.append('../PyFAST/')
 #import src.PyFAST as PyFAST
@@ -58,8 +59,15 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     
     # Data
     #------------------------------------------------------------------------------  
-    plant_life = 40
-    hydrogen_storage_cost_USDprkg = 540 * year2022_CEPCI/year2020_CEPCI # 2022$
+    model_year_CEPCI = 816.0
+    year2018_CEPCI = 603.1
+    year2020_CEPCI = 596.2 
+    year2022_CEPCI = 816.0
+    year2020_CPI = 271
+    year2022_CPI = 292.7
+    
+    plant_life = 30
+    # hydrogen_storage_cost_USDprkg = 540 * year2022_CEPCI/year2020_CEPCI # 2022$
     land_cost = 0 # $/acre
     water_cost = 0 # $/gal H2O
     CO2_credit = {} # $/ton CO2
@@ -75,13 +83,20 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     hydrogen_storage_duration = 4 # hours, which have been chosen based on RODeO runs with grid connection
     lhv_h2 = 33 # kWh/kg H2
     water_consumption = 8.116 # gal H2O/kg H2 - for feedstock and process water
-    compressor_capex_USDprkWe = 39 * year2022_CEPCI/year2020_CEPCI # 2022$/kWe
-    model_year_CEPCI = 607.5
-    year2018_CEPCI = 603.1
-    year2020_CEPCI = 596.2 
-    year2022_CEPCI = 816.0
-    year2020_CPI = 271
-    year2022_CPI = 292.7
+
+    h2_HHV = 141.88 #MJ/kg
+    # Get storage compressor capacity and cost
+    max_h2_injection_rate_kgphr = hydrogen_production_kgpd/24
+    compressor_total_capacity_kW = max_h2_injection_rate_kgphr/3600/2.0158*8641.678424
+
+    compressor_max_capacity_kw = 16000
+    n_comps = math.ceil(compressor_total_capacity_kW/compressor_max_capacity_kw)
+
+    small_positive = 1e-6
+    compressor_avg_capacity_kw = compressor_total_capacity_kW/(n_comps+small_positive)
+    storage_compressor_total_installed_cost_USD = 2*n_comps*(6893.2*compressor_avg_capacity_kw**0.7464)*1.16/1.12*year2022_CEPCI/541.7
+    hydrogen_storage_capacity_MWh_HHV = hydrogen_storage_capacity_kg*h2_HHV/3600
+ 
     # policy credit
     #CO2_per_H2 = 8.3 # kg CO2e/kg H2 -> change if the capture rate is changed
     CO2_per_H2 = 9.326 # From H2A
@@ -117,7 +132,7 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     # Energy demand and plant costs
     if CCS_option == 'wCCS':
         energy_demand_process_ccs = 3.495 # kWh/kgH2
-        total_plant_cost = year2022_CEPCI/year2020_CEPCI * (-0.0005 * (h2_plant_capacity_kgpd**2) + 1407.2 * h2_plant_capacity_kgpd + 2*(10**8))  # 2022$ ; the correlation takes daily capacity
+        total_plant_cost = year2022_CEPCI/year2020_CEPCI * (-0.0005 * (h2_plant_capacity_kgpd**2) + 1385 * h2_plant_capacity_kgpd + 2*(10**8))  # 2022$ ; the correlation takes daily capacity
         #owners_n_catalyst_cost = 0.174 * total_plant_cost # Percentage from NETL report
         #total_plant_cost = total_plant_cost + owners_n_catalyst_cost #overnight cost
         energy_demand_NG = 0 # 2.01-1.50 # kWh/kgH2
@@ -185,40 +200,6 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     for year in range(operational_year,EOL_year):
         naturalgas_prices_dict[year]=naturalgas_prices.loc[year,site_name]
 
-    # if NG_price_case == 'default':
-    #     if site_location == 'Site 1' :
-    #       NG_cost = NG_costs_csv.at["Indiana","Default"]  
-    #     elif site_location == 'Site 2':
-    #        NG_cost = NG_costs_csv.at["Texas","Default"]  
-    #     elif site_location == 'Site 3':
-    #         NG_cost = NG_costs_csv.at["Iowa","Default"]  
-    #     elif site_location == 'Site 4':
-    #         NG_cost = NG_costs_csv.at["Mississippi","Default"]  
-    #     elif site_location == 'Site 5':
-    #        NG_cost =  NG_costs_csv.at["Minnesota","Default"]      
-    # elif NG_price_case == 'min':
-    #     if site_location == 'Site 1' :
-    #       NG_cost = NG_costs_csv.at["Indiana","Min"]  
-    #     elif site_location == 'Site 2':
-    #        NG_cost =  NG_costs_csv.at["Texas","Min"] 
-    #     elif site_location == 'Site 3':
-    #       NG_cost =   NG_costs_csv.at["Iowa","Min"]  
-    #     elif site_location == 'Site 4':
-    #        NG_cost =  NG_costs_csv.at["Mississippi","Min"] 
-    #     elif site_location == 'Site 5':
-    #        NG_cost =  NG_costs_csv.at["Minnesota","Min"]  
-    # elif NG_price_case == 'max':
-    #     if site_location == 'Site 1' :
-    #       NG_cost = NG_costs_csv.at["Indiana","Max"] 
-    #     elif site_location == 'Site 2':
-    #         NG_cost = NG_costs_csv.at["Texas","Max"] 
-    #     elif site_location == 'Site 3':
-    #        NG_cost =  NG_costs_csv.at["Iowa","Max"]  
-    #     elif site_location == 'Site 4':
-    #         NG_cost = NG_costs_csv.at["Mississippi","Max"] 
-    #     elif site_location == 'Site 5':
-    #         NG_cost = NG_costs_csv.at["Minnesota","Max"]     
-    # Calculations
     #------------------------------------------------------------------------------
     # CAPEX
     #------------------------------------------------------------------------------
@@ -226,12 +207,22 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     if CCS_option == 'wCCS': 
         hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process_ccs * hydrogen_production_kgpy / (hrs_in_year  * lhv_h2)
         CO2_TnS_unit_cost = (CO2_transport_capex + CO2_storage_capex)* CO2_captured/(h2_plant_capacity_kgpy * capacity_factor) #$2022/kgH2
-    elif CCS_option == 'woCCS': 
+    elif CCS_option == 'woCCS': # this option shouldn't be used
         hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process * hydrogen_production_kgpy / (hrs_in_year  * lhv_h2)
         CO2_TnS_unit_cost = 0 #$2022/kgH2
+       # Get hydrogen storage cost
+    if hydrogen_storage_capacity_MWh_HHV <= 4085:
+        base_capacity_MWh_HHV = 4085
+        base_cost_USDprkg = 521.34
+        scaling_factor = 0.9592
+        hydrogen_storage_cost_USDprkg = year2022_CEPCI/year2020_CEPCI*base_capacity_MWh_HHV*base_cost_USDprkg*(hydrogen_storage_capacity_MWh_HHV/base_capacity_MWh_HHV)**scaling_factor/hydrogen_storage_capacity_MWh_HHV
+        status_message = 'Hydrogen storage model complete'
+    else:
+        hydrogen_storage_cost_USDprkg = year2022_CEPCI/year2020_CEPCI*521.34
+        status_message = 'Hydrogen storage model complete.\nStorage capacity: ' + str(hydrogen_storage_capacity_kg/1000) + ' metric tonnes. \nStorage cost: ' + str(hydrogen_storage_cost_USDprkg) + ' $/kg'
+
     capex_storage_installed = hydrogen_storage_capacity_kg * hydrogen_storage_cost_USDprkg
-    capex_compressor_installed = compressor_capex_USDprkWe * h2_plant_capacity_kgpy * lhv_h2 / hrs_in_year 
- 
+    capex_compressor_installed = storage_compressor_total_installed_cost_USD #compressor_capex_USDprkWe * h2_plant_capacity_kgpy * lhv_h2 / hrs_in_year 
     
     # Fixed and variable costs
     #------------------------------------------------------------------------------
