@@ -348,53 +348,99 @@ def batch_generator_kernel(arg_list):
 
     electrolyzer_energy_kWh_per_kg_estimate_EOL = electrolyzer_energy_kWh_per_kg_estimate_BOL*(1+electrolyzer_degradation_power_increase)
 
-    # Annual electricity target to meet hydrogen production target - use this to calculate renewable plant sizing
-    #electricity_production_target_MWhpy = hydrogen_production_target_kgpy*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
+    # Annual electricity requirement estimate based on 
+    electricity_production_target_MWhpyr = hydrogen_production_target_kgpy*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
+
+    print('Annual electricity target (MWhpyr): ' + str(electricity_production_target_MWhpyr))
 
     # Estimate required electrolyzer capacity
     if floris == False:
         if grid_connection_scenario =='off-grid':
             # For PySAM, use probable wind capacity factors by location if off-grid
             if site_location == 'Site 1':
-                cf_estimate = 0.3947
+                wind_cf_estimate = 0.3947
                 solar_cf_estimate = 0.2266
             elif site_location == 'Site 2':
-                cf_estimate = 0.4819
+                wind_cf_estimate = 0.4819
                 solar_cf_estimate = 0.2889
             elif site_location == 'Site 3':
-                cf_estimate = 0.4319
+                wind_cf_estimate = 0.4319
                 solar_cf_estimate = 0.2351
             elif site_location == 'Site 4':
-                cf_estimate = 0.3525
+                wind_cf_estimate = 0.3525
                 solar_cf_estimate = 0.2390
             elif site_location == 'Site 5':
-                cf_estimate = 0.4014
+                wind_cf_estimate = 0.4014
                 solar_cf_estimate = 0.2171
 
         else:
             # If grid-connected, base capacity off of constant full-power operation (steel/ammonia plant CF is incorporated above)
             cf_estimate = 1
 
-        # Electrolyzer rated hydrogen production capacity - independent of degradation
-        hydrogen_production_capacity_required_kgphr = hydrogen_production_target_kgpy/(8760*cf_estimate)
+        wind_max_norm_power = 0.8094133
+        solar_max_norm_power_AC = 1
 
-        # Annual electricity requirement estimate
-        electricity_production_target_MWhpyr = hydrogen_production_target_kgpy*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
+        # Estimate wind and solar power required size for providing all electrolysis energy from one or the other
+        if grid_connection_scenario == 'off-grid':
+            wind_size_mw_estimate = electricity_production_target_MWhpyr/(8760*wind_cf_estimate)
+            solar_size_mw_AC_estimate = electricity_production_target_MWhpyr/(8760*solar_cf_estimate)
 
-        print('Annual electricity target (MWhpyr): ' + str(electricity_production_target_MWhpyr))
+            # Actual wind and solar plant size
+            n_turbines = int(np.ceil(np.ceil(wind_size_mw_estimate)/turbine_rating))
+            wind_size_mw = n_turbines*turbine_rating
 
-        # Electrolyzer power requirement at BOL - namplate capacity in MWe?
-        electrolyzer_capacity_BOL_MW = hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
+            solar_size_step_mw_AC = 100
+            n_solar_size_steps = int(np.ceil(np.ceil(solar_size_mw_AC_estimate)/solar_size_step_mw_AC))
+            #solar_size_mw_AC_max = math.ceil(solar_electrolyzer_AC_capacity_EOL_MW)
+            solar_size_mw_AC_max = solar_size_step_mw_AC*n_solar_size_steps
+            n_solar_size_steps = n_solar_size_steps + 1 # Add one for zero
 
-        # Electrolyzer power requirement at EOL
-        electrolyzer_capacity_EOL_MW = hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
+            electrolyzer_capacity_EOL_MW_wind = wind_size_mw*wind_max_norm_power
+            electrolyzer_capacity_EOL_MW_solar = solar_size_mw_AC_max*solar_max_norm_power_AC
+
+            electrolyzer_capacity_BOL_MW_wind = electrolyzer_capacity_EOL_MW_wind/(1+electrolyzer_degradation_power_increase)
+            electrolyzer_capacity_BOL_MW_solar = electrolyzer_capacity_EOL_MW_solar/(1+electrolyzer_degradation_power_increase)
+
+            hydrogen_production_capacity_required_kgphr = electrolyzer_capacity_BOL_MW_wind*1000/electrolyzer_energy_kWh_per_kg_estimate_BOL
+
+
+        elif grid_connection_scenario == 'hybrid-grid':
+            electrolyzer_capacity_EOL_MW = electricity_production_target_MWhpyr/(8760*cf_estimate)
+            electrolyzer_capacity_BOL_MW = electrolyzer_capacity_EOL_MW/(1+electrolyzer_degradation_power_increase)
+
+            electrolyzer_capacity_BOL_MW_wind = electrolyzer_capacity_BOL_MW
+
+            wind_size_mw_estimate = electrolyzer_capacity_EOL_MW/wind_max_norm_power
+            solar_size_mw_AC_estimate = electrolyzer_capacity_EOL_MW/solar_max_norm_power_AC
+
+            # Actual wind and solar plant size
+            n_turbines = int(np.ceil(np.ceil(wind_size_mw_estimate)/turbine_rating))
+            wind_size_mw = n_turbines*turbine_rating
+
+            solar_size_step_mw_AC = 100
+            n_solar_size_steps = int(np.ceil(np.ceil(solar_size_mw_AC_estimate)/solar_size_step_mw_AC))
+            #solar_size_mw_AC_max = math.ceil(solar_electrolyzer_AC_capacity_EOL_MW)
+            solar_size_mw_AC_max = solar_size_step_mw_AC*n_solar_size_steps
+            n_solar_size_steps = n_solar_size_steps + 1 # Add one for zero
+
+            hydrogen_production_capacity_required_kgphr = electrolyzer_capacity_BOL_MW_wind*1000/electrolyzer_energy_kWh_per_kg_estimate_BOL
+
+        []
+        # # Electrolyzer rated hydrogen production capacity - independent of degradation
+        # hydrogen_production_capacity_required_kgphr = hydrogen_production_target_kgpy/(8760*wind_cf_estimate)
+
+        # # Electrolyzer power requirement at BOL - namplate capacity in MWe?
+        # electrolyzer_capacity_BOL_MW = hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
+
+        # # Electrolyzer power requirement at EOL
+        # electrolyzer_capacity_EOL_MW = hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
 
         # Size wind plant for providing power to electrolyzer at EOL. Do not size wind plant here to consider wind degradation
         # because we are not actually modeling wind plant degradation; if we size it in here we will have more wind generation
         # than we would in reality becaue the model does not take into account degradation. Wind plant degradation can be factored
         # into capital cost later.
-        n_turbines = int(np.ceil(np.ceil(electrolyzer_capacity_EOL_MW/0.8094133)/turbine_rating))
-        wind_size_mw = n_turbines*turbine_rating
+        # n_turbines = int(np.ceil(np.ceil(electrolyzer_capacity_EOL_MW)/turbine_rating))
+        # wind_size_mw = n_turbines*turbine_rating
         #wind_size_mw = electrolyzer_capacity_EOL_MW
         #wind_size_mw = electrolyzer_capacity_EOL_MW*1.08
 
@@ -409,10 +455,10 @@ def batch_generator_kernel(arg_list):
         # wind_size_mw = electrolyzer_capacity_BOL_MW
         # #wind_size_mw = electrolyzer_capacity_EOL_MW*1.08
         
-        if grid_connection_scenario !='grid-only':
-            solar_hydrogen_production_capacity_required_kgphr = hydrogen_production_target_kgpy/(8760*solar_cf_estimate)
-            solar_electrolyzer_AC_capacity_BOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
-            solar_electrolyzer_AC_capacity_EOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
+        # if grid_connection_scenario !='grid-only':
+        #     solar_hydrogen_production_capacity_required_kgphr = hydrogen_production_target_kgpy/(8760*solar_cf_estimate)
+        #     solar_electrolyzer_AC_capacity_BOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
+        #     solar_electrolyzer_AC_capacity_EOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
     else:
         wind_size_mw = nTurbs*turbine_rating
         electrolyzer_capacity_EOL_MW = wind_size_mw
@@ -427,15 +473,15 @@ def batch_generator_kernel(arg_list):
     #electrolyzer_size_mw = np.ceil(electrolyzer_capacity_EOL_MW)
     #electrolyzer_size_mw = np.ceil(electrolyzer_capacity_BOL_MW)
     cluster_cap_mw = 40
-    n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
+    n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW_wind)/cluster_cap_mw))
     electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
 
-    if grid_connection_scenario =='off-grid':
-        solar_size_step_mw_AC = 100
-        n_solar_size_steps = int(np.ceil(np.ceil(solar_electrolyzer_AC_capacity_EOL_MW)/solar_size_step_mw_AC))
-        #solar_size_mw_AC_max = math.ceil(solar_electrolyzer_AC_capacity_EOL_MW)
-        solar_size_mw_AC_max = solar_size_step_mw_AC*n_solar_size_steps
-        n_solar_size_steps = n_solar_size_steps + 1 # Add one for zero
+    # if grid_connection_scenario =='off-grid':
+    #     solar_size_step_mw_AC = 100
+    #     n_solar_size_steps = int(np.ceil(np.ceil(solar_electrolyzer_AC_capacity_EOL_MW)/solar_size_step_mw_AC))
+    #     #solar_size_mw_AC_max = math.ceil(solar_electrolyzer_AC_capacity_EOL_MW)
+    #     solar_size_mw_AC_max = solar_size_step_mw_AC*n_solar_size_steps
+    #     n_solar_size_steps = n_solar_size_steps + 1 # Add one for zero
 
     #n_pem_clusters = 12
     if electrolysis_scale == 'Distributed':
@@ -522,7 +568,7 @@ def batch_generator_kernel(arg_list):
             site_df,sample_site,site,site_location,\
             turbine_model,wind_size_mw,nTurbs,floris_config,floris,\
             sell_price,buy_price,discount_rate,debt_equity_split,\
-            electrolyzer_size_mw,electrolyzer_capacity_EOL_MW,n_pem_clusters,pem_control_type,hydrogen_demand_kgphr,\
+            electrolyzer_size_mw,electrolyzer_capacity_EOL_MW_wind,n_pem_clusters,pem_control_type,hydrogen_demand_kgphr,\
             electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg,time_between_replacement,\
             user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
             electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC,grid_price_filename,\

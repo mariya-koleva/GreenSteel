@@ -386,7 +386,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             
             solar_size_mw_AC = solar_size_mw_DC/solar_DC_AC_ratio
 
-            print('Actual wnd/solar electricity output (MWh): ' + str(sum(plant_power_production)/1000))
+            print('Actual wind/solar electricity output (MWh): ' + str(sum(plant_power_production)/1000))
             if run_wind_plant:
                 cf_wind_annuals = hybrid_plant.wind._financial_model.Outputs.cf_annual_costs
                 wind_itc_total = hybrid_plant.wind._financial_model.Outputs.itc_total
@@ -447,7 +447,8 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             )
 
             print('Energy to electrolyzer after battery (MWh): ' + str(sum(energy_to_electrolyzer)/1000))
-            print('Electricity production margin (%): ' + str(100*(sum(energy_to_electrolyzer)/1000 - electricity_production_target_MWhpyr)/electricity_production_target_MWhpyr))
+            print('Curtailed electricity after storage (%): ' + str((sum(combined_pv_wind_power_production_hopp) - sum(energy_to_electrolyzer))/sum(combined_pv_wind_power_production_hopp)*100))
+            #print('Electricity production margin (%): ' + str(100*(sum(energy_to_electrolyzer)/1000 - electricity_production_target_MWhpyr)/electricity_production_target_MWhpyr))
 
             if solar_size_mw_AC > 0:
                 cf_solar = hybrid_plant.pv.capacity_factor/100
