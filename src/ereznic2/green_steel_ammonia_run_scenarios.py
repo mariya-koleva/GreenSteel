@@ -138,13 +138,13 @@ def batch_generator_kernel(arg_list):
     #storage_sizes_mwh = [0]
     if grid_connection_scenario == 'off-grid':
         solar_sizes_mw=[0]
-        storage_sizes_mw=[0]
-        storage_sizes_mwh = [0]
+        #storage_sizes_mw=[0]
+        #storage_sizes_mwh = [0]
         #solar_sizes_mw=[0,100,250,500,750]
         #storage_sizes_mw=[0,100,100,200]
         #storage_sizes_mwh = [0,100,400,400]
-        #storage_sizes_mw=[0,100,100,200]
-        #storage_sizes_mwh = [0,100,400,400]
+        storage_sizes_mw=[0,100]
+        storage_sizes_mwh = [0,100]
     else:
         solar_sizes_mw = [0,100,250,500]
         storage_sizes_mw=[0]
@@ -393,7 +393,7 @@ def batch_generator_kernel(arg_list):
         # because we are not actually modeling wind plant degradation; if we size it in here we will have more wind generation
         # than we would in reality becaue the model does not take into account degradation. Wind plant degradation can be factored
         # into capital cost later.
-        n_turbines = int(np.ceil(np.ceil(electrolyzer_capacity_EOL_MW)/turbine_rating))
+        n_turbines = int(np.ceil(np.ceil(electrolyzer_capacity_EOL_MW/0.8094133)/turbine_rating))
         wind_size_mw = n_turbines*turbine_rating
         #wind_size_mw = electrolyzer_capacity_EOL_MW
         #wind_size_mw = electrolyzer_capacity_EOL_MW*1.08
@@ -409,9 +409,10 @@ def batch_generator_kernel(arg_list):
         # wind_size_mw = electrolyzer_capacity_BOL_MW
         # #wind_size_mw = electrolyzer_capacity_EOL_MW*1.08
         
-        solar_hydrogen_production_capacity_required_kgphr = hydrogen_production_target_kgpy/(8760*solar_cf_estimate)
-        solar_electrolyzer_AC_capacity_BOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
-        solar_electrolyzer_AC_capacity_EOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
+        if grid_connection_scenario !='grid-only':
+            solar_hydrogen_production_capacity_required_kgphr = hydrogen_production_target_kgpy/(8760*solar_cf_estimate)
+            solar_electrolyzer_AC_capacity_BOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_BOL/1000
+            solar_electrolyzer_AC_capacity_EOL_MW = solar_hydrogen_production_capacity_required_kgphr*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
     else:
         wind_size_mw = nTurbs*turbine_rating
         electrolyzer_capacity_EOL_MW = wind_size_mw
@@ -429,11 +430,12 @@ def batch_generator_kernel(arg_list):
     n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
     electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
 
-    solar_size_step_mw_AC = 100
-    n_solar_size_steps = int(np.ceil(np.ceil(solar_electrolyzer_AC_capacity_EOL_MW)/solar_size_step_mw_AC))
-    #solar_size_mw_AC_max = math.ceil(solar_electrolyzer_AC_capacity_EOL_MW)
-    solar_size_mw_AC_max = solar_size_step_mw_AC*n_solar_size_steps
-    n_solar_size_steps = n_solar_size_steps + 1 # Add one for zero
+    if grid_connection_scenario =='off-grid':
+        solar_size_step_mw_AC = 100
+        n_solar_size_steps = int(np.ceil(np.ceil(solar_electrolyzer_AC_capacity_EOL_MW)/solar_size_step_mw_AC))
+        #solar_size_mw_AC_max = math.ceil(solar_electrolyzer_AC_capacity_EOL_MW)
+        solar_size_mw_AC_max = solar_size_step_mw_AC*n_solar_size_steps
+        n_solar_size_steps = n_solar_size_steps + 1 # Add one for zero
 
     #n_pem_clusters = 12
     if electrolysis_scale == 'Distributed':
@@ -444,8 +446,8 @@ def batch_generator_kernel(arg_list):
     #solar_size_num_steps = 5
     if grid_connection_scenario == 'off-grid':
         #solar_sizes_mw=np.linspace(0,solar_size_mw_max,solar_size_num_steps).tolist()
-        #solar_sizes_mw_AC = np.linspace(0,solar_size_mw_AC_max,n_solar_size_steps+1)
-        solar_sizes_mw_AC = [500,1250,solar_size_mw_AC_max]
+        #solar_sizes_mw_AC = np.linspace(0,solar_size_mw_AC_max,n_solar_size_steps).tolist()
+        solar_sizes_mw_AC = [0,1200,solar_size_mw_AC_max]
 
         # if grid_connection_scenario == 'off-grid':
 

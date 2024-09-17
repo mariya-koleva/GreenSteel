@@ -21,7 +21,7 @@ from green_steel_ammonia_run_scenarios import batch_generator_kernel
 project_path = os.path.abspath('')
 hopp_path = os.path.dirname(os.path.abspath(hopp.__file__))
 
-results_dir_name = 'Results_test'
+results_dir_name = 'Results_main'
 
 results_dir = os.path.join(project_path, "H2_Analysis", "results")
 fin_sum_dir = os.path.join(project_path, results_dir_name, "Fin_sum")
@@ -88,10 +88,10 @@ if __name__ == '__main__':
 
     site_selection = [
                     #'Site 1',
-                    #'Site 2',
+                    'Site 2',
                     #'Site 3',
                     #'Site 4',
-                    'Site 5'
+                    #'Site 5'
                     ]
 
     electrolysis_cases = [
@@ -157,7 +157,7 @@ if __name__ == '__main__':
                                                     pem_control_type,storage_capacity_multiplier,solar_ITC,grid_price_filename])
     for runs in range(len(arg_list)):
         batch_generator_kernel(arg_list[runs])
-    []
+    # []
 # ------------------ Run HOPP-RODeO/PyFAST Framework to get LCOH ---------------
-    # with Pool(processes=8,maxtasksperchild=1) as pool:
+    # with Pool(processes=3,maxtasksperchild=1) as pool:
     #         pool.map(batch_generator_kernel, arg_list)

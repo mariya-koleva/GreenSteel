@@ -307,12 +307,14 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
 
             solar_cf_AC_est = solar_cf_DC_est*solar_DC_AC_ratio
 
+            # if wind_size_mw > 0:
+            #     wind_cf_est = hybrid_plant_cfest.wind.capacity_factor/100
+            # else:
+            #     wind_cf_est = 0
             if wind_size_mw > 0:
-                wind_cf_est = hybrid_plant_cfest.wind.capacity_factor/100
+                wind_power_norm = np.array(hybrid_plant_cfest.wind.generation_profile[:8760])/(wind_size_mw*1000)
             else:
-                wind_cf_est = 0
-
-            wind_power_norm = np.array(hybrid_plant_cfest.wind.generation_profile[:8760])/(wind_size_mw*1000)
+                wind_power_norm = np.zeros(8760)
             if solar_size_mw_AC > 0:
                 solar_power_norm_AC = np.array(hybrid_plant_cfest.pv.generation_profile[:8760])/(solar_size_mw_AC*1000)
             else: 
@@ -320,17 +322,17 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
 
             if grid_connection_scenario == 'off-grid':
 
-                wind_size_mw_calc = (electricity_production_target_MWhpyr/8760-solar_size_mw_AC*solar_cf_AC_est)/wind_cf_est
-                #else:
-                #wind_size_mw_calc = wind_size_mw
-
-                n_turbines = int(np.ceil(np.ceil(wind_size_mw_calc)/turbine_rating))
-
-                if solar_size_mw_AC == solar_sizes_mw_AC[-1]:
+                if solar_size_mw_AC == solar_sizes_mw_AC[-1] or wind_size_mw ==0:
                     wind_size_mw = 0
+                    wind_cf_est = 0
                     run_wind_plant = False
                 else:
+                    wind_cf_est = hybrid_plant_cfest.wind.capacity_factor/100
+                    wind_size_mw_calc = (electricity_production_target_MWhpyr/8760-solar_size_mw_AC*solar_cf_AC_est)/wind_cf_est
+                    n_turbines = int(np.ceil(np.ceil(wind_size_mw_calc)/turbine_rating))
                     wind_size_mw = turbine_rating*n_turbines
+
+                
 
                 combined_vre_power_mWh = solar_power_norm_AC*solar_size_mw_AC +wind_power_norm*wind_size_mw
 
@@ -344,7 +346,7 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 print('Wind size: ' +str(wind_size_mw) + ' MW')
                 print('Electrolyzer size: ' +str(electrolyzer_size_mw)+ ' MW')
                 print('Estimated annual electricity production (MWh): '+ str(sum(combined_vre_power_mWh)))
-                #print('Battery size: ' + str(storage_size_mw) + ' MW, ' + str(storage_size_mwh) + ' MWh')
+                print('Battery size: ' + str(storage_size_mw) + ' MW, ' + str(storage_size_mwh) + ' MWh')
 
                 kw_continuous = electrolyzer_size_mw * 1000
                 load = [kw_continuous for x in
@@ -583,14 +585,15 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
                 combined_VRE_capacity_deficit = combined_VRE_capacity_required_MW - max(combined_vre_power_mWh)
 
                 if combined_VRE_capacity_deficit > 0:
-                    if solar_size_mw_AC == solar_sizes_mw_AC[-1]:
-                        solar_size_mw_DC = solar_size_mw_DC + combined_VRE_capacity_deficit
-                        solar_size_mw_AC = solar_size_mw_DC*solar_DC_AC_ratio
-                        renewable_plant_cost['pv']['size_mw'] = solar_size_mw_AC
+                    if solar_size_mw_AC == solar_sizes_mw_AC[-1] or wind_size_mw ==0:
+                        if storage_size_mw == storage_sizes_mw[0]:
+                            solar_size_mw_DC = solar_size_mw_DC + combined_VRE_capacity_deficit
+                            solar_size_mw_AC = solar_size_mw_DC/solar_DC_AC_ratio
+                            renewable_plant_cost['pv']['size_mw'] = solar_size_mw_AC
                     else:
-                        n_turbines_extra = int(np.ceil(combined_VRE_capacity_deficit/turbine_rating))
-                        wind_size_mw = wind_size_mw + turbine_rating*n_turbines_extra
-                        renewable_plant_cost['wind']['size_mw']=wind_size_mw
+                            n_turbines_extra = int(np.ceil(combined_VRE_capacity_deficit/turbine_rating))
+                            wind_size_mw = wind_size_mw + turbine_rating*n_turbines_extra
+                            renewable_plant_cost['wind']['size_mw']=wind_size_mw
 
             # if wind_capacity_required_MW > wind_size_mw:
             #     n_turbines = int(np.ceil(np.ceil(wind_capacity_required_MW)/turbine_rating))
