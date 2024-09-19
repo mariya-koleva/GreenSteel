@@ -68,7 +68,8 @@ def batch_generator_kernel(arg_list):
         pem_control_type,
         storage_capacity_multiplier,
         solar_ITC,
-        grid_price_filename
+        grid_price_filename,
+        print_toggle
     ] = arg_list
 
     hopp_path = os.path.dirname(os.path.abspath(hopp.__file__))
@@ -141,10 +142,10 @@ def batch_generator_kernel(arg_list):
         #storage_sizes_mw=[0]
         #storage_sizes_mwh = [0]
         #solar_sizes_mw=[0,100,250,500,750]
-        #storage_sizes_mw=[0,100,100,200]
-        #storage_sizes_mwh = [0,100,400,400]
-        storage_sizes_mw=[0,100]
-        storage_sizes_mwh = [0,100]
+        storage_sizes_mw=[0,100,100,200]
+        storage_sizes_mwh = [0,100,400,400]
+        #storage_sizes_mw=[0,100]
+        #storage_sizes_mwh = [0,100]
     else:
         solar_sizes_mw = [0,100,250,500]
         storage_sizes_mw=[0]
@@ -336,7 +337,8 @@ def batch_generator_kernel(arg_list):
     steel_ammonia_plant_cf = 0.9
     hydrogen_production_target_kgpy = steel_annual_production_rate_target_tpy*1000*hydrogen_consumption_for_steel/steel_ammonia_plant_cf
 
-    print('Annual hydrogen production target (kg/yr): ' + str(hydrogen_production_target_kgpy))
+    if print_toggle:
+        print('Annual hydrogen production target (kg/yr): ' + str(hydrogen_production_target_kgpy))
 
     hydrogen_demand_kgphr = hydrogen_production_target_kgpy/8760
 
@@ -351,7 +353,8 @@ def batch_generator_kernel(arg_list):
     # Annual electricity requirement estimate based on 
     electricity_production_target_MWhpyr = hydrogen_production_target_kgpy*electrolyzer_energy_kWh_per_kg_estimate_EOL/1000
 
-    print('Annual electricity target (MWhpyr): ' + str(electricity_production_target_MWhpyr))
+    if print_toggle:
+        print('Annual electricity target (MWhpyr): ' + str(electricity_production_target_MWhpyr))
 
     # Estimate required electrolyzer capacity
     if floris == False:
@@ -403,12 +406,14 @@ def batch_generator_kernel(arg_list):
 
             hydrogen_production_capacity_required_kgphr = electrolyzer_capacity_BOL_MW_wind*1000/electrolyzer_energy_kWh_per_kg_estimate_BOL
 
+            # Needed later, particularly for any wind-only cases
+            electrolyzer_capacity_BOL_MW = electrolyzer_capacity_BOL_MW_wind
+            electrolyzer_capacity_EOL_MW = electrolyzer_capacity_EOL_MW_wind
 
-        elif grid_connection_scenario == 'hybrid-grid':
+        #elif grid_connection_scenario == 'hybrid-grid':
+        else:
             electrolyzer_capacity_EOL_MW = electricity_production_target_MWhpyr/(8760*cf_estimate)
             electrolyzer_capacity_BOL_MW = electrolyzer_capacity_EOL_MW/(1+electrolyzer_degradation_power_increase)
-
-            electrolyzer_capacity_BOL_MW_wind = electrolyzer_capacity_BOL_MW
 
             wind_size_mw_estimate = electrolyzer_capacity_EOL_MW/wind_max_norm_power
             solar_size_mw_AC_estimate = electrolyzer_capacity_EOL_MW/solar_max_norm_power_AC
@@ -423,7 +428,7 @@ def batch_generator_kernel(arg_list):
             solar_size_mw_AC_max = solar_size_step_mw_AC*n_solar_size_steps
             n_solar_size_steps = n_solar_size_steps + 1 # Add one for zero
 
-            hydrogen_production_capacity_required_kgphr = electrolyzer_capacity_BOL_MW_wind*1000/electrolyzer_energy_kWh_per_kg_estimate_BOL
+            hydrogen_production_capacity_required_kgphr = electrolyzer_capacity_BOL_MW*1000/electrolyzer_energy_kWh_per_kg_estimate_BOL
 
         []
         # # Electrolyzer rated hydrogen production capacity - independent of degradation
@@ -469,12 +474,13 @@ def batch_generator_kernel(arg_list):
         # else:
         hydrogen_production_capacity_required_kgphr = electrolyzer_capacity_BOL_MW*1000/electrolyzer_energy_kWh_per_kg_estimate_BOL
 
-    interconnection_size_mw = wind_size_mw # this makes sense because wind_size_mw captures extra electricity needed by electrolzyer at end of life
     #electrolyzer_size_mw = np.ceil(electrolyzer_capacity_EOL_MW)
     #electrolyzer_size_mw = np.ceil(electrolyzer_capacity_BOL_MW)
     cluster_cap_mw = 40
-    n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW_wind)/cluster_cap_mw))
+    n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
     electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
+
+    interconnection_size_mw = electrolyzer_size_mw*(1+electrolyzer_degradation_power_increase)
 
     # if grid_connection_scenario =='off-grid':
     #     solar_size_step_mw_AC = 100
@@ -490,10 +496,10 @@ def batch_generator_kernel(arg_list):
         n_pem_clusters = n_pem_clusters_max
 
     #solar_size_num_steps = 5
-    if grid_connection_scenario == 'off-grid':
-        #solar_sizes_mw=np.linspace(0,solar_size_mw_max,solar_size_num_steps).tolist()
-        #solar_sizes_mw_AC = np.linspace(0,solar_size_mw_AC_max,n_solar_size_steps).tolist()
-        solar_sizes_mw_AC = [0,1200,solar_size_mw_AC_max]
+    #if grid_connection_scenario == 'off-grid':
+    if grid_connection_scenario != 'grid-only':
+        solar_sizes_mw_AC = np.linspace(0,solar_size_mw_AC_max,n_solar_size_steps).tolist()
+        #solar_sizes_mw_AC = [0,solar_size_mw_AC_max/2,solar_size_mw_AC_max]
 
         # if grid_connection_scenario == 'off-grid':
 
@@ -568,11 +574,11 @@ def batch_generator_kernel(arg_list):
             site_df,sample_site,site,site_location,\
             turbine_model,wind_size_mw,nTurbs,floris_config,floris,\
             sell_price,buy_price,discount_rate,debt_equity_split,\
-            electrolyzer_size_mw,electrolyzer_capacity_EOL_MW_wind,n_pem_clusters,pem_control_type,hydrogen_demand_kgphr,\
+            electrolyzer_size_mw,electrolyzer_capacity_EOL_MW,n_pem_clusters,pem_control_type,hydrogen_demand_kgphr,\
             electrolyzer_capex_kw,electrolyzer_component_costs_kw,wind_plant_degradation_power_decrease,electrolyzer_energy_kWh_per_kg,time_between_replacement,\
             user_defined_stack_replacement_time,use_optimistic_pem_efficiency,electrolyzer_degradation_penalty,storage_capacity_multiplier,hydrogen_production_capacity_required_kgphr,\
             electrolyzer_model_parameters,electricity_production_target_MWhpyr,turbine_rating,electrolyzer_degradation_power_increase,cluster_cap_mw,interconnection_size_mw,solar_ITC,grid_price_filename,\
-            gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector,hydrogen_production_target_kgpy]
+            gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector,hydrogen_production_target_kgpy,print_toggle]
             #if solar and battery size lists are set to 'None' then defaults will be used
             #
             lcoh,hopp_dict,best_result_data,param_sweep_tracker,combined_pv_wind_power_production_hopp,combined_pv_wind_storage_power_production_hopp,\
@@ -779,20 +785,20 @@ def batch_generator_kernel(arg_list):
                 plot_grid,
             )
 
-            electrolyzer_capacity_EOL_MW = max(energy_to_electrolyzer)/1000
-            electrolyzer_capacity_BOL_MW = electrolyzer_capacity_EOL_MW/(1+electrolyzer_degradation_power_increase)
-            n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
-            electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
+            # electrolyzer_capacity_EOL_MW = max(energy_to_electrolyzer)/1000
+            # electrolyzer_capacity_BOL_MW = electrolyzer_capacity_EOL_MW/(1+electrolyzer_degradation_power_increase)
+            # n_pem_clusters_max = int(np.ceil(np.ceil(electrolyzer_capacity_BOL_MW)/cluster_cap_mw))
+            # electrolyzer_size_mw = n_pem_clusters_max*cluster_cap_mw
 
-            kw_continuous = electrolyzer_size_mw * 1000
-            load = [kw_continuous for x in
-                    range(0, 8760)]  # * (sin(x) + pi) Set desired/required load profile for plant
-            if battery_for_minimum_electrolyzer_op:
-                battery_dispatch_load = list(0.15*np.array(load))
-            else:
-                battery_dispatch_load = list(np.array(load))
+            # kw_continuous = electrolyzer_size_mw * 1000
+            # load = [kw_continuous for x in
+            #         range(0, 8760)]  # * (sin(x) + pi) Set desired/required load profile for plant
+            # if battery_for_minimum_electrolyzer_op:
+            #     battery_dispatch_load = list(0.15*np.array(load))
+            # else:
+            #     battery_dispatch_load = list(np.array(load))
 
-            []
+            # []
 
     # else:
     elif grid_connection_scenario == 'grid-only':
@@ -800,7 +806,7 @@ def batch_generator_kernel(arg_list):
         wind_cost_kw = 0
         lcoe = 0
         wind_size_mw = 0
-        solar_size_mw = 0
+        solar_size_mw_AC = 0
         storage_size_mw = 0
         storage_hours = 0
         cf_wind_annuals = np.zeros(30)
@@ -1086,7 +1092,7 @@ def batch_generator_kernel(arg_list):
                                     electrolyzer_capex_kw,time_between_replacement,electrolyzer_energy_kWh_per_kg,hydrogen_storage_capacity_kg,hydrogen_storage_cost_USDprkg,storage_compressor_total_capacity_kW,storage_compressor_total_installed_cost_USD,hydrogen_storage_duration_hr,\
                                     desal_capex,desal_opex,useful_life,water_cost,wind_size_mw,solar_size_mw_AC,storage_size_mw,renewable_plant_cost,wind_om_cost_kw,grid_connected_hopp,\
                                     grid_connection_scenario,atb_year, site_name, policy_option, policy[i],electrical_generation_timeseries, combined_pv_wind_storage_power_production_hopp,combined_pv_wind_curtailment_hopp,\
-                                    energy_shortfall_hopp,elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC,gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector)
+                                    energy_shortfall_hopp,elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC,gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector,print_toggle)
 
     lcoh = h2_solution['price']
 

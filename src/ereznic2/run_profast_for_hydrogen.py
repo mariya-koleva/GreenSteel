@@ -25,7 +25,7 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
                             capex_desal,opex_desal,plant_life,water_cost,wind_size_mw,solar_size_mw,storage_size_mw,renewable_plant_cost_info,wind_om_cost_kw,hybrid_plant,\
                             grid_connection_scenario, atb_year, site_name, policy_option, policy, energy_to_electrolyzer, combined_pv_wind_power_production_hopp,combined_pv_wind_curtailment_hopp,\
                             energy_shortfall_hopp, elec_price,grid_prices_interpolated_USDperkwh, grid_price_scenario,user_defined_stack_replacement_time,use_optimistic_pem_efficiency,wind_annual_energy_MWh,solar_annual_energy_MWh,solar_ITC,\
-                            gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector): 
+                            gams_locations_rodeo_version,rodeo_output_dir,run_RODeO_selector,print_toggle): 
     # mwh_to_kwh = 0.001
     # plant_life=useful_life
     # electrolyzer_system_capex_kw = electrolyzer_capex_kw
@@ -627,7 +627,8 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
                       'LCOH: Taxes ($/kg)':price_breakdown_taxes,\
                       'LCOH: Water consumption ($/kg)':price_breakdown_water,'LCOH: Grid electricity ($/kg)':price_breakdown_grid_elec_price,\
                       'LCOH: Finances ($/kg)':remaining_financial,'LCOH: total ($/kg)':lcoh_check,'LCOH Profast:':sol['price']}
-    print('{} {} {} has LCOH = ${} /kg'.format(site_name,policy_option,grid_connection_scenario,sol['price']))
+    if print_toggle:
+        print('{} {} {} has LCOH = ${} /kg'.format(site_name,policy_option,grid_connection_scenario,sol['price']))
     price_breakdown = price_breakdown.drop(columns=['index','Amount'])
    
     # return(sol,summary,price_breakdown,lcoh_breakdown,capex_electrolyzer_overnight/electrolyzer_size_mw/1000,elec_cf,ren_frac,electrolysis_total_EI_policy_grid,electrolysis_total_EI_policy_offgrid,H2_PTC,Ren_PTC,total_capex)

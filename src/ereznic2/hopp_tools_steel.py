@@ -394,7 +394,7 @@ def set_turbine_model(hopp_dict, turbine_model, scenario, parent_path, floris_di
     scenario['Powercurve File'] = custom_powercurve_path
     scenario['Rotor Diameter'] = rotor_diameter
 
-    print("Powercurve Path: ", custom_powercurve_path)
+    #print("Powercurve Path: ", custom_powercurve_path)
 
     sub_dict = {
         'scenario':
