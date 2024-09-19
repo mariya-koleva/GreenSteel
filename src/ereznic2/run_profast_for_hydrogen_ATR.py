@@ -46,15 +46,15 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     kWh_to_MWh_conv = 0.001 # Conversion from kWh to MWh
     
     #------------------------------------------------------------------------------
-    # Autothermal reforming (ATR) - Fossil-based H2 production process
+    # Autothermal reforming (atr) - Fossil-based H2 production process
     #------------------------------------------------------------------------------
 
     atr_NG_combust = 56.2     # Natural gas combustion (g CO2e/MJ)
     atr_NG_consume = 167      # Natural gas consumption (MJ/kg H2); Original from H2A: 0.158 mmBtu HHV
-    atr_PO_consume = 3.495    # Power consumption in ATR plant (kWh/kg H2)
-    atr_steam_prod = 0        # Steam production on ATR site (MJ/kg H2)
+    atr_PO_consume = 3.495    # Power consumption in atr plant (kWh/kg H2)
+    atr_steam_prod = 0        # Steam production on atr site (MJ/kg H2)
     atr_HEX_eff    = 0.9      # Heat exchanger efficiency (-)
-    atr_NG_supply  = 9        # Natural gas extraction and supply to ATR plant assuming 2% CH4 leakage rate (g CO2e/MJ)
+    atr_NG_supply  = 9        # Natural gas extraction and supply to atr plant assuming 2% CH4 leakage rate (g CO2e/MJ)
     ccs_perc_capture = 0.945  # Carbon capture rate (-)
     
     # Data
@@ -77,7 +77,7 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     h2_plant_capacity_kgpy = 73288715 # kg H2/yr
     hydrogen_production_kgpd = h2_plant_capacity_kgpd * capacity_factor # kg H2/day; The number is based on annual demand of 1 MMT steel; 
     hydrogen_production_kgpy = h2_plant_capacity_kgpy * capacity_factor # kg H2/year
-    fom_ATR_perc = 0.032 # fraction of capital cost
+    fom_atr_perc = 0.032 # fraction of capital cost
     electricity_cost = 0.076 # $/kWh; If electricity prices file missing, this is the cost which will be taken
     hydrogen_storage_duration = 4 # hours, which have been chosen based on RODeO runs with grid connection
     lhv_h2 = 33 # kWh/kg H2
@@ -94,14 +94,13 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     small_positive = 1e-6
     compressor_avg_capacity_kw = compressor_total_capacity_kW/(n_comps+small_positive)
     storage_compressor_total_installed_cost_USD = 2*n_comps*(6893.2*compressor_avg_capacity_kw**0.7464)*1.16/1.12*year2022_CEPCI/541.7
-    hydrogen_storage_capacity_MWh_HHV = hydrogen_storage_capacity_kg*h2_HHV/3600
- 
+
     # policy credit
     #CO2_per_H2 = 8.3 # kg CO2e/kg H2 -> change if the capture rate is changed
     CO2_per_H2 = 9.326 # From H2A
     policy_credit_45Q_duration = 12 # years
     policy_credit_PTC_duration = 10 # years
-    energy_demand_process = 0 # kWh/kgH2 defaulted to ATR without CCS
+    energy_demand_process = 0 # kWh/kgH2 defaulted to atr without CCS
     energy_demand_process_ccs = 3.495 # kWh/kg H2
     total_plant_cost = 0
     NG_consumption = 167 # MJ-HHV/kgH2
@@ -210,6 +209,7 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
         hydrogen_storage_capacity_kg = hydrogen_storage_duration * energy_demand_process * hydrogen_production_kgpy / (hrs_in_year  * hhv_h2)
         CO2_TnS_unit_cost = 0 #$2022/kgH2
        # Get hydrogen storage cost
+    hydrogen_storage_capacity_MWh_HHV = hydrogen_storage_capacity_kg*h2_HHV/3600
     if hydrogen_storage_capacity_MWh_HHV <= 4085:
         base_capacity_MWh_HHV = 4085
         base_cost_USDprkg = 521.34
@@ -225,23 +225,23 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     
     # Fixed and variable costs
     #------------------------------------------------------------------------------
-    fom_ATR_total = fom_ATR_perc * total_plant_cost # $/year
+    fom_atr_total = fom_atr_perc * total_plant_cost # $/year
     
     grid_cost_pr_yr_USDprkg = grid_price_per_yr*total_energy_demand
     grid_prices_interpolated_USDperkg = dict(zip(grid_cost_keys,grid_cost_pr_yr_USDprkg))
     
-    #vom_ATR_NG_perMJ = naturalgas_prices_dict    # $/MJ
+    #vom_atr_NG_perMJ = naturalgas_prices_dict    # $/MJ
     #other_vom_costs = 0.08938 # $/kgH2
     other_vom_costs = 0.258 * year2022_CPI/year2020_CPI # 2022$/kg H2 from H2A
     
-    ATR_total_EI_all = []
-    ATR_ccs_total_EI_all = []
-    ATR_Scope3_emission_intensity = []
-    ATR_Scope2_emission_intensity = []
-    ATR_emission_intensity = []
-    ATR_ccs_Scope3_emission_intensity = []
-    ATR_ccs_Scope2_emission_intensity = []
-    ATR_ccs_emission_intensity = []
+    atr_total_EI_all = []
+    atr_ccs_total_EI_all = []
+    atr_Scope3_emission_intensity = []
+    atr_Scope2_emission_intensity = []
+    atr_emission_intensity = []
+    atr_ccs_Scope3_emission_intensity = []
+    atr_ccs_Scope2_emission_intensity = []
+    atr_ccs_emission_intensity = []
  
     years = list(range(cambium_year,2055,5))
     for year in years:    
@@ -262,63 +262,63 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
         cambium_data['Scope 2 (combustion) grid emissions (kg-CO2e)'] = total_energy_demand * kWh_to_MWh_conv * hydrogen_production_kgpy * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)']
         cambium_data['Scope 3 (production) grid emissions (kg-CO2e)'] = total_energy_demand * kWh_to_MWh_conv * hydrogen_production_kgpy * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)']
         
-    # Calculate ATR emissions
-        ATR_Scope3_EI = ATR_NG_supply * (ATR_NG_consume - ATR_steam_prod/ATR_HEX_eff) * g_to_kg_conv + energy_demand_process * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
-        ATR_Scope2_EI = energy_demand_process * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
-        ATR_Scope1_EI = ATR_NG_combust * (ATR_NG_consume - ATR_steam_prod/ATR_HEX_eff) * g_to_kg_conv # kg CO2e/kg H2
-        ATR_total_EI  = ATR_Scope1_EI + ATR_Scope2_EI + ATR_Scope3_EI   
+    # Calculate atr emissions
+        atr_Scope3_EI = atr_NG_supply * (atr_NG_consume - atr_steam_prod/atr_HEX_eff) * g_to_kg_conv + energy_demand_process * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+        atr_Scope2_EI = energy_demand_process * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+        atr_Scope1_EI = atr_NG_combust * (atr_NG_consume - atr_steam_prod/atr_HEX_eff) * g_to_kg_conv # kg CO2e/kg H2
+        atr_total_EI  = atr_Scope1_EI + atr_Scope2_EI + atr_Scope3_EI   
         
                    
-        # Calculate ATR + CCS emissions
-        ATR_ccs_Scope3_EI = ATR_NG_supply * (ATR_NG_consume - ATR_steam_prod/ATR_HEX_eff) * g_to_kg_conv + energy_demand_process_ccs * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
-        ATR_ccs_Scope2_EI = energy_demand_process_ccs * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
-        ATR_ccs_Scope1_EI = (1-ccs_perc_capture)* ATR_NG_combust * (ATR_NG_consume - ATR_steam_prod/ATR_HEX_eff) * g_to_kg_conv # kg CO2e/kg H2
-        ATR_ccs_total_EI  = ATR_ccs_Scope1_EI + ATR_ccs_Scope2_EI + ATR_ccs_Scope3_EI  
+        # Calculate atr + CCS emissions
+        atr_ccs_Scope3_EI = atr_NG_supply * (atr_NG_consume - atr_steam_prod/atr_HEX_eff) * g_to_kg_conv + energy_demand_process_ccs * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+        atr_ccs_Scope2_EI = energy_demand_process_ccs * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+        atr_ccs_Scope1_EI = (1-ccs_perc_capture)* atr_NG_combust * (atr_NG_consume - atr_steam_prod/atr_HEX_eff) * g_to_kg_conv # kg CO2e/kg H2
+        atr_ccs_total_EI  = atr_ccs_Scope1_EI + atr_ccs_Scope2_EI + atr_ccs_Scope3_EI  
 
 
-        ATR_Scope3_emission_intensity.append(ATR_Scope3_EI)
-        ATR_Scope2_emission_intensity.append(ATR_Scope2_EI)
-        ATR_emission_intensity.append(ATR_total_EI)
-        ATR_ccs_Scope3_emission_intensity.append(ATR_Scope3_EI)
-        ATR_ccs_Scope2_emission_intensity.append(ATR_Scope2_EI)
-        ATR_ccs_emission_intensity.append(ATR_ccs_total_EI)
+        atr_Scope3_emission_intensity.append(atr_Scope3_EI)
+        atr_Scope2_emission_intensity.append(atr_Scope2_EI)
+        atr_emission_intensity.append(atr_total_EI)
+        atr_ccs_Scope3_emission_intensity.append(atr_Scope3_EI)
+        atr_ccs_Scope2_emission_intensity.append(atr_Scope2_EI)
+        atr_ccs_emission_intensity.append(atr_ccs_total_EI)
         
     emission_intensities_df = pd.DataFrame({'Year':years,
-                                            'ATR Scope3 EI (kg CO2e/kg H2)': ATR_Scope3_emission_intensity, 
-                                            'ATR Scope2 EI (kg CO2e/kg H2)': ATR_Scope2_emission_intensity, 
-                                            'ATR EI (kg CO2e/kg H2)': ATR_emission_intensity, 
-                                            'ATR ccs Scope3 EI (kg CO2e/kg H2)': ATR_ccs_Scope3_emission_intensity, 
-                                            'ATR ccs Scope2 EI (kg CO2e/kg H2)': ATR_ccs_Scope2_emission_intensity, 
-                                            'ATR ccs EI (kg CO2e/kg H2)': ATR_ccs_emission_intensity
+                                            'atr Scope3 EI (kg CO2e/kg H2)': atr_Scope3_emission_intensity, 
+                                            'atr Scope2 EI (kg CO2e/kg H2)': atr_Scope2_emission_intensity, 
+                                            'atr EI (kg CO2e/kg H2)': atr_emission_intensity, 
+                                            'atr ccs Scope3 EI (kg CO2e/kg H2)': atr_ccs_Scope3_emission_intensity, 
+                                            'atr ccs Scope2 EI (kg CO2e/kg H2)': atr_ccs_Scope2_emission_intensity, 
+                                            'atr ccs EI (kg CO2e/kg H2)': atr_ccs_emission_intensity
                                             })
 
     endoflife_year = cambium_year + plant_life
 
-    ATR_Scope3_EI_interpolated = {}
-    ATR_Scope2_EI_interpolated = {}
-    ATR_EI_interpolated = {}
-    ATR_ccs_Scope3_EI_interpolated = {}
-    ATR_ccs_Scope2_EI_interpolated = {}
-    ATR_ccs_EI_interpolated = {}
+    atr_Scope3_EI_interpolated = {}
+    atr_Scope2_EI_interpolated = {}
+    atr_EI_interpolated = {}
+    atr_ccs_Scope3_EI_interpolated = {}
+    atr_ccs_Scope2_EI_interpolated = {}
+    atr_ccs_EI_interpolated = {}
     
     for year in range(cambium_year,endoflife_year):
        if year <= max(emission_intensities_df['Year']):
 
-           ATR_Scope3_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['ATR Scope3 EI (kg CO2e/kg H2)']))
-           ATR_Scope2_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['ATR Scope2 EI (kg CO2e/kg H2)']))
-           ATR_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['ATR EI (kg CO2e/kg H2)']))
-           ATR_ccs_Scope3_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['ATR ccs Scope3 EI (kg CO2e/kg H2)']))
-           ATR_ccs_Scope2_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['ATR ccs Scope2 EI (kg CO2e/kg H2)']))
-           ATR_ccs_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['ATR ccs EI (kg CO2e/kg H2)']))
+           atr_Scope3_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['atr Scope3 EI (kg CO2e/kg H2)']))
+           atr_Scope2_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['atr Scope2 EI (kg CO2e/kg H2)']))
+           atr_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['atr EI (kg CO2e/kg H2)']))
+           atr_ccs_Scope3_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['atr ccs Scope3 EI (kg CO2e/kg H2)']))
+           atr_ccs_Scope2_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['atr ccs Scope2 EI (kg CO2e/kg H2)']))
+           atr_ccs_EI_interpolated[year]=(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['atr ccs EI (kg CO2e/kg H2)']))
    
        else:
    
-           ATR_Scope3_EI_interpolated[year]=(emission_intensities_df['ATR Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
-           ATR_Scope2_EI_interpolated[year]=(emission_intensities_df['ATR Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
-           ATR_EI_interpolated[year]=(emission_intensities_df['ATR EI (kg CO2e/kg H2)'].values[-1:][0])
-           ATR_ccs_Scope3_EI_interpolated[year]=(emission_intensities_df['ATR ccs Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
-           ATR_ccs_Scope2_EI_interpolated[year]=(emission_intensities_df['ATR ccs Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
-           ATR_ccs_EI_interpolated[year]=(emission_intensities_df['ATR ccs EI (kg CO2e/kg H2)'].values[-1:][0])         
+           atr_Scope3_EI_interpolated[year]=(emission_intensities_df['atr Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
+           atr_Scope2_EI_interpolated[year]=(emission_intensities_df['atr Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
+           atr_EI_interpolated[year]=(emission_intensities_df['atr EI (kg CO2e/kg H2)'].values[-1:][0])
+           atr_ccs_Scope3_EI_interpolated[year]=(emission_intensities_df['atr ccs Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
+           atr_ccs_Scope2_EI_interpolated[year]=(emission_intensities_df['atr ccs Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
+           atr_ccs_EI_interpolated[year]=(emission_intensities_df['atr ccs EI (kg CO2e/kg H2)'].values[-1:][0])         
   
     H2_PTC = {}
     CCS_credit_45Q = {}
@@ -346,7 +346,7 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
         elif atb_year == 2035:         
             CO2_credit[year] = 0 
             CCS_credit_45Q[year] = 0
-        CCS_credit_45Q[year] = CO2_credit[year] * (ATR_Scope1_EI - ATR_ccs_Scope1_EI)  / (mt_tokg_conv)  # $/kgH2  
+        CCS_credit_45Q[year] = CO2_credit[year] * (atr_Scope1_EI - atr_ccs_Scope1_EI)  / (mt_tokg_conv)  # $/kgH2  
         
     for year in range(cambium_year,endofincentivesPTC_year):  
         if atb_year < 2035:
@@ -355,24 +355,24 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
                 if policy_case == 'no policy':
                     H2_PTC[year]  = 0 
                 elif policy_case == 'base':
-                    if ATR_ccs_EI_interpolated[year] <= 0.45: # kg CO2e/kg H2
+                    if atr_ccs_EI_interpolated[year] <= 0.45: # kg CO2e/kg H2
                         H2_PTC[year]  = 0.6 # $/kg H2
-                    elif ATR_ccs_EI_interpolated[year] > 0.45 and ATR_ccs_EI_interpolated[year] <= 1.5: # kg CO2e/kg H2
+                    elif atr_ccs_EI_interpolated[year] > 0.45 and atr_ccs_EI_interpolated[year] <= 1.5: # kg CO2e/kg H2
                         H2_PTC[year] = 0.2 # $/kg H2
-                    elif ATR_ccs_EI_interpolated[year] > 1.5 and ATR_ccs_EI_interpolated[year] <= 2.5: # kg CO2e/kg H2     
+                    elif atr_ccs_EI_interpolated[year] > 1.5 and atr_ccs_EI_interpolated[year] <= 2.5: # kg CO2e/kg H2     
                         H2_PTC[year] = 0.15 # $/kg H2
-                    elif ATR_ccs_EI_interpolated[year] > 2.5 and ATR_ccs_EI_interpolated[year] <= 4: # kg CO2e/kg H2    
+                    elif atr_ccs_EI_interpolated[year] > 2.5 and atr_ccs_EI_interpolated[year] <= 4: # kg CO2e/kg H2    
                         H2_PTC[year] = 0.12 # $/kg H2
                     else:
                         H2_PTC[year]=0
                 elif policy_case == 'max':                 
-                    if ATR_ccs_EI_interpolated[year] <= 0.45: # kg CO2e/kg H2
+                    if atr_ccs_EI_interpolated[year] <= 0.45: # kg CO2e/kg H2
                         H2_PTC[year] = 3 # $/kg H2
-                    elif ATR_ccs_EI_interpolated[year] > 0.45 and ATR_ccs_EI_interpolated[year] <= 1.5: # kg CO2e/kg H2
+                    elif atr_ccs_EI_interpolated[year] > 0.45 and atr_ccs_EI_interpolated[year] <= 1.5: # kg CO2e/kg H2
                         H2_PTC[year] = 1 # $/kg H2
-                    elif ATR_ccs_EI_interpolated[year] > 1.5 and ATR_ccs_EI_interpolated[year] <= 2.5: # kg CO2e/kg H2     
+                    elif atr_ccs_EI_interpolated[year] > 1.5 and atr_ccs_EI_interpolated[year] <= 2.5: # kg CO2e/kg H2     
                         H2_PTC[year] = 0.75 # $/kg H2
-                    elif ATR_ccs_EI_interpolated[year] > 2.5 and ATR_ccs_EI_interpolated[year] <= 4: # kg CO2e/kg H2    
+                    elif atr_ccs_EI_interpolated[year] > 2.5 and atr_ccs_EI_interpolated[year] <= 4: # kg CO2e/kg H2    
                         H2_PTC[year] = 0.6 # $/kg 
                     else:
                         H2_PTC[year]=0
@@ -380,24 +380,24 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
                 if policy_case == 'no policy':
                     H2_PTC[year]  = 0 
                 elif policy_case == 'base':
-                    if ATR_EI_interpolated[year] <= 0.45: # kg CO2e/kg H2
+                    if atr_EI_interpolated[year] <= 0.45: # kg CO2e/kg H2
                         H2_PTC[year]  = 0.6 # $/kg H2
-                    elif ATR_EI_interpolated[year] > 0.45 and ATR_EI_interpolated[year] <= 1.5: # kg CO2e/kg H2
+                    elif atr_EI_interpolated[year] > 0.45 and atr_EI_interpolated[year] <= 1.5: # kg CO2e/kg H2
                         H2_PTC[year] = 0.2 # $/kg H2
-                    elif ATR_EI_interpolated[year] > 1.5 and ATR_EI_interpolated[year] <= 2.5: # kg CO2e/kg H2     
+                    elif atr_EI_interpolated[year] > 1.5 and atr_EI_interpolated[year] <= 2.5: # kg CO2e/kg H2     
                         H2_PTC[year] = 0.15 # $/kg H2
-                    elif ATR_EI_interpolated[year] > 2.5 and ATR_EI_interpolated[year] <= 4: # kg CO2e/kg H2    
+                    elif atr_EI_interpolated[year] > 2.5 and atr_EI_interpolated[year] <= 4: # kg CO2e/kg H2    
                         H2_PTC[year] = 0.12 # $/kg H2
                     else:
                         H2_PTC[year]=0
                 elif policy_case == 'max':             
-                    if ATR_EI_interpolated[year] <= 0.45: # kg CO2e/kg H2
+                    if atr_EI_interpolated[year] <= 0.45: # kg CO2e/kg H2
                         H2_PTC[year] = 3 # $/kg H2
-                    elif ATR_EI_interpolated[year] > 0.45 and ATR_EI_interpolated[year] <= 1.5: # kg CO2e/kg H2
+                    elif atr_EI_interpolated[year] > 0.45 and atr_EI_interpolated[year] <= 1.5: # kg CO2e/kg H2
                         H2_PTC[year] = 1 # $/kg H2
-                    elif ATR_EI_interpolated[year] > 1.5 and ATR_EI_interpolated[year] <= 2.5: # kg CO2e/kg H2     
+                    elif atr_EI_interpolated[year] > 1.5 and atr_EI_interpolated[year] <= 2.5: # kg CO2e/kg H2     
                         H2_PTC[year] = 0.75 # $/kg H2
-                    elif ATR_EI_interpolated[year] > 2.5 and ATR_EI_interpolated[year] <= 4: # kg CO2e/kg H2    
+                    elif atr_EI_interpolated[year] > 2.5 and atr_EI_interpolated[year] <= 4: # kg CO2e/kg H2    
                         H2_PTC[year] = 0.6 # $/kg H2   
                     else:
                         H2_PTC[year]=0
@@ -453,28 +453,28 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
     pf.set_params('cash onhand',1)
     
     #----------------------------------- Add capital items to ProFAST ----------------
-    pf.add_capital_item(name="ATR Plant Cost",cost=total_plant_cost,depr_type="MACRS",depr_period=7,refurb=[0])
+    pf.add_capital_item(name="atr Plant Cost",cost=total_plant_cost,depr_type="MACRS",depr_period=7,refurb=[0])
     pf.add_capital_item(name="Hydrogen Storage",cost=capex_storage_installed,depr_type="MACRS",depr_period=7,refurb=[0])
     pf.add_capital_item(name="Compression",cost=capex_compressor_installed,depr_type="MACRS",depr_period=7,refurb=[0])
     #    pf.add_capital_item(name ="Desalination",cost = capex_desal,depr_type="MACRS",depr_period=5,refurb=[0])
     
     total_capex = total_plant_cost+capex_storage_installed+capex_compressor_installed
 
-    capex_fraction = {'ATR Plant Cost':total_plant_cost/total_capex,
+    capex_fraction = {'atr Plant Cost':total_plant_cost/total_capex,
                       'Compression':capex_compressor_installed/total_capex,
                       'Hydrogen Storage':capex_storage_installed/total_capex}
     
     #-------------------------------------- Add fixed costs--------------------------------
-    pf.add_fixed_cost(name="ATR FOM Cost",usage=1.0,unit='$/year',cost=fom_ATR_total,escalation=gen_inflation)
+    pf.add_fixed_cost(name="atr FOM Cost",usage=1.0,unit='$/year',cost=fom_atr_total,escalation=gen_inflation)
     #    pf.add_fixed_cost(name="Desalination Fixed O&M Cost",usage=1.0,unit='$/year',cost=opex_desal,escalation=gen_inflation)
     
     #---------------------- Add feedstocks, note the various cost options-------------------
     #pf.add_feedstock(name='Electricity',usage=total_energy_demand,unit='kWh',cost=electricity_cost,escalation=gen_inflation)
     #pf.add_feedstock(name='Natural Gas',usage=NG_consumption,unit='MJ/kg-H2',cost=NG_cost,escalation=gen_inflation)
     pf.add_feedstock(name='Water Charges',usage=water_consumption,unit='gallons of water per kg-H2',cost=water_cost,escalation=gen_inflation)
-    pf.add_feedstock(name='ATR NG Cost',usage=NG_consumption,unit='$/MJ',cost=naturalgas_prices_dict,escalation=gen_inflation)
-    pf.add_feedstock(name='ATR Electricity Cost',usage=1.0,unit='$/kg-H2',cost=grid_prices_interpolated_USDperkg,escalation=gen_inflation)
-    pf.add_feedstock(name='ATR VOM Cost',usage=1.0,unit='$/kg-H2',cost=other_vom_costs,escalation=gen_inflation)
+    pf.add_feedstock(name='atr NG Cost',usage=NG_consumption,unit='$/MJ',cost=naturalgas_prices_dict,escalation=gen_inflation)
+    pf.add_feedstock(name='atr Electricity Cost',usage=1.0,unit='$/kg-H2',cost=grid_prices_interpolated_USDperkg,escalation=gen_inflation)
+    pf.add_feedstock(name='atr VOM Cost',usage=1.0,unit='$/kg-H2',cost=other_vom_costs,escalation=gen_inflation)
     
     pf.add_incentive(name ='Policy credit', value=policy_credit, decay = 0, sunset_years = policy_credit_duration, tax_credit = True)
 
@@ -497,18 +497,18 @@ def run_profast_for_hydrogen_ATR(atb_year,site_name,site_location,policy_case,NG
         - price_breakdown.loc[price_breakdown['Name']=='Sale of non-depreciable assets','NPV'].tolist()[0]\
         - price_breakdown.loc[price_breakdown['Name']=='Cash on hand recovery','NPV'].tolist()[0]
     
-    price_breakdown_ATR_plant = price_breakdown.loc[price_breakdown['Name']=='ATR Plant Cost','NPV'].tolist()[0] + cap_expense*capex_fraction['ATR Plant Cost']
+    price_breakdown_ATR_plant = price_breakdown.loc[price_breakdown['Name']=='atr Plant Cost','NPV'].tolist()[0] + cap_expense*capex_fraction['atr Plant Cost']
     price_breakdown_H2_storage = price_breakdown.loc[price_breakdown['Name']=='Hydrogen Storage','NPV'].tolist()[0] + cap_expense*capex_fraction['Hydrogen Storage']
     price_breakdown_compression = price_breakdown.loc[price_breakdown['Name']=='Compression','NPV'].tolist()[0] + cap_expense*capex_fraction['Compression']
     #    price_breakdown_desalination = price_breakdown.loc[price_breakdown['Name']=='Desalination','NPV'].tolist()[0]
     #    price_breakdown_desalination_FOM = price_breakdown.loc[price_breakdown['Name']=='Desalination Fixed O&M Cost','NPV'].tolist()[0]
 
     price_breakdown_proptax_ins = price_breakdown.loc[price_breakdown['Name']=='Property insurance','NPV'].tolist()
-    price_breakdown_ATR_FOM = price_breakdown.loc[price_breakdown['Name']=='ATR FOM Cost','NPV'].tolist()[0]
-    price_breakdown_ATR_NG = price_breakdown.loc[price_breakdown['Name']=='ATR NG Cost','NPV'].tolist()[0]
-    price_breakdown_ATR_E = price_breakdown.loc[price_breakdown['Name']=='ATR Electricity Cost','NPV'].tolist()[0]
+    price_breakdown_ATR_FOM = price_breakdown.loc[price_breakdown['Name']=='atr FOM Cost','NPV'].tolist()[0]
+    price_breakdown_ATR_NG = price_breakdown.loc[price_breakdown['Name']=='atr NG Cost','NPV'].tolist()[0]
+    price_breakdown_ATR_E = price_breakdown.loc[price_breakdown['Name']=='atr Electricity Cost','NPV'].tolist()[0]
     price_breakdown_water_charges = price_breakdown.loc[price_breakdown['Name']=='Water Charges','NPV'].tolist()[0] 
-    price_breakdown_ATR_VOM = price_breakdown.loc[price_breakdown['Name']=='ATR VOM Cost','NPV'].tolist()[0]
+    price_breakdown_ATR_VOM = price_breakdown.loc[price_breakdown['Name']=='atr VOM Cost','NPV'].tolist()[0]
     
 
     #    price_breakdown_natural_gas = price_breakdown.loc[price_breakdown['Name']=='Natural Gas','NPV'].tolist()[0]
