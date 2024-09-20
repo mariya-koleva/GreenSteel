@@ -1,0 +1,36 @@
+,Type,Name,NPV
+0,Operating Expenses,Total annual maintenance,0.0
+1,Operating Expenses,Licensing and Permitting,0.0
+2,Operating Expenses,Rent of land,0.0
+3,Operating Expenses,Administrative expenses,0.0
+4,Operating Expenses,Labor,0.0
+5,Operating Expenses,Installation cost,0.0
+6,Operating Expenses,Sales tax,0.0
+7,Operating Expenses,Credit card fees,0.0
+8,Financing cash outflow,Capital gains taxes payable,0.0
+9,Operating Expenses,Property insurance,0.0
+10,Operating Expenses,Road tax,0.0
+11,Operating Expenses,Non-depreciable assets,1.4475250230883258e-06
+12,Financing cash outflow,Hydrogen Storage,0.001129478932482358
+13,Operating Expenses,Cash on hand reserve,0.006583823662631234
+14,Financing cash outflow,Compression,0.009693023743549103
+15,Operating Expenses,Water Charges,0.03585244497416972
+16,Financing cash outflow,Income taxes payable,0.045605601907293965
+17,Financing cash outflow,Repayment of debt,0.12595987773554465
+18,Financing cash outflow,Interest expense,0.20803747538594705
+19,Operating Expenses,atr VOM Cost,0.2786590405904059
+20,Operating Expenses,atr FOM Cost,0.3040705114100225
+21,Financing cash outflow,atr Plant Cost,0.3167401160521067
+22,Operating Expenses,atr Electricity Cost,0.34311587245833997
+23,Financing cash outflow,Dividends paid,0.6021050888991561
+24,Operating Expenses,atr NG Cost,1.0766452703333331
+25,Operating Revenue,Take or pay revenue,0.0
+26,Operating Revenue,Incidental revenue,0.0
+27,Financing cash inflow,One time capital incentive,0.0
+28,Financing cash inflow,Annual operating incentives,0.0
+29,Operating Revenue,Sale of non-depreciable assets,1.4475250230883258e-06
+30,Operating Revenue,Cash on hand recovery,0.006583823662631234
+31,Financing cash inflow,Inflow of debt,0.12595987773554465
+32,Financing cash inflow,Inflow of equity,0.32845873453120916
+33,Financing cash inflow,Monetized tax losses,0.356831470996562
+34,Operating Revenue,Hydrogen sales,2.5363637191590356
