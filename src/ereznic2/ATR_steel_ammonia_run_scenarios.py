@@ -26,8 +26,8 @@ dir1 = os.getcwd()
 dirin_el_prices = 'H2_Analysis/'
 el_prices_files = glob.glob(os.path.join(dir1 + dirin_el_prices, 'annual_average_retail_prices.csv'))
 renewable_cost_path = ('H2_Analysis/green_steel_site_renewable_costs_ATB_aug2023.xlsx')
-#fin_sum_dir = parent_path + '/Results_ATR'
-#price_breakdown_dir = parent_path + '/H2_Analysis/Phase1B/ATR_ProFAST_price/'
+#fin_sum_dir = parent_path + '/Results_atr'
+#price_breakdown_dir = parent_path + '/H2_Analysis/Phase1B/atr_ProFAST_price/'
 
 fin_sum_dir = os.path.join(parent_path,"Results_ATR", "Fin_sum")
 price_breakdown_dir = os.path.join(parent_path,"Results_ATR", "ProFAST")
@@ -40,7 +40,7 @@ policy_all = []
 NG_price_all = []
 scenario = dict()
 scenario['Wind PTC'] = 0.0
-ATR_LCOH_dic = {'Year':[], 'Location':[], 'Policy': [], 'NG price case': [], 'LCOH':[], 'LCOA':[], 'LCOS':[]}
+atr_LCOH_dic = {'Year':[], 'Location':[], 'Policy': [], 'NG price case': [], 'LCOH':[], 'LCOA':[], 'LCOS':[]}
 
 atb_years = [
             #2020,
@@ -82,7 +82,9 @@ NG_price_cases = [
                   'min',
                   'max',
                   ]
-CCS_options = ['wCCS'
+CCS_options = [
+   # 'woCCS',
+    'wCCS'
              ]
 
 o2_heat_integration = 0 # should always be set to zero in this scenario
@@ -122,7 +124,7 @@ for atb_year in atb_years:
                     carbon_unit_cost = site_df['Carbon ($/metric tonne)'] + site_df['Carbon Transport ($/metric tonne)']
                     iron_ore_pellets_unit_cost = site_df['Iron Ore Pellets ($/metric tonne)'] + site_df['Iron Ore Pellets Transport ($/metric tonne)']
                     steel_economics_from_pyfast, steel_economics_summary, profast_steel_price_breakdown,steel_breakeven_price, steel_annual_production_mtpy,steel_price_breakdown,steel_plant_capex = \
-                                                                                    hopp_tools_steel.steel_LCOS_ATR(lcoh,hydrogen_annual_production,
+                                                                                    hopp_tools_steel.steel_LCOS_SMR(lcoh,hydrogen_annual_production,
                                                                                                                             lime_unit_cost,
                                                                                                                             carbon_unit_cost,
                                                                                                                             iron_ore_pellets_unit_cost,
@@ -135,7 +137,7 @@ for atb_year in atb_years:
                     #oxygen_cost = 0.03476 * year2022_CPI/year2020_CPI  # 2022$/kg 
                     oxygen_cost = 0
                     ammonia_economics_from_pyfast, ammonia_economics_summary, profast_ammonia_price_breakdown,ammonia_breakeven_price, ammonia_annual_production_kgpy,ammonia_price_breakdown,ammonia_plant_capex = \
-                                                                                    hopp_tools_steel.levelized_cost_of_ammonia_ATR(lcoh,hydrogen_annual_production,
+                                                                                    hopp_tools_steel.levelized_cost_of_ammonia_SMR(lcoh,hydrogen_annual_production,
                                                                                                                             cooling_water_cost,
                                                                                                                             iron_based_catalyst_cost,
                                                                                                                             oxygen_cost, 

@@ -8,11 +8,11 @@ import os
 import matplotlib.pyplot as plt
 import yaml
 import re
-from yamlinclude import YamlIncludeConstructor
+#from yamlinclude import YamlIncludeConstructor
 from pathlib import Path
 
 PATH = Path(__file__).parent
-YamlIncludeConstructor.add_to_loader_class(loader_class=yaml.FullLoader, base_dir=PATH / 'floris_input_files/')
+#YamlIncludeConstructor.add_to_loader_class(loader_class=yaml.FullLoader, base_dir=PATH / 'floris_input_files/')
 
 
 # HOPP functionss
@@ -1967,6 +1967,98 @@ def write_outputs_ProFAST_SMR(fin_sum_dir,
 
     return (atb_year,site_name)
 
+def write_outputs_ProFAST_ATR(fin_sum_dir,
+                     price_breakdown_dir,
+                     atb_year,
+                     site_name,
+                     lcoe_first_year,
+                     lcoh,
+                     NG_price_case,
+                     hydrogen_storage_duration_hr,
+                     hydrogen_annual_production,
+                     price_breakdown_storage,price_breakdown_compression,
+                     price_breakdown_ATR_plant,
+                     CO2_TnS_unit_cost,
+                     price_breakdown_ATR_FOM, price_breakdown_ATR_VOM,
+                     price_breakdown_ATR_NG, price_breakdown_ATR_E,
+                     price_breakdown_taxes,
+                     price_breakdown_water_charges,
+                     remaining_financial,
+                     steel_annual_production_mtpy,
+                     steel_breakeven_price,
+                     steel_price_breakdown,
+                     ammonia_annual_production_kgpy,
+                     ammonia_breakeven_price,
+                     ammonia_price_breakdown,policy_case,CCS_option,o2_heat_integration,
+                     h2_production_capex,
+                     steel_plant_capex,
+                     ammonia_plant_capex,
+                     profast_h2_price_breakdown,
+                     profast_steel_price_breakdown,
+                     profast_ammonia_price_breakdown,
+                     ):
+
+    h2_transmission_capex = 0
+
+    financial_summary_ATR_df = pd.DataFrame([atb_year,
+                                            lcoe_first_year,
+                                            lcoh,
+                                            hydrogen_storage_duration_hr,
+                                            hydrogen_annual_production,
+                                            h2_production_capex,
+                                            h2_transmission_capex,
+                                            steel_plant_capex,
+                                            ammonia_plant_capex,
+                                            price_breakdown_storage,
+                                            price_breakdown_compression,
+                                            price_breakdown_ATR_plant,
+                                            CO2_TnS_unit_cost,
+                                            price_breakdown_ATR_FOM,
+                                            price_breakdown_ATR_VOM,
+                                            price_breakdown_ATR_NG, 
+                                            price_breakdown_ATR_E,
+                                            price_breakdown_taxes,
+                                            price_breakdown_water_charges,
+                                            remaining_financial,
+                                            steel_annual_production_mtpy,
+                                            ammonia_annual_production_kgpy],
+                                            ['ATB Year',
+                                            'LCOE First Year ($/MWh)',
+                                            'LCOH ($/kg)',
+                                            'Hydrogen storage duration (hr)',
+                                            'Hydrogen annual production (kg)',
+                                            'Hydrogen production total CAPEX ($)',
+                                            'Hydrogen transmission total CAPEX ($)',
+                                            'Steel Plant Total CAPEX ($)',
+                                            'Ammonia Plant Total CAPEX ($)',
+                                            'LCOH: Hydrogen Storage ($/kg)',
+                                            'LCOH: Compression ($/kg)',
+                                            'LCOH: ATR plant CAPEX ($/kg)',
+                                            'LCOH: CO2 transportation and storage ($/kg)',
+                                            'LCOH: ATR plant FOM ($/kg)',
+                                            'LCOH: ATR plant VOM ($/kg)',
+                                            'LCOH: Natural gas charges ($/kg)',
+                                            'LCOH: Electricity charges ($/kg)',
+                                            'LCOH: Taxes ($/kg)',
+                                            'LCOH: Water charges ($/kg)',
+                                            'LCOH: Financial ($/kg)',
+                                            'Steel annual production (tonne steel/year)',
+                                            'Ammonia annual production (kgNH3/year)'])
+
+
+    steel_price_breakdown_df = pd.DataFrame.from_dict(steel_price_breakdown,orient='index')
+    ammonia_price_breakdown_df = pd.DataFrame.from_dict(ammonia_price_breakdown,orient='index')
+    financial_summary_df = pd.concat([financial_summary_ATR_df,steel_price_breakdown_df,ammonia_price_breakdown_df])
+
+    financial_summary_df.to_csv(os.path.join(fin_sum_dir, 'Financial_Summary_ProFAST_ATR_{}_{}_{}_{}_{}_heat_integration_{}.csv'.format(site_name,atb_year,policy_case,CCS_option,NG_price_case,o2_heat_integration)))
+
+    # Write profast price breakdowns to file
+    profast_h2_price_breakdown.to_csv(os.path.join(price_breakdown_dir, 'H2_PF_PB_{}_{}_{}_{}_{}_heat_integration_{}.csv'.format(site_name,atb_year,policy_case,CCS_option,NG_price_case,o2_heat_integration)))
+    profast_steel_price_breakdown.to_csv(os.path.join(price_breakdown_dir, 'Stl_PF_PB_{}_{}_{}_{}_{}_heat_integration_{}.csv'.format(site_name,atb_year,policy_case,CCS_option,NG_price_case,o2_heat_integration)))
+    profast_ammonia_price_breakdown.to_csv(os.path.join(price_breakdown_dir, 'NH3_PF_PB_{}_{}_{}_{}_{}_heat_integration_{}.csv'.format(site_name,atb_year,policy_case,CCS_option,NG_price_case,o2_heat_integration)))
+
+
+    return (atb_year,site_name)
 
 def steel_LCOS(
     hopp_dict,
