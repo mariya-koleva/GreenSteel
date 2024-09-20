@@ -83,17 +83,17 @@ if __name__ == '__main__':
 
     policy = {
         'no-policy': {'Wind ITC': 0, 'Wind PTC': 0, "H2 PTC": 0, 'Storage ITC': 0},
-        'base': {'Wind ITC': 0, 'Wind PTC':  0.0055341, "H2 PTC": 0.6, 'Storage ITC': 0.06},
-        'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
+        #'base': {'Wind ITC': 0, 'Wind PTC':  0.0055341, "H2 PTC": 0.6, 'Storage ITC': 0.06},
+        #'max': {'Wind ITC': 0, 'Wind PTC': 0.0332046, "H2 PTC": 3.0, 'Storage ITC': 0.5},
     }
 
 
     site_selection = [
-                    'Site 1',
-                    'Site 2',
+                    #'Site 1',
+                    #'Site 2',
                     'Site 3',
                     'Site 4',
-                    'Site 5'
+                    #'Site 5'
                     ]
 
     electrolysis_cases = [
@@ -102,9 +102,9 @@ if __name__ == '__main__':
                           ]
 
     electrolyzer_cost_cases = [
-                                #'Low',
-                                'Mid',
-                                #'High'
+                                'Low',
+                                #'Mid',
+                                'High'
                                 ]
 
     grid_connection_cases = [
@@ -151,6 +151,7 @@ if __name__ == '__main__':
                                     energy_profile_dir = os.path.join(project_path, "Results_RODeO", "Profiles")
                                     price_breakdown_dir = os.path.join(project_path, "Results_RODeO", "ProFAST") 
                                     
+                                #if (site_location == 'Site 3' and electrolyzer_cost_case == 'Low' and atb_year == 2030) or (site_location == 'Site 3' and electrolyzer_cost_case == 'High' and atb_year in [2025,2035])  or (site_location == 'Site 4' and electrolyzer_cost_case == 'Low' and atb_year == 2035):
                                 arg_list.append([policy, i, atb_year, site_location, electrolysis_scale,run_RODeO_selector,floris,\
                                                 grid_connection_scenario,grid_price_scenario,\
                                                 direct_coupling,electrolyzer_cost_case,electrolyzer_degradation_power_increase,wind_plant_degradation_power_decrease,\
@@ -161,5 +162,5 @@ if __name__ == '__main__':
     #     batch_generator_kernel(arg_list[runs])
     # []
 # ------------------ Run HOPP-RODeO/PyFAST Framework to get LCOH ---------------
-    with Pool(processes=4,maxtasksperchild=1) as pool:
+    with Pool(processes=2,maxtasksperchild=1) as pool:
             pool.map(batch_generator_kernel, arg_list)
