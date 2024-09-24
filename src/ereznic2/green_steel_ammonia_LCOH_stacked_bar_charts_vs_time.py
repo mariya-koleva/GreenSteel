@@ -10,13 +10,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sqlite3
 import matplotlib.colors as mcolors
-import plotly.express as px
+#import plotly.express as px
 
 # Initialization and Global Settings
 #Specify directory name
 output_directory = 'Results_main/Fin_sum'
 plot_directory = 'Plots'
-#plot_subdirectory = 'Stacked_Plots'
 # Read in the summary data from the database
 conn = sqlite3.connect(output_directory+'/Default_summary.db')
 financial_summary  = pd.read_sql_query("SELECT * From Summary",conn)
@@ -50,7 +49,7 @@ grid_cases = [
 
     # Select hybrids case 'Wind' or 'Wind+PV+bat'
 hybrids_cases = [
-            'Wind',
+            #'Wind',
             'Wind+PV+bat',
                 ]
 
@@ -58,7 +57,7 @@ locations = [
         'IN',
         'TX',
         'IA',
-        #'MS',
+        'MS',
         'MN'
         ]
 
@@ -66,12 +65,12 @@ location_strings = [
         'Indiana',
         'Texas',
         'Iowa',
-        #'Mississippi',
+        'Mississippi',
         'Minnesota'
 ]
 
 # True if you want to plot quad of four locations. Must select four locations above
-plot_quad = True
+plot_quad = False
 
 for electrolysis_case in electrolysis_cases:
     for grid_case in grid_cases:

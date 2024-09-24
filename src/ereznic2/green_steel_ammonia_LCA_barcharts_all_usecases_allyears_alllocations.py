@@ -27,19 +27,19 @@ elif retail_string == 'wholesale':
 
 # Add labels for plotting
 lca_summary.loc[lca_summary['Grid case']=='grid-only-'+retail_string,'Label']='Grid Only'
-lca_summary.loc[lca_summary['Grid case']=='grid-only-'+retail_string,'Order']= 2
-lca_summary.loc[(lca_summary['Grid case']=='hybrid-grid-'+retail_string) & (lca_summary['Renewables case']=='Wind'),'Label']='Grid + Wind'
-lca_summary.loc[(lca_summary['Grid case']=='hybrid-grid-'+retail_string) & (lca_summary['Renewables case']=='Wind'),'Order']=3
+lca_summary.loc[lca_summary['Grid case']=='grid-only-'+retail_string,'Order']= 3
+#lca_summary.loc[(lca_summary['Grid case']=='hybrid-grid-'+retail_string) & (lca_summary['Renewables case']=='Wind'),'Label']='Grid + Wind'
+#lca_summary.loc[(lca_summary['Grid case']=='hybrid-grid-'+retail_string) & (lca_summary['Renewables case']=='Wind'),'Order']=3
 lca_summary.loc[(lca_summary['Grid case']=='hybrid-grid-'+retail_string) & (lca_summary['Renewables case']=='Wind+PV+bat'),'Label']='Grid + Wind + PV'
 lca_summary.loc[(lca_summary['Grid case']=='hybrid-grid-'+retail_string) & (lca_summary['Renewables case']=='Wind+PV+bat'),'Order']=4
-lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Centralized'),'Label']='Wind, CE'
-lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Centralized'),'Order']=5
+#lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Centralized'),'Label']='Wind, CE'
+#lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Centralized'),'Order']=5
 lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Centralized'),'Label']='Wind+PV+bat, CE'
-lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Centralized'),'Order']=6
-lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Distributed'),'Label']='Wind, DE'
-lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Distributed'),'Order']=7
-lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Distributed'),'Label']='Wind+PV+bat, DE'
-lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Distributed'),'Order']=8
+lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Centralized'),'Order']=5
+#lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Distributed'),'Label']='Wind, DE'
+#lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Distributed'),'Order']=7
+#lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Distributed'),'Label']='Wind+PV+bat, DE'
+#lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Distributed'),'Order']=8
 
 locations = [
             'IN',

@@ -13,9 +13,9 @@ import sqlite3
 # Initialization and Global Settings
 #Specify directory name
 electrolysis_directory = 'Results_main/Fin_sum'
-#electrolysis_directory = 'examples/H2_Analysis/Phase1B/Fin_sum_mid'
 sensitivity_directory = 'Results_sensitivity/Fin_sum'
 smr_directory = 'Results_SMR/Fin_sum'
+atr_directory = 'Results_ATR/Fin_sum'
 plot_directory = 'Plots'
 
 
@@ -23,7 +23,6 @@ plot_directory = 'Plots'
 retail_string = 'retail-flat'
 
 plot_subdirectory = 'Regionalsensitivity_alltech_alllocations_allyears'
-#plot_subdirectory = 'Stacked_Plots_all_technologies_mid'
 
 # Read in the summary data from the electrolysis case database
 conn = sqlite3.connect(electrolysis_directory+'/Default_summary.db')
@@ -39,7 +38,13 @@ financial_summary_smr  = pd.read_sql_query("SELECT * From Summary",conn)
 conn.commit()
 conn.close()
 
-# Open distributed case sensitivity
+# Read in the summary data from the atr case database
+conn = sqlite3.connect(atr_directory+'/Default_summary.db')
+financial_summary_atr  = pd.read_sql_query("SELECT * From Summary",conn)
+
+conn.commit()
+conn.close()
+
 # Read in the summary data from the electrolysis case database
 conn = sqlite3.connect(sensitivity_directory+'/Default_summary.db')
 financial_summary_electrolysis_distributed_sensitivity  = pd.read_sql_query("SELECT * From Summary",conn)
@@ -54,31 +59,35 @@ elif retail_string == 'wholesale':
     financial_summary_electrolysis = financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid Case']!='grid-only-retail-flat') & (financial_summary_electrolysis['Grid Case']!='hybrid-grid-retail-flat')]
 
 # Add labels for plotting
-financial_summary_electrolysis.loc[financial_summary_electrolysis['Grid case']=='grid-only-'+retail_string,'Label']='Grid Only'
-financial_summary_electrolysis.loc[financial_summary_electrolysis['Grid case']=='grid-only-'+retail_string,'Order']= 2
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis['Renewables case']=='Wind'),'Label']='Grid + Wind'
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis['Renewables case']=='Wind'),'Order']=3
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat'),'Label']='Grid + Wind + PV'
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat'),'Order']=4
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind') & (financial_summary_electrolysis['Electrolysis case']=='Centralized'),'Label']='Wind, CE'
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind') & (financial_summary_electrolysis['Electrolysis case']=='Centralized'),'Order']=5
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Centralized'),'Label']='Wind+PV+bat, CE'
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Centralized'),'Order']=6
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Label']='Wind, DE'
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Order']=7
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Label']='Wind+PV+bat, DE'
-financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Order']=8
-
 financial_summary_smr.loc[financial_summary_smr['CCS Case']=='woCCS','Label']= 'SMR'
 financial_summary_smr.loc[financial_summary_smr['CCS Case']=='woCCS','Order']= 0
 financial_summary_smr.loc[financial_summary_smr['CCS Case']=='wCCS','Label']= 'SMR + CCS'
 financial_summary_smr.loc[financial_summary_smr['CCS Case']=='wCCS','Order']= 1
 
+financial_summary_atr.loc[financial_summary_atr['CCS Case']=='wCCS','Label']= 'ATR + CCS'
+financial_summary_atr.loc[financial_summary_atr['CCS Case']=='wCCS','Order']= 2
+
+financial_summary_electrolysis.loc[financial_summary_electrolysis['Grid case']=='grid-only-'+retail_string,'Label']='Grid Only'
+financial_summary_electrolysis.loc[financial_summary_electrolysis['Grid case']=='grid-only-'+retail_string,'Order']= 3
+#financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis['Renewables case']=='Wind'),'Label']='Grid + Wind'
+#financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis['Renewables case']=='Wind'),'Order']=3
+financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat'),'Label']='Grid + Wind + PV'
+financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='hybrid-grid-'+retail_string) & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat'),'Order']=4
+#financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind') & (financial_summary_electrolysis['Electrolysis case']=='Centralized'),'Label']='Wind, CE'
+#financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind') & (financial_summary_electrolysis['Electrolysis case']=='Centralized'),'Order']=5
+financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Centralized'),'Label']='Wind + PV + bat'
+financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Centralized'),'Order']=5
+#financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Label']='Wind, DE'
+#financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Order']=7
+#financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Label']='Wind+PV+bat, DE'
+#financial_summary_electrolysis.loc[(financial_summary_electrolysis['Grid case']=='off-grid') & (financial_summary_electrolysis['Renewables case']=='Wind+PV+bat') & (financial_summary_electrolysis['Electrolysis case']=='Distributed'),'Order']=8
+
 # Rename things as necessary
 financial_summary_electrolysis = financial_summary_electrolysis.rename(columns={'(-) Steel price: BOS savings ($/tonne)':'Steel price: Labor savings ($/tonne)'})
 financial_summary_smr = financial_summary_smr.rename(columns={'(-) Steel price: BOS savings ($/tonne)':'Steel price: Labor savings ($/tonne)'})
 financial_summary_smr.loc[financial_summary_smr['Policy Option']=='no policy','Policy Option']='no-policy'
-
+financial_summary_atr = financial_summary_atr.rename(columns={'(-) Steel price: BOS savings ($/tonne)':'Steel price: Labor savings ($/tonne)'})
+financial_summary_atr.loc[financial_summary_atr['Policy Option']=='no policy','Policy Option']='no-policy'
 
 
 locations = [
@@ -142,7 +151,11 @@ for axi1,policy in enumerate(policy_cases):
         policy_year_smr['Electrolysis case']=  'NA'
         policy_year_smr['Grid Case'] = 'NA'
 
-        policy_year_combined = pd.concat([policy_year_smr,policy_year_electrolysis],join='inner',ignore_index=True) 
+        policy_year_atr = financial_summary_atr.loc[(financial_summary_atr['Policy Option']==policy) & (financial_summary_atr['Year']==atb_year) & (financial_summary_atr['NG price case']=='default')]
+        policy_year_atr['Electrolysis case']=  'NA'
+        policy_year_atr['Grid Case'] = 'NA'
+
+        policy_year_combined = pd.concat([policy_year_smr,policy_year_atr,policy_year_electrolysis],join='inner',ignore_index=True) 
         policy_year_combined = policy_year_combined.sort_values(by='Order',ignore_index=True)
                
         labels  = pd.unique(policy_year_combined['Label'].values.tolist())
