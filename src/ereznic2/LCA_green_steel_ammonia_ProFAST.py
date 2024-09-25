@@ -111,6 +111,18 @@ smr_NG_supply  = 9    # Natural gas extraction and supply to SMR plant assuming 
 ccs_PO_consume = 0   # Power consumption for CCS (kWh/kg CO2)
 ccs_perc_capture = 0.95 # Carbon capture rate (-)
 
+
+#------------------------------------------------------------------------------
+# Autothermal reforming (ATR) with CCS
+#------------------------------------------------------------------------------
+
+atr_NG_combust = 56.2 # Natural gas combustion (g CO2e/MJ)
+atr_NG_supply= 9      # Natural gas extraction and supply to SMR plant assuming 2% CH4 leakage rate (g CO2e/MJ)
+atr_PO_consume = 13   # Electricity consumption in the ATR plant (MJ/kg H2)
+atr_NG_consume = 211  # Natural gas indirect consumption (MJ/kg H2)
+atr_H2O_consume = 0.012 # metric ton per 1 kg H2
+atr_perc_capture = 0.944962 # Carbon capture rate (-)
+
 #------------------------------------------------------------------------------
 # Hydrogen production via water electrolysis
 #------------------------------------------------------------------------------
@@ -173,6 +185,18 @@ steel_smr_ccs_Scope3_EI = 'NA'
 steel_smr_ccs_Scope2_EI = 'NA'
 steel_smr_ccs_Scope1_EI = 'NA'
 steel_smr_ccs_total_EI  = 'NA'
+atr_ccs_Scope3_EI = 'NA'
+atr_ccs_Scope2_EI = 'NA'
+atr_ccs_Scope1_EI = 'NA'
+atr_ccs_total_EI  = 'NA'
+NH3_atr_ccs_Scope3_EI = 'NA'
+NH3_atr_ccs_Scope2_EI = 'NA'
+NH3_atr_ccs_Scope1_EI = 'NA'
+NH3_atr_ccs_total_EI  = 'NA'
+steel_atr_ccs_Scope3_EI = 'NA'
+steel_atr_ccs_Scope2_EI = 'NA'
+steel_atr_ccs_Scope1_EI = 'NA'
+steel_atr_ccs_total_EI  = 'NA'
 electrolysis_Scope3_EI = 'NA'
 electrolysis_Scope2_EI = 'NA'
 electrolysis_Scope1_EI = 'NA'
@@ -218,6 +242,9 @@ for i0 in range(len(files2load_results)):
     smr_ccs_Scope3_emission_intensity = []
     smr_ccs_Scope2_emission_intensity = []
     smr_ccs_emission_intensity = []
+    atr_ccs_Scope3_emission_intensity = []
+    atr_ccs_Scope2_emission_intensity = []
+    atr_ccs_emission_intensity = []
     NH3_electrolysis_Scope3_emission_intensity = []
     NH3_electrolysis_Scope2_emission_intensity = []
     NH3_electrolysis_emission_intensity = []
@@ -235,7 +262,13 @@ for i0 in range(len(files2load_results)):
     NH3_smr_ccs_emission_intensity = []
     steel_smr_ccs_Scope3_emission_intensity = []
     steel_smr_ccs_Scope2_emission_intensity = []
-    steel_smr_ccs_emission_intensity = []
+    steel_smr_ccs_emission_intensity = []    
+    NH3_atr_ccs_Scope3_emission_intensity = []
+    NH3_atr_ccs_Scope2_emission_intensity = []
+    NH3_atr_ccs_emission_intensity = []
+    steel_atr_ccs_Scope3_emission_intensity = []
+    steel_atr_ccs_Scope2_emission_intensity = []
+    steel_atr_ccs_emission_intensity = []
 
     # Read in financial summary to determine if there is any solar or batteries
     if grid_case != 'grid-only-retail-flat':
@@ -400,7 +433,27 @@ for i0 in range(len(files2load_results)):
             steel_smr_ccs_Scope3_EI = (smr_ccs_total_EI * steel_H2_consume * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv)  # kg CO2e/metric tonne steel
             steel_smr_ccs_Scope2_EI = steel_smr_Scope2_EI 
             steel_smr_ccs_Scope1_EI = steel_smr_Scope1_EI 
-            steel_smr_ccs_total_EI  = steel_smr_Scope1_EI + steel_smr_Scope2_EI + steel_smr_ccs_Scope3_EI        
+            steel_smr_ccs_total_EI  = steel_smr_Scope1_EI + steel_smr_Scope2_EI + steel_smr_ccs_Scope3_EI  
+            
+            # Calculate ATR + CCS emissions
+            atr_ccs_Scope3_EI = atr_NG_supply * atr_NG_consume * g_to_kg_conv + atr_PO_consume  * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+            atr_ccs_Scope2_EI = atr_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+            atr_ccs_Scope1_EI = (1-atr_perc_capture)* atr_NG_combust * atr_NG_consume * g_to_kg_conv # kg CO2e/kg H2
+            atr_ccs_total_EI  = atr_ccs_Scope1_EI + atr_ccs_Scope2_EI + atr_ccs_Scope3_EI  
+            
+            # Calculate ammonia emissions via ATR with CCS process
+            NH3_atr_ccs_Scope3_EI = NH3_H2_consume * atr_ccs_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv
+            NH3_atr_ccs_Scope2_EI = NH3_smr_Scope2_EI
+            NH3_atr_ccs_Scope1_EI = NH3_smr_Scope1_EI
+            NH3_atr_ccs_total_EI = NH3_atr_ccs_Scope1_EI + NH3_atr_ccs_Scope2_EI + NH3_atr_ccs_Scope3_EI   
+            
+            # Calculate steel emissions via ATR with CCS process
+
+            steel_atr_ccs_Scope3_EI = (atr_ccs_total_EI * steel_H2_consume * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv)  # kg CO2e/metric tonne steel
+            steel_atr_ccs_Scope2_EI = steel_smr_Scope2_EI 
+            steel_atr_ccs_Scope1_EI = steel_smr_Scope1_EI 
+            steel_atr_ccs_total_EI  = steel_atr_ccs_Scope1_EI + steel_atr_ccs_Scope2_EI + steel_atr_ccs_Scope3_EI  
+                       
             # Calculate grid-connected electrolysis emissions
             electrolysis_Scope3_EI = scope3_grid_emissions_annual_sum/h2prod_annual_sum + (grid_imbedded_EI*grid_annual_sum_MWh/h2prod_annual_sum) + ely_stack_capex_EI# kg CO2e/kg H2
             electrolysis_Scope2_EI = scope2_grid_emissions_annual_sum/h2prod_annual_sum 
@@ -444,6 +497,9 @@ for i0 in range(len(files2load_results)):
         smr_ccs_Scope3_emission_intensity.append(smr_Scope3_EI)
         smr_ccs_Scope2_emission_intensity.append(smr_Scope2_EI)
         smr_ccs_emission_intensity.append(smr_ccs_total_EI)
+        atr_ccs_Scope3_emission_intensity.append(atr_ccs_Scope3_EI)
+        atr_ccs_Scope2_emission_intensity.append(atr_ccs_Scope2_EI)
+        atr_ccs_emission_intensity.append(atr_ccs_total_EI)
         NH3_electrolysis_Scope3_emission_intensity.append(NH3_electrolysis_Scope3_EI)
         NH3_electrolysis_Scope2_emission_intensity.append(NH3_electrolysis_Scope2_EI)
         NH3_electrolysis_emission_intensity.append(NH3_electrolysis_total_EI)
@@ -461,7 +517,13 @@ for i0 in range(len(files2load_results)):
         NH3_smr_ccs_emission_intensity.append(NH3_smr_ccs_total_EI)
         steel_smr_ccs_Scope3_emission_intensity.append(steel_smr_ccs_Scope3_EI)
         steel_smr_ccs_Scope2_emission_intensity.append(steel_smr_ccs_Scope2_EI)
-        steel_smr_ccs_emission_intensity.append(steel_smr_ccs_total_EI)
+        steel_smr_ccs_emission_intensity.append(steel_smr_ccs_total_EI)        
+        NH3_atr_ccs_Scope3_emission_intensity.append(NH3_atr_ccs_Scope3_EI)
+        NH3_atr_ccs_Scope2_emission_intensity.append(NH3_atr_ccs_Scope2_EI)
+        NH3_atr_ccs_emission_intensity.append(NH3_atr_ccs_total_EI)
+        steel_atr_ccs_Scope3_emission_intensity.append(steel_atr_ccs_Scope3_EI)
+        steel_atr_ccs_Scope2_emission_intensity.append(steel_atr_ccs_Scope2_EI)
+        steel_atr_ccs_emission_intensity.append(steel_atr_ccs_total_EI)
         
     emission_intensities_df = pd.DataFrame({'Year':years,
                                             'electrolysis Scope3 EI (kg CO2e/kg H2)':electrolysis_Scope3_emission_intensity, 
@@ -473,6 +535,9 @@ for i0 in range(len(files2load_results)):
                                             'smr ccs Scope3 EI (kg CO2e/kg H2)': smr_ccs_Scope3_emission_intensity, 
                                             'smr ccs Scope2 EI (kg CO2e/kg H2)': smr_ccs_Scope2_emission_intensity, 
                                             'smr ccs EI (kg CO2e/kg H2)': smr_ccs_emission_intensity,      
+                                            'atr ccs Scope3 EI (kg CO2e/kg H2)': atr_ccs_Scope3_emission_intensity, 
+                                            'atr ccs Scope2 EI (kg CO2e/kg H2)': atr_ccs_Scope2_emission_intensity, 
+                                            'atr ccs EI (kg CO2e/kg H2)': atr_ccs_emission_intensity,  
                                             'NH3 electrolysis Scope3 EI (kg CO2e/kg H2)': NH3_electrolysis_Scope3_emission_intensity, 
                                             'NH3 electrolysis Scope2 EI (kg CO2e/kg H2)': NH3_electrolysis_Scope2_emission_intensity, 
                                             'NH3 electrolysis EI (kg CO2e/kg H2)': NH3_electrolysis_emission_intensity, 
@@ -491,6 +556,12 @@ for i0 in range(len(files2load_results)):
                                             'steel smr ccs Scope3 EI (kg CO2e/kg H2)': steel_smr_ccs_Scope3_emission_intensity, 
                                             'steel smr ccs Scope2 EI (kg CO2e/kg H2)': steel_smr_ccs_Scope2_emission_intensity, 
                                             'steel smr ccs EI (kg CO2e/kg H2)': steel_smr_ccs_emission_intensity,
+                                            'NH3 atr ccs Scope3 EI (kg CO2e/kg H2)': NH3_atr_ccs_Scope3_emission_intensity, 
+                                            'NH3 atr ccs Scope2 EI (kg CO2e/kg H2)': NH3_atr_ccs_Scope2_emission_intensity, 
+                                            'NH3 atr ccs EI (kg CO2e/kg H2)': NH3_atr_ccs_emission_intensity, 
+                                            'steel atr ccs Scope3 EI (kg CO2e/kg H2)': steel_atr_ccs_Scope3_emission_intensity, 
+                                            'steel atr ccs Scope2 EI (kg CO2e/kg H2)': steel_atr_ccs_Scope2_emission_intensity, 
+                                            'steel atr ccs EI (kg CO2e/kg H2)': steel_atr_ccs_emission_intensity,
                                             })
 
     endoflife_year = cambium_year + system_life
@@ -504,6 +575,9 @@ for i0 in range(len(files2load_results)):
     smr_ccs_Scope3_EI_interpolated = []
     smr_ccs_Scope2_EI_interpolated = []
     smr_ccs_EI_interpolated = []
+    atr_ccs_Scope3_EI_interpolated = []
+    atr_ccs_Scope2_EI_interpolated = []
+    atr_ccs_EI_interpolated = []
     NH3_electrolysis_Scope3_EI_interpolated = []
     NH3_electrolysis_Scope2_EI_interpolated = []
     NH3_electrolysis_EI_interpolated = []
@@ -522,6 +596,12 @@ for i0 in range(len(files2load_results)):
     steel_smr_ccs_Scope3_EI_interpolated = []
     steel_smr_ccs_Scope2_EI_interpolated = []
     steel_smr_ccs_EI_interpolated = []
+    NH3_atr_ccs_Scope3_EI_interpolated = []
+    NH3_atr_ccs_Scope2_EI_interpolated = []
+    NH3_atr_ccs_EI_interpolated = []
+    steel_atr_ccs_Scope3_EI_interpolated = []
+    steel_atr_ccs_Scope2_EI_interpolated = []
+    steel_atr_ccs_EI_interpolated = []
     
     for year in range(cambium_year,endoflife_year):
        if year <= max(emission_intensities_df['Year']):
@@ -533,7 +613,10 @@ for i0 in range(len(files2load_results)):
            smr_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['smr EI (kg CO2e/kg H2)']))
            smr_ccs_Scope3_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['smr ccs Scope3 EI (kg CO2e/kg H2)']))
            smr_ccs_Scope2_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['smr ccs Scope2 EI (kg CO2e/kg H2)']))
-           smr_ccs_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['smr ccs EI (kg CO2e/kg H2)']))
+           smr_ccs_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['smr ccs EI (kg CO2e/kg H2)']))           
+           atr_ccs_Scope3_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['atr ccs Scope3 EI (kg CO2e/kg H2)']))
+           atr_ccs_Scope2_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['atr ccs Scope2 EI (kg CO2e/kg H2)']))
+           atr_ccs_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['atr ccs EI (kg CO2e/kg H2)']))                      
            NH3_electrolysis_Scope3_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['NH3 electrolysis Scope3 EI (kg CO2e/kg H2)']))
            NH3_electrolysis_Scope2_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['NH3 electrolysis Scope2 EI (kg CO2e/kg H2)']))
            NH3_electrolysis_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['NH3 electrolysis EI (kg CO2e/kg H2)']))
@@ -552,6 +635,12 @@ for i0 in range(len(files2load_results)):
            steel_smr_ccs_Scope3_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['steel smr ccs Scope3 EI (kg CO2e/kg H2)']))
            steel_smr_ccs_Scope2_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['steel smr ccs Scope2 EI (kg CO2e/kg H2)']))
            steel_smr_ccs_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['steel smr ccs EI (kg CO2e/kg H2)']))  
+           NH3_atr_ccs_Scope3_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['NH3 atr ccs Scope3 EI (kg CO2e/kg H2)']))
+           NH3_atr_ccs_Scope2_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['NH3 atr ccs Scope2 EI (kg CO2e/kg H2)']))
+           NH3_atr_ccs_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['NH3 atr ccs EI (kg CO2e/kg H2)']))
+           steel_atr_ccs_Scope3_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['steel atr ccs Scope3 EI (kg CO2e/kg H2)']))
+           steel_atr_ccs_Scope2_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['steel atr ccs Scope2 EI (kg CO2e/kg H2)']))
+           steel_atr_ccs_EI_interpolated.append(np.interp(year,emission_intensities_df['Year'],emission_intensities_df['steel atr ccs EI (kg CO2e/kg H2)']))  
        else:
            electrolysis_Scope3_EI_interpolated.append(emission_intensities_df['electrolysis Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
            electrolysis_Scope2_EI_interpolated.append(emission_intensities_df['electrolysis Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
@@ -562,6 +651,9 @@ for i0 in range(len(files2load_results)):
            smr_ccs_Scope3_EI_interpolated.append(emission_intensities_df['smr ccs Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
            smr_ccs_Scope2_EI_interpolated.append(emission_intensities_df['smr ccs Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
            smr_ccs_EI_interpolated.append(emission_intensities_df['smr ccs EI (kg CO2e/kg H2)'].values[-1:][0])
+           atr_ccs_Scope3_EI_interpolated.append(emission_intensities_df['atr ccs Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
+           atr_ccs_Scope2_EI_interpolated.append(emission_intensities_df['atr ccs Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
+           atr_ccs_EI_interpolated.append(emission_intensities_df['atr ccs EI (kg CO2e/kg H2)'].values[-1:][0])
            NH3_electrolysis_Scope3_EI_interpolated.append(emission_intensities_df['NH3 electrolysis Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
            NH3_electrolysis_Scope2_EI_interpolated.append(emission_intensities_df['NH3 electrolysis Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
            NH3_electrolysis_EI_interpolated.append(emission_intensities_df['NH3 electrolysis EI (kg CO2e/kg H2)'].values[-1:][0])
@@ -580,6 +672,12 @@ for i0 in range(len(files2load_results)):
            steel_smr_ccs_Scope3_EI_interpolated.append(emission_intensities_df['steel smr ccs Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
            steel_smr_ccs_Scope2_EI_interpolated.append(emission_intensities_df['steel smr ccs Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
            steel_smr_ccs_EI_interpolated.append(emission_intensities_df['steel smr ccs EI (kg CO2e/kg H2)'].values[-1:][0])
+           NH3_atr_ccs_Scope3_EI_interpolated.append(emission_intensities_df['NH3 atr ccs Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
+           NH3_atr_ccs_Scope2_EI_interpolated.append(emission_intensities_df['NH3 atr ccs Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
+           NH3_atr_ccs_EI_interpolated.append(emission_intensities_df['NH3 atr ccs EI (kg CO2e/kg H2)'].values[-1:][0])
+           steel_atr_ccs_Scope3_EI_interpolated.append(emission_intensities_df['steel atr ccs Scope3 EI (kg CO2e/kg H2)'].values[-1:][0])
+           steel_atr_ccs_Scope2_EI_interpolated.append(emission_intensities_df['steel atr ccs Scope2 EI (kg CO2e/kg H2)'].values[-1:][0])
+           steel_atr_ccs_EI_interpolated.append(emission_intensities_df['steel atr ccs EI (kg CO2e/kg H2)'].values[-1:][0])
       # print(smr_EI_interpolated)
     
     electrolysis_Scope3_LCA = sum(np.asarray(electrolysis_Scope3_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
@@ -591,6 +689,9 @@ for i0 in range(len(files2load_results)):
     smr_ccs_Scope3_LCA = sum(np.asarray(smr_ccs_Scope3_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
     smr_ccs_Scope2_LCA = sum(np.asarray(smr_ccs_Scope2_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
     smr_ccs_total_LCA = sum(np.asarray(smr_ccs_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
+    atr_ccs_Scope3_LCA = sum(np.asarray(atr_ccs_Scope3_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
+    atr_ccs_Scope2_LCA = sum(np.asarray(atr_ccs_Scope2_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
+    atr_ccs_total_LCA = sum(np.asarray(atr_ccs_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
     NH3_electrolysis_Scope3_LCA = sum(np.asarray(NH3_electrolysis_Scope3_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
     NH3_electrolysis_Scope2_LCA = sum(np.asarray(NH3_electrolysis_Scope2_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
     NH3_electrolysis_total_LCA = sum(np.asarray(NH3_electrolysis_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
@@ -608,8 +709,13 @@ for i0 in range(len(files2load_results)):
     NH3_smr_ccs_total_LCA = sum(np.asarray(NH3_smr_ccs_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
     steel_smr_ccs_Scope3_LCA = sum(np.asarray(steel_smr_ccs_Scope3_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
     steel_smr_ccs_Scope2_LCA = sum(np.asarray(steel_smr_ccs_Scope2_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
-    steel_smr_ccs_total_LCA = sum(np.asarray(steel_smr_ccs_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
-
+    steel_smr_ccs_total_LCA = sum(np.asarray(steel_smr_ccs_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum    
+    NH3_atr_ccs_Scope3_LCA = sum(np.asarray(NH3_atr_ccs_Scope3_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
+    NH3_atr_ccs_Scope2_LCA = sum(np.asarray(NH3_atr_ccs_Scope2_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
+    NH3_atr_ccs_total_LCA = sum(np.asarray(NH3_atr_ccs_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
+    steel_atr_ccs_Scope3_LCA = sum(np.asarray(steel_atr_ccs_Scope3_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
+    steel_atr_ccs_Scope2_LCA = sum(np.asarray(steel_atr_ccs_Scope2_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
+    steel_atr_ccs_total_LCA = sum(np.asarray(steel_atr_ccs_EI_interpolated) * h2prod_annual_sum) /h2prod_life_sum
                     
     '''
     For reference:s
@@ -651,7 +757,22 @@ for i0 in range(len(files2load_results)):
           'Steel SMR with CCS Scope 2 GHG Emissions (kg-CO2e/MT steel)': [steel_smr_ccs_Scope2_LCA],
           'Steel SMR with CCS Scope 1 GHG Emissions (kg-CO2e/MT steel)': [steel_smr_ccs_Scope1_EI],
          # 'Steel SMR with CCS Total GHG Emissions (kg-CO2e/MT steel)': [steel_smr_ccs_total_EI],  
-          'Steel SMR with CCS Total GHG Emissions (kg-CO2e/MT steel)': [steel_smr_ccs_total_LCA],                  
+          'Steel SMR with CCS Total GHG Emissions (kg-CO2e/MT steel)': [steel_atr_ccs_total_LCA], 
+          'ATR with CCS Scope 3 GHG Emissions (kg-CO2e/kg-H2)': [atr_ccs_Scope3_LCA],
+          'ATR with CCS Scope 2 GHG Emissions (kg-CO2e/kg-H2)': [atr_ccs_Scope2_LCA],
+          'ATR with CCS Scope 1 GHG Emissions (kg-CO2e/kg-H2)': [atr_ccs_Scope1_EI],
+          #'ATR with CCS Total GHG Emissions (kg-CO2e/kg-H2)': [atr_ccs_total_EI],     
+          'ATR with CCS Total GHG Emissions (kg-CO2e/kg-H2)': [atr_ccs_total_LCA],   
+          'Ammonia ATR with CCS Scope 3 GHG Emissions (kg-CO2e/kg-NH3)': [NH3_atr_ccs_Scope3_LCA],
+          'Ammonia ATR with CCS Scope 2 GHG Emissions (kg-CO2e/kg-NH3)': [NH3_atr_ccs_Scope2_LCA], 
+          'Ammonia ATR with CCS Scope 1 GHG Emissions (kg-CO2e/kg-NH3)': [NH3_atr_ccs_Scope1_EI],
+          #'Ammonia ATR with CCS Total GHG Emissions (kg-CO2e/kg-NH3)': [NH3_atr_ccs_total_EI],    
+          'Ammonia ATR with CCS Total GHG Emissions (kg-CO2e/kg-NH3)': [NH3_atr_ccs_total_LCA], 
+          'Steel ATR with CCS Scope 3 GHG Emissions (kg-CO2e/MT steel)': [steel_atr_ccs_Scope3_LCA],
+          'Steel ATR with CCS Scope 2 GHG Emissions (kg-CO2e/MT steel)': [steel_atr_ccs_Scope2_LCA],
+          'Steel ATR with CCS Scope 1 GHG Emissions (kg-CO2e/MT steel)': [steel_atr_ccs_Scope1_EI],
+         # 'Steel ATR with CCS Total GHG Emissions (kg-CO2e/MT steel)': [steel_atr_ccs_total_EI],  
+          'Steel ATR with CCS Total GHG Emissions (kg-CO2e/MT steel)': [steel_atr_ccs_total_LCA],                 
           'Electrolysis Scope 3 GHG Emissions (kg-CO2e/kg-H2)':[electrolysis_Scope3_LCA],
           'Electrolysis Scope 2 GHG Emissions (kg-CO2e/kg-H2)':[electrolysis_Scope2_LCA],
           'Electrolysis Scope 1 GHG Emissions (kg-CO2e/kg-H2)':[electrolysis_Scope1_EI],   
