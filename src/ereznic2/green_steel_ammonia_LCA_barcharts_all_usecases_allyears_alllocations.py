@@ -34,7 +34,7 @@ lca_summary.loc[(lca_summary['Grid case']=='hybrid-grid-'+retail_string) & (lca_
 lca_summary.loc[(lca_summary['Grid case']=='hybrid-grid-'+retail_string) & (lca_summary['Renewables case']=='Wind+PV+bat'),'Order']=4
 #lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Centralized'),'Label']='Wind, CE'
 #lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Centralized'),'Order']=5
-lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Centralized'),'Label']='Wind+PV+bat, CE'
+lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Centralized'),'Label']='Wind + PV + bat'
 lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind+PV+bat') & (lca_summary['Electrolysis case']=='Centralized'),'Order']=5
 #lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Distributed'),'Label']='Wind, DE'
 #lca_summary.loc[(lca_summary['Grid case']=='off-grid') & (lca_summary['Renewables case']=='Wind') & (lca_summary['Electrolysis case']=='Distributed'),'Order']=7
@@ -110,6 +110,18 @@ for axi1,site in enumerate(locations):
         ammonia_scope_2 = [pd.unique(site_year_lca['Ammonia SMR Scope 2 GHG Emissions (kg-CO2e/kg-NH3)'])[0],pd.unique(site_year_lca['Ammonia SMR with CCS Scope 2 GHG Emissions (kg-CO2e/kg-NH3)'])[0]]
         ammonia_scope_3 = [pd.unique(site_year_lca['Ammonia SMR Scope 3 GHG Emissions (kg-CO2e/kg-NH3)'])[0],pd.unique(site_year_lca['Ammonia SMR with CCS Scope 3 GHG Emissions (kg-CO2e/kg-NH3)'])[0]]
 
+        #Set up ATR cases
+        hydrogen_scope_1.append(pd.unique(site_year_lca['ATR with CCS Scope 1 GHG Emissions (kg-CO2e/kg-H2)'])[0])
+        hydrogen_scope_2.append(pd.unique(site_year_lca['ATR with CCS Scope 2 GHG Emissions (kg-CO2e/kg-H2)'])[0])
+        hydrogen_scope_3.append(pd.unique(site_year_lca['ATR with CCS Scope 3 GHG Emissions (kg-CO2e/kg-H2)'])[0])
+
+        steel_scope_1.append(pd.unique(site_year_lca['Steel ATR with CCS Scope 1 GHG Emissions (kg-CO2e/MT steel)'])[0])
+        steel_scope_2.append(pd.unique(site_year_lca['Steel ATR with CCS Scope 2 GHG Emissions (kg-CO2e/MT steel)'])[0])
+        steel_scope_3.append(pd.unique(site_year_lca['Steel ATR with CCS Scope 3 GHG Emissions (kg-CO2e/MT steel)'])[0])
+
+        ammonia_scope_1.append(pd.unique(site_year_lca['Ammonia ATR with CCS Scope 1 GHG Emissions (kg-CO2e/kg-NH3)'])[0])
+        ammonia_scope_2.append(pd.unique(site_year_lca['Ammonia ATR with CCS Scope 2 GHG Emissions (kg-CO2e/kg-NH3)'])[0])
+        ammonia_scope_3.append(pd.unique(site_year_lca['Ammonia ATR with CCS Scope 3 GHG Emissions (kg-CO2e/kg-NH3)'])[0])
 
         # Set up electrolysis cases
         hydrogen_electrolysis_scope_1 = np.array(site_year_lca['Electrolysis Scope 1 GHG Emissions (kg-CO2e/kg-H2)'].values.tolist())
@@ -124,7 +136,7 @@ for axi1,site in enumerate(locations):
         ammonia_electrolysis_scope_2 = np.array(site_year_lca['Ammonia Electrolysis Scope 2 GHG Emissions (kg-CO2e/kg-NH3)'].values.tolist())
         ammonia_electrolysis_scope_3 = np.array(site_year_lca['Ammonia Electrolysis Scope 3 GHG Emissions (kg-CO2e/kg-NH3)'].values.tolist())
 
-        labels = ['SMR','SMR + CCS']
+        labels = ['SMR','SMR + CCS','ATR + CCS']
 
         # Combine SMR and electrolysis cases
         for j in range(len(hydrogen_electrolysis_scope_1)):
