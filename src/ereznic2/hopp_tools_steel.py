@@ -165,7 +165,7 @@ def set_electrolyzer_info(hopp_dict, atb_year, electrolysis_scale,electrolyzer_c
     component_scaling_factors = {'Stack':0.89,'Power Electronics':0.75,'BOP':0.73,'H2 Conditioning':0.6}
 
     #Apply PEM Cost Estimates based on year based on GPRA pathway (H2New)
-    if atb_year == 2020:
+    if atb_year == 2022:
 
         electrolyzer_energy_kWh_per_kg = 54.61
 
@@ -2118,7 +2118,21 @@ def steel_LCOS(
     naturalgas_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis",ngprice_filename),index_col = None,header = 0,usecols=['Year',site_name])
     naturalgas_prices = naturalgas_prices.set_index('Year')
 
-    operational_year = atb_year + 5
+    # Specify grid cost year for ATB year
+    if atb_year == 2022:
+        grid_year = 2030
+        operational_year = 2030
+    elif atb_year == 2025:
+        grid_year = 2030
+        operational_year = 2030
+    elif atb_year == 2030:
+        grid_year = 2035
+        operational_year = 2035
+    elif atb_year == 2035:
+        grid_year = 2040
+        operational_year = 2040
+
+    #operational_year = atb_year + 5
     EOL_year = operational_year + steel_plant_life
 
     # Put natural gas prices into a dictionary and convert to $/GJ
@@ -2128,15 +2142,7 @@ def steel_LCOS(
 
     #natural_gas_cost = 4                        # $/MMBTU
 
-     # Specify grid cost year for ATB year
-    if atb_year == 2020:
-        grid_year = 2025
-    elif atb_year == 2025:
-        grid_year = 2030
-    elif atb_year == 2030:
-        grid_year = 2035
-    elif atb_year == 2035:
-        grid_year = 2040
+     
 
     # Read in csv for grid prices
     grid_prices = pd.read_csv(os.path.join(hopp_dict.main_dict["Configuration"]["parent_path"], "H2_Analysis",grid_price_filename),index_col = None,header = 0)
@@ -2232,25 +2238,27 @@ def steel_LCOS_SMR(
     naturalgas_prices = pd.read_csv(os.path.join("H2_Analysis",ngprice_filename),index_col = None,header = 0,usecols=['Year',site_name])
     naturalgas_prices = naturalgas_prices.set_index('Year')
 
-    operational_year = atb_year + 5
+    # Specify grid cost year for ATB year
+    if atb_year == 2022:
+        grid_year = 2030
+        operational_year = 2030
+    elif atb_year == 2025:
+        grid_year = 2030
+        operational_year = 2030
+    elif atb_year == 2030:
+        grid_year = 2035
+        operational_year = 2035
+    elif atb_year == 2035:
+        grid_year = 2040
+        operational_year = 2040
+
+    #operational_year = atb_year + 5
     EOL_year = operational_year + steel_plant_life
 
     # Put natural gas prices into a dictionary and convert to $/GJ
     naturalgas_prices_dict = {}
     for year in range(operational_year,EOL_year):
         naturalgas_prices_dict[year]=naturalgas_prices.loc[year,site_name]*1000
-
-    # Should connect these to something (AEO, Cambium, etc.)
-    #electricity_cost = lcoe                    # $/MWh
-     # Specify grid cost year for ATB year
-    if atb_year == 2020:
-        grid_year = 2025
-    elif atb_year == 2025:
-        grid_year = 2030
-    elif atb_year == 2030:
-        grid_year = 2035
-    elif atb_year == 2035:
-        grid_year = 2040
 
     grid_prices = pd.read_csv(os.path.join("H2_Analysis", grid_price_filename),index_col = None,header = 0)
     elec_price = grid_prices.loc[grid_prices['Year']==grid_year,site_name].tolist()[0]
@@ -2333,8 +2341,8 @@ def levelized_cost_of_ammonia(
 
 
      # Specify grid cost year for ATB year
-    if atb_year == 2020:
-        grid_year = 2025
+    if atb_year == 2022:
+        grid_year = 2030
     elif atb_year == 2025:
         grid_year = 2030
     elif atb_year == 2030:
@@ -2424,8 +2432,8 @@ def levelized_cost_of_ammonia_SMR(
     # Read in csv for grid prices
 
      # Specify grid cost year for ATB year
-    if atb_year == 2020:
-        grid_year = 2025
+    if atb_year == 2022:
+        grid_year = 2030
     elif atb_year == 2025:
         grid_year = 2030
     elif atb_year == 2030:
@@ -2498,8 +2506,8 @@ def levelized_cost_of_h2_transmission(
     plant_life = 30
 
      # Specify grid cost year for ATB year
-    if atb_year == 2020:
-        grid_year = 2025
+    if atb_year == 2022:
+        grid_year = 2030
     elif atb_year == 2025:
         grid_year = 2030
     elif atb_year == 2030:

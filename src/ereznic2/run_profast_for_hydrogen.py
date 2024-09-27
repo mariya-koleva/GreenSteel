@@ -123,7 +123,12 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
 
 
     # Establish Ren PTC and assign total emission intensity
-    start_year = atb_year + 5
+    #start_year = atb_year + 5
+    if atb_year == 2022:
+        start_year = 2030
+    else:
+        start_year = atb_year + 5
+
     endofincentives_year = start_year + H2_PTC_duration
     Ren_PTC = {}
     y_idx = 0
@@ -215,7 +220,15 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
 
 
     #Calculate H2 and combined PTC
-    cambium_year = atb_year + 5
+    #cambium_year = atb_year + 5
+    if atb_year == 2022:
+        cambium_year = 2030
+    elif atb_year == 2025:
+        cambium_year = 2030
+    elif atb_year == 2030:
+        cambium_year =2035
+    elif atb_year == 2035:
+        cambium_year = 2040
     endofincentives_year = cambium_year + H2_PTC_duration
     H2_PTC = {}
     y_idx = 0
@@ -381,7 +394,15 @@ def run_profast_for_hydrogen(hopp_dict,electrolyzer_size_mw,H2_Results,\
     # Fill these in - can have most of them as 0 also
     
     install_years = 3
-    analysis_start = atb_year + 5 - install_years
+    #analysis_start = atb_year + 5 - install_years
+    if atb_year == 2022:
+        analysis_start = 2030 - install_years
+    elif atb_year == 2025:
+        analysis_start = 2030 - install_years
+    elif atb_year == 2030:
+        analysis_start = 2035 - install_years
+    elif atb_year == 2035:
+        analysis_start = 2040 - install_years
     #09/05 (5 lines below)
     operation_start = analysis_start + install_years
     operational_years = np.arange(operation_start,operation_start+plant_life,1)

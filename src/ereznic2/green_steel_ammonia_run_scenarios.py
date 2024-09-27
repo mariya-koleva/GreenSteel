@@ -551,9 +551,9 @@ def batch_generator_kernel(arg_list):
     site = SiteInfo(sample_site, hub_height=scenario['Tower Height'])
 
     #Assign scenario cost details
-    if atb_year == 2020:
-        total_capex = site_df['2020 CapEx']
-        wind_om_cost_kw = site_df['2020 OpEx ($/kw-yr)']*(1+wind_plant_degradation_power_decrease)
+    if atb_year == 2022:
+        total_capex = site_df['2022 CapEx']
+        wind_om_cost_kw = site_df['2022 OpEx ($/kw-yr)']*(1+wind_plant_degradation_power_decrease)
     if atb_year == 2025:
         total_capex = site_df['2025 CapEx']
         wind_om_cost_kw = site_df['2025 OpEx ($/kw-yr)']*(1+wind_plant_degradation_power_decrease)
@@ -1066,8 +1066,8 @@ def batch_generator_kernel(arg_list):
     # water_consumption_while_running=H2_Results['water_hourly_usage']
     # hydrogen_production_while_running=H2_Results['hydrogen_hourly_production']
     # Specify grid cost year for ATB year
-    if atb_year == 2020:
-        grid_year = 2025
+    if atb_year == 2022:
+        grid_year = 2030
     elif atb_year == 2025:
         grid_year = 2030
     elif atb_year == 2030:
@@ -1099,10 +1099,14 @@ def batch_generator_kernel(arg_list):
 
     lcoh = h2_solution['price']
 
-    electrolysis_total_EI_policy_grid_firstyear = electrolysis_total_EI_policy_grid[atb_year+5]
-    electrolysis_total_EI_policy_offgrid_firstyear = electrolysis_total_EI_policy_offgrid[atb_year+5]
-    H2_PTC_firstyear = H2_PTC[atb_year+5]
-    Ren_PTC_firstyear = Ren_PTC[atb_year+5]
+    #electrolysis_total_EI_policy_grid_firstyear = electrolysis_total_EI_policy_grid[atb_year+5]
+    electrolysis_total_EI_policy_grid_firstyear = electrolysis_total_EI_policy_grid[grid_year]
+    #electrolysis_total_EI_policy_offgrid_firstyear = electrolysis_total_EI_policy_offgrid[atb_year+5]
+    electrolysis_total_EI_policy_offgrid_firstyear = electrolysis_total_EI_policy_offgrid[grid_year]
+    #H2_PTC_firstyear = H2_PTC[atb_year+5]
+    #Ren_PTC_firstyear = Ren_PTC[atb_year+5]
+    H2_PTC_firstyear = H2_PTC[grid_year]
+    Ren_PTC_firstyear = Ren_PTC[grid_year]
     ren_frac = ren_frac
 
 

@@ -118,14 +118,18 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     
     h2prod_life_sum = hydrogen_production_kgpy * plant_life
                 
-    if atb_year == 2020:
-        cambium_year = 2025
+    if atb_year == 2022:
+        grid_year = 2030
+        operational_year = 2030
     elif atb_year == 2025:
-        cambium_year = 2030
+        grid_year = 2030
+        operational_year = 2030
     elif atb_year == 2030:
-        cambium_year =2035
+        grid_year = 2035
+        operational_year = 2035
     elif atb_year == 2035:
-        cambium_year = 2040
+        grid_year = 2040
+        operational_year = 2040
     
     # Read in csv for grid prices
     electricity_prices= pd.read_csv('H2_Analysis/'+grid_price_filename,index_col = None,header = 0)
@@ -197,7 +201,7 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     naturalgas_prices = pd.read_csv(os.path.join("H2_Analysis",ngprice_filename),index_col = None,header = 0,usecols=['Year',site_name])
     naturalgas_prices = naturalgas_prices.set_index('Year')
 
-    operational_year = atb_year + 5
+    #operational_year = atb_year + 5
     EOL_year = operational_year + plant_life
 
     # Put natural gas prices into a dictionary, keep in $/MJ
