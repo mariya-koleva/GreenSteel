@@ -364,8 +364,8 @@ def batch_generator_kernel(arg_list):
                 wind_cf_estimate = 0.3947
                 solar_cf_estimate = 0.2266
             elif site_location == 'Site 2':
-                wind_cf_estimate = 0.4819
-                solar_cf_estimate = 0.2889
+                wind_cf_estimate = 0.4933
+                solar_cf_estimate = 0.3052
             elif site_location == 'Site 3':
                 wind_cf_estimate = 0.4319
                 solar_cf_estimate = 0.2351
@@ -903,8 +903,11 @@ def batch_generator_kernel(arg_list):
             transmission_cost_lat_lons = [(x,y) for x,y in zip(transmission_cost_df['latitude'],transmission_cost_df['longitude'])]
             transmission_cost_lat,transmission_cost_lon = transmission_cost_lat_lons[cdist([lat_lon],transmission_cost_lat_lons).argmin()]
 
-            trans_cap_cost_per_mw = transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'trans_cap_cost_per_mw'].tolist()[0]
-            reinforcement_cost_per_mw = transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'reinforcement_cost_per_mw'].tolist()[0]
+            model_year_CEPCI = 816
+            equation_year_CEPCI = 541.7
+
+            trans_cap_cost_per_mw = model_year_CEPCI/equation_year_CEPCI*transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'trans_cap_cost_per_mw'].tolist()[0]
+            reinforcement_cost_per_mw = model_year_CEPCI/equation_year_CEPCI*transmission_cost_df.loc[(transmission_cost_df['latitude']==transmission_cost_lat) & (transmission_cost_df['longitude']==transmission_cost_lon),'reinforcement_cost_per_mw'].tolist()[0]
             transmission_cost = (trans_cap_cost_per_mw + reinforcement_cost_per_mw)*interconnection_size_mw
             []
         else:
