@@ -653,8 +653,8 @@ def solar_storage_param_sweep(project_path,arg_list,save_best_solar_case_pickle,
             # water_consumption_while_running=H2_Results['water_hourly_usage']
             # hydrogen_production_while_running=H2_Results['hydrogen_hourly_production']
             # Specify grid cost year for ATB year
-            if atb_year == 2020:
-                grid_year = 2025
+            if atb_year == 2022:
+                grid_year = 2030
             elif atb_year == 2025:
                 grid_year = 2030
             elif atb_year == 2030:

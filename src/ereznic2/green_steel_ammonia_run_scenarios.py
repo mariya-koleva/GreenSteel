@@ -139,11 +139,11 @@ def batch_generator_kernel(arg_list):
     #storage_sizes_mwh = [0]
     if grid_connection_scenario == 'off-grid':
         solar_sizes_mw=[0]
-        #storage_sizes_mw=[0]
-        #storage_sizes_mwh = [0]
+        storage_sizes_mw=[0]
+        storage_sizes_mwh = [0]
         #solar_sizes_mw=[0,100,250,500,750]
-        storage_sizes_mw=[0,100,100,200]
-        storage_sizes_mwh = [0,100,400,400]
+        #storage_sizes_mw=[0,100,100,200]
+        #storage_sizes_mwh = [0,100,400,400]
         #storage_sizes_mw=[0,100]
         #storage_sizes_mwh = [0,100]
     else:
