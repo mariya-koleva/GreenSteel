@@ -19,7 +19,7 @@
 17,Financing cash outflow,Piping,1.393822827447565
 18,Financing cash outflow,"Buildings, Storage, Water Service",2.0572996862080872
 19,Operating Expenses,Lime,2.096121599999999
-20,Operating Expenses,Cash on hand reserve,2.5474177003236136
+20,Operating Expenses,Cash on hand reserve,2.5474177003236145
 21,Operating Expenses,Natural Gas,2.9491347099746275
 22,Financing cash outflow,Shaft Furnace,3.070009570469014
 23,Operating Expenses,Maintenance Labor Cost,4.23340125527393
@@ -32,11 +32,11 @@
 30,Operating Expenses,Carbon,11.228597999999998
 31,Financing cash outflow,Interest expense,13.963371429891158
 32,Operating Expenses,Administrative & Support Labor Cost,24.89926683919674
-33,Financing cash outflow,Income taxes payable,33.31700309849243
+33,Financing cash outflow,Income taxes payable,33.317003098492464
 34,Operating Expenses,Electricity,53.35229066275755
 35,Operating Expenses,Annual Operating Labor Cost,87.97980425784283
-36,Financing cash outflow,Dividends paid,97.08303205366684
-37,Operating Expenses,Hydrogen,215.48091798571372
+36,Financing cash outflow,Dividends paid,97.08303205366693
+37,Operating Expenses,Hydrogen,215.48091798571375
 38,Operating Expenses,Iron Ore,366.16213979999986
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
@@ -44,8 +44,8 @@
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.0315040650406504
-45,Operating Revenue,Cash on hand recovery,2.5474177003236136
-46,Financing cash inflow,Monetized tax losses,3.8539550043681814
+45,Operating Revenue,Cash on hand recovery,2.547417700323614
+46,Financing cash inflow,Monetized tax losses,3.8539550043681805
 47,Financing cash inflow,Inflow of debt,8.454364074656022
-48,Financing cash inflow,Inflow of equity,18.897220515051778
-49,Operating Revenue,Steel sales,936.9700169819873
+48,Financing cash inflow,Inflow of equity,18.897220515051774
+49,Operating Revenue,Steel sales,936.9700169819878

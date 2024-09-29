@@ -18,7 +18,7 @@
 16,Operating Expenses,Desalination Fixed O&M Cost,0.003833772633355645
 17,Operating Expenses,Water,0.008292914934426387
 18,Financing cash outflow,Compression,0.011417048828577714
-19,Operating Expenses,Cash on hand reserve,0.028921146214307688
+19,Operating Expenses,Cash on hand reserve,0.028921146214307695
 20,Operating Expenses,Var O&M,0.07199970945234835
 21,Operating Expenses,Property insurance,0.09770918911288447
 22,Operating Expenses,Solar Plant Fixed O&M Cost,0.17902268124513376
@@ -35,9 +35,9 @@
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,Annual operating incentives,0.0
 35,Operating Revenue,Sale of non-depreciable assets,0.01783199648891133
-36,Operating Revenue,Cash on hand recovery,0.02892114621430769
+36,Operating Revenue,Cash on hand recovery,0.028921146214307695
 37,Financing cash inflow,One time capital incentive,0.4808213527416412
-38,Financing cash inflow,Inflow of debt,1.339141803470247
-39,Operating Revenue,Hydrogen sales,2.1134976499533464
-40,Financing cash inflow,Monetized tax losses,2.311197188274955
-41,Financing cash inflow,Inflow of equity,2.3248090270812813
+38,Financing cash inflow,Inflow of debt,1.3391418034702471
+39,Operating Revenue,Hydrogen sales,2.113497649953346
+40,Financing cash inflow,Monetized tax losses,2.311197188274956
+41,Financing cash inflow,Inflow of equity,2.324809027081282

@@ -14,7 +14,7 @@
 12,Financing cash outflow,Cooling Tower,0.0006593171206636713
 13,Operating Expenses,Maintenance Cost,0.0008994527646492345
 14,Financing cash outflow,Boiler and Steam Turbine,0.0009711574132529504
-15,Operating Expenses,Cash on hand reserve,0.0010928043833183508
+15,Operating Expenses,Cash on hand reserve,0.0010928043833183512
 16,Operating Expenses,Installation cost,0.001256302046185137
 17,Financing cash outflow,Haber Bosch,0.0025611596134998945
 18,Operating Expenses,Iron based catalyst,0.002581878260701437
@@ -24,10 +24,10 @@
 22,Financing cash outflow,Repayment of debt,0.0046745604040859924
 23,Operating Expenses,Property tax and insurance,0.006403255912597562
 24,Financing cash outflow,Interest expense,0.007720583430915295
-25,Financing cash outflow,Income taxes payable,0.0095784721992643
+25,Financing cash outflow,Income taxes payable,0.009578472199264266
 26,Operating Expenses,Electricity,0.011629550116543699
 27,Operating Expenses,Labor Cost,0.019621969214428995
-28,Financing cash outflow,Dividends paid,0.03452498497428203
+28,Financing cash outflow,Dividends paid,0.03452498497428192
 29,Operating Expenses,Hydrogen,0.32925118791186875
 30,Operating Revenue,Take or pay revenue,0.0
 31,Operating Revenue,Incidental revenue,0.0
@@ -35,8 +35,8 @@
 33,Financing cash inflow,One time capital incentive,0.0
 34,Financing cash inflow,Annual operating incentives,0.0
 35,Operating Revenue,Sale of non-depreciable assets,0.00022799965503308213
-36,Financing cash inflow,Monetized tax losses,0.000724779781485337
-37,Operating Revenue,Cash on hand recovery,0.001092804383318351
+36,Financing cash inflow,Monetized tax losses,0.0007247797814853409
+37,Operating Revenue,Cash on hand recovery,0.0010928043833183512
 38,Financing cash inflow,Inflow of debt,0.0046745604040859924
-39,Financing cash inflow,Inflow of equity,0.010238349998545424
-40,Operating Revenue,Ammonia sales,0.4271077971339261
+39,Financing cash inflow,Inflow of equity,0.010238349998545428
+40,Operating Revenue,Ammonia sales,0.427107797133926

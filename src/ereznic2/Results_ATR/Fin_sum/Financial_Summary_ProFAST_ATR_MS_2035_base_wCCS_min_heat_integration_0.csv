@@ -8,15 +8,15 @@ Hydrogen production total CAPEX ($),648179372.0327449
 Hydrogen transmission total CAPEX ($),0.0
 Steel Plant Total CAPEX ($),372424316.09681773
 Ammonia Plant Total CAPEX ($),96338579.30899039
-LCOH: Hydrogen Storage ($/kg),0.0038113488280044406
-LCOH: Compression ($/kg),0.032708440699819895
-LCOH: ATR plant CAPEX ($/kg),1.0688176958236832
+LCOH: Hydrogen Storage ($/kg),0.003811348828004442
+LCOH: Compression ($/kg),0.03270844069981991
+LCOH: ATR plant CAPEX ($/kg),1.0688176958236837
 LCOH: CO2 transportation and storage ($/kg),0.19046164750888964
 LCOH: ATR plant FOM ($/kg),0.3040705114100225
 LCOH: ATR plant VOM ($/kg),0.2786590405904059
 LCOH: Natural gas charges ($/kg),0.5811290159333333
 LCOH: Electricity charges ($/kg),0.2687951034305501
-LCOH: Taxes ($/kg),0.19748236534407826
+LCOH: Taxes ($/kg),0.19748236534407843
 LCOH: Water charges ($/kg),0.03585244497416972
 LCOH: Financial ($/kg),0.0
 Steel annual production (tonne steel/year),899997.8646149181
@@ -43,11 +43,11 @@ Steel price: Hydrogen ($/tonne),195.35951105525348
 Steel price: Natural gas ($/tonne),2.483996801882218
 Steel price: Electricity ($/tonne),41.9503672962756
 Steel price: Slag Disposal ($/tonne),7.085325067638374
-Steel price: Taxes ($/tonne),30.010256377287963
-Steel price: Equipment Financing ($/tonne),93.5692300134721
+Steel price: Taxes ($/tonne),30.010256377287853
+Steel price: Equipment Financing ($/tonne),93.56923001347181
 Steel price: Remaining Financial ($/tonne),9.083541456865895
 Steel price: Oxygen sales ($/tonne),0.0
-Steel price: Total ($/tonne),972.4491525265659
+Steel price: Total ($/tonne),972.4491525265655
 (-) Steel price: BOS savings ($/tonne),7.469780051759022
 Ammonia price: Air Separation by Cryogenic ($/kg),0.0030919022023188562
 Ammonia price: Haber Bosch ($/kg),0.0025611596134998945

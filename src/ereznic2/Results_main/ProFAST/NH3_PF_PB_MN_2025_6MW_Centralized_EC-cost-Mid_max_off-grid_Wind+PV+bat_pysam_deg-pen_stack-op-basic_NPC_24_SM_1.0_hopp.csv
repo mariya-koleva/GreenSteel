@@ -12,7 +12,7 @@
 10,Operating Expenses,Cooling water,0.0001547520645747896
 11,Operating Expenses,Non-depreciable assets,0.0002185902473509667
 12,Financing cash outflow,Cooling Tower,0.0006321075023893634
-13,Operating Expenses,Cash on hand reserve,0.0007749225636433666
+13,Operating Expenses,Cash on hand reserve,0.0007749225636433663
 14,Operating Expenses,Maintenance Cost,0.0009186076656436084
 15,Financing cash outflow,Boiler and Steam Turbine,0.0009310783349601288
 16,Operating Expenses,Installation cost,0.0011793589339429342
@@ -24,19 +24,19 @@
 22,Financing cash outflow,Repayment of debt,0.004477222283062598
 23,Operating Expenses,Property tax and insurance,0.006147155674344377
 24,Financing cash outflow,Interest expense,0.007394656435484999
-25,Financing cash outflow,Income taxes payable,0.00882595257566499
+25,Financing cash outflow,Income taxes payable,0.008825952575665017
 26,Operating Expenses,Electricity,0.011639600097879597
 27,Operating Expenses,Labor Cost,0.018131081048142532
-28,Financing cash outflow,Dividends paid,0.0324185999582837
-29,Operating Expenses,Hydrogen,0.21743389424838835
+28,Financing cash outflow,Dividends paid,0.03241859995828377
+29,Operating Expenses,Hydrogen,0.21743389424838822
 30,Operating Revenue,Take or pay revenue,0.0
 31,Operating Revenue,Incidental revenue,0.0
 32,Operating Revenue,Oxygen byproduct,0.0
 33,Financing cash inflow,One time capital incentive,0.0
 34,Financing cash inflow,Annual operating incentives,0.0
 35,Operating Revenue,Sale of non-depreciable assets,0.0002185902473509667
-36,Financing cash inflow,Monetized tax losses,0.000684958872848154
-37,Operating Revenue,Cash on hand recovery,0.0007749225636433667
+36,Financing cash inflow,Monetized tax losses,0.0006849588728481522
+37,Operating Revenue,Cash on hand recovery,0.0007749225636433663
 38,Financing cash inflow,Inflow of debt,0.004477222283062598
-39,Financing cash inflow,Inflow of equity,0.010111160431807896
+39,Financing cash inflow,Inflow of equity,0.010111160431807893
 40,Operating Revenue,Ammonia sales,0.30943704659231097

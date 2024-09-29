@@ -16,9 +16,9 @@ LCOH: SMR plant FOM ($/kg),0.48705723860543826
 LCOH: SMR plant VOM ($/kg),0.044823062730627306
 LCOH: Natural gas charges ($/kg),0.5402703690999999
 LCOH: Electricity charges ($/kg),0.12929899411971
-LCOH: Taxes ($/kg),0.1591804811384765
+LCOH: Taxes ($/kg),0.15918048113847635
 LCOH: Water charges ($/kg),0.05162752767527676
-LCOH: Financial ($/kg),6.071532165918825e-17
+LCOH: Financial ($/kg),5.984795992119984e-17
 Steel annual production (tonne steel/year),899997.8646149181
 Ammonia annual production (kgNH3/year),300904979.04185563
 Steel price: EAF and Casting CAPEX ($/tonne),5.695687665291704
@@ -43,11 +43,11 @@ Steel price: Hydrogen ($/tonne),209.18786059737943
 Steel price: Natural gas ($/tonne),2.181334812836521
 Steel price: Electricity ($/tonne),35.21821484125238
 Steel price: Slag Disposal ($/tonne),7.085325067638374
-Steel price: Taxes ($/tonne),30.188136015290794
-Steel price: Equipment Financing ($/tonne),94.07900018045137
+Steel price: Taxes ($/tonne),30.188136015290866
+Steel price: Equipment Financing ($/tonne),94.07900018045159
 Steel price: Remaining Financial ($/tonne),9.083541456865893
 Steel price: Oxygen sales ($/tonne),0.0
-Steel price: Total ($/tonne),981.3395377639182
+Steel price: Total ($/tonne),981.3395377639185
 (-) Steel price: BOS savings ($/tonne),7.469780051759022
 Ammonia price: Air Separation by Cryogenic ($/kg),0.0030919022023188562
 Ammonia price: Haber Bosch ($/kg),0.0025611596134998945
@@ -62,7 +62,7 @@ Ammonia price: Electricity ($/kg),0.0077643724329597
 Ammonia price: Cooling water ($/kg),6.803051972079998e-06
 Ammonia price: Iron based catalyst ($/kg),0.002581878260701437
 Ammonia price: Oxygen byproduct ($/kg),-0.0
-Ammonia price: Taxes ($/kg),0.009681251079844858
-Ammonia price: Equipment Financing ($/kg),0.03439472836178063
-Ammonia price: Remaining Financial ($/kg),0.006403255912597563
-Ammonia price: Total ($/kg),0.7228811847038975
+Ammonia price: Taxes ($/kg),0.00968125107984478
+Ammonia price: Equipment Financing ($/kg),0.034394728361780404
+Ammonia price: Remaining Financial ($/kg),0.0064032559125975635
+Ammonia price: Total ($/kg),0.7228811847038972

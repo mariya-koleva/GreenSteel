@@ -32,10 +32,10 @@
 30,Operating Expenses,Carbon,12.309439999999999
 31,Financing cash outflow,Interest expense,14.245446228098313
 32,Operating Expenses,Administrative & Support Labor Cost,24.89926683919674
-33,Financing cash outflow,Income taxes payable,34.14481905488477
+33,Financing cash outflow,Income taxes payable,34.14481905488474
 34,Operating Expenses,Electricity,57.08753942775134
 35,Operating Expenses,Annual Operating Labor Cost,87.97980425784283
-36,Financing cash outflow,Dividends paid,99.23319065359901
+36,Financing cash outflow,Dividends paid,99.23319065359892
 37,Operating Expenses,Hydrogen,210.60355081981209
 38,Operating Expenses,Iron Ore,431.57733029999986
 39,Operating Revenue,Take or pay revenue,0.0
@@ -45,7 +45,7 @@
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.0315040650406504
 45,Operating Revenue,Cash on hand recovery,2.740497091302969
-46,Financing cash inflow,Monetized tax losses,3.891044378863111
+46,Financing cash inflow,Monetized tax losses,3.8910443788631115
 47,Financing cash inflow,Inflow of debt,8.625151126501066
-48,Financing cash inflow,Inflow of equity,19.210268910030972
+48,Financing cash inflow,Inflow of equity,19.210268910030976
 49,Operating Revenue,Steel sales,1005.5328345764624

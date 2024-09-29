@@ -20,24 +20,24 @@
 18,Operating Expenses,Non-depreciable assets,0.00011370520891750185
 19,Financing cash outflow,Desalination,0.0003765972460594557
 20,Operating Expenses,Desalination Fixed O&M Cost,0.0016627110733025703
-21,Financing cash outflow,Income taxes payable,0.0035634736805726748
+21,Financing cash outflow,Income taxes payable,0.003563473680572561
 22,Operating Expenses,Property insurance,0.0081096767812046
 23,Operating Expenses,Water,0.013622038964452972
-24,Operating Expenses,Cash on hand reserve,0.021192531723434348
+24,Operating Expenses,Cash on hand reserve,0.02119253172343435
 25,Operating Expenses,Var O&M,0.07527468904833468
 26,Operating Expenses,Electrolyzer Fixed O&M Cost,0.08383257643069576
-27,Financing cash outflow,Repayment of debt,0.0864516268538636
-28,Financing cash outflow,Interest expense,0.11923866053737817
+27,Financing cash outflow,Repayment of debt,0.08645162685386368
+28,Financing cash outflow,Interest expense,0.11923866053737824
 29,Financing cash outflow,Electrolysis system,0.23981384513756313
-30,Financing cash outflow,Dividends paid,0.2844338296961369
+30,Financing cash outflow,Dividends paid,0.28443382969613573
 31,Operating Expenses,Grid Electricity Cost,6.0265223630948626
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
 36,Operating Revenue,Sale of non-depreciable assets,0.00011370520891747475
-37,Operating Revenue,Cash on hand recovery,0.021192531723434348
-38,Financing cash inflow,Inflow of debt,0.0864516268538636
-39,Financing cash inflow,Inflow of equity,0.29357589699941206
-40,Financing cash inflow,Monetized tax losses,0.45560562484835665
-41,Operating Revenue,Hydrogen sales,6.107268939842794
+37,Operating Revenue,Cash on hand recovery,0.02119253172343435
+38,Financing cash inflow,Inflow of debt,0.08645162685386368
+39,Financing cash inflow,Inflow of equity,0.29357589699941333
+40,Financing cash inflow,Monetized tax losses,0.45560562484835737
+41,Operating Revenue,Hydrogen sales,6.1072689398427915

@@ -17,27 +17,27 @@
 15,Operating Expenses,Desalination Fixed O&M Cost,0.0031934714826807806
 16,Operating Expenses,Water,0.008292914934426389
 17,Financing cash outflow,Compression,0.00898690556919771
-18,Operating Expenses,Cash on hand reserve,0.012319883738451503
+18,Operating Expenses,Cash on hand reserve,0.012319883738451502
 19,Operating Expenses,Solar Plant Fixed O&M Cost,0.026416081258436096
 20,Financing cash outflow,Solar Plant,0.06568798872931109
 21,Operating Expenses,Property insurance,0.07287424650086136
 22,Operating Expenses,Var O&M,0.07393779787497136
 23,Financing cash outflow,Hydrogen Storage,0.10964774790177577
 24,Operating Expenses,Electrolyzer Fixed O&M Cost,0.1610123048133248
-25,Financing cash outflow,Income taxes payable,0.4953324744897243
+25,Financing cash outflow,Income taxes payable,0.49533247448972356
 26,Operating Expenses,Wind Plant Fixed O&M Cost,0.5255924666021362
 27,Financing cash outflow,Wind Plant,0.903146194851281
 28,Financing cash outflow,Repayment of debt,1.06727924126261
 29,Financing cash outflow,Electrolysis system,1.0863625914271067
 30,Financing cash outflow,Interest expense,1.6022720530346324
-31,Financing cash outflow,Dividends paid,2.185528406636614
+31,Financing cash outflow,Dividends paid,2.185528406636611
 32,Operating Revenue,Take or pay revenue,0.0
 33,Operating Revenue,Incidental revenue,0.0
 34,Financing cash inflow,One time capital incentive,0.0
 35,Financing cash inflow,Annual operating incentives,0.0
-36,Operating Revenue,Cash on hand recovery,0.012319883738451502
+36,Operating Revenue,Cash on hand recovery,0.012319883738451498
 37,Operating Revenue,Sale of non-depreciable assets,0.014874057632974055
-38,Financing cash inflow,Monetized tax losses,0.30177504480930606
+38,Financing cash inflow,Monetized tax losses,0.3017750448093063
 39,Financing cash inflow,Inflow of debt,1.06727924126261
 40,Financing cash inflow,Inflow of equity,1.6271144700372409
-41,Operating Revenue,Hydrogen sales,5.385348207553573
+41,Operating Revenue,Hydrogen sales,5.3853482075535695

@@ -9,7 +9,7 @@
 7,Operating Expenses,Road tax,0.0
 8,Operating Expenses,Property insurance,0.0
 9,Financing cash outflow,Capital gains taxes payable,0.0
-10,Operating Expenses,Cash on hand reserve,0.00015152670724217978
+10,Operating Expenses,Cash on hand reserve,0.00015152670724217972
 11,Operating Expenses,Cooling water,0.0001547520645747896
 12,Operating Expenses,Non-depreciable assets,0.0002185902473509667
 13,Financing cash outflow,Cooling Tower,0.0006321075023893634
@@ -22,21 +22,21 @@
 20,Financing cash outflow,Depreciable Nonequipment,0.0032623102416052376
 21,Operating Expenses,Administrative Expense,0.003626216209628507
 22,Financing cash outflow,Repayment of debt,0.004477222283062598
-23,Operating Expenses,Hydrogen,0.0059839379679228226
+23,Operating Expenses,Hydrogen,0.005983937967922846
 24,Operating Expenses,Property tax and insurance,0.006147155674344377
 25,Financing cash outflow,Interest expense,0.007394656435484999
-26,Financing cash outflow,Income taxes payable,0.00836049137235511
+26,Financing cash outflow,Income taxes payable,0.008360491372355106
 27,Operating Expenses,Electricity,0.011706726061741664
 28,Operating Expenses,Labor Cost,0.018131081048142532
-29,Financing cash outflow,Dividends paid,0.03148528242686485
+29,Financing cash outflow,Dividends paid,0.031485282426864845
 30,Operating Revenue,Take or pay revenue,0.0
 31,Operating Revenue,Incidental revenue,0.0
 32,Operating Revenue,Oxygen byproduct,0.0
 33,Financing cash inflow,One time capital incentive,0.0
 34,Financing cash inflow,Annual operating incentives,0.0
-35,Operating Revenue,Cash on hand recovery,0.00015152670724217978
+35,Operating Revenue,Cash on hand recovery,0.00015152670724217972
 36,Operating Revenue,Sale of non-depreciable assets,0.0002185902473509667
-37,Financing cash inflow,Monetized tax losses,0.0007766333444049545
+37,Financing cash inflow,Monetized tax losses,0.0007766333444049548
 38,Financing cash inflow,Inflow of debt,0.004477222283062598
 39,Financing cash inflow,Inflow of equity,0.010785181486853696
-40,Operating Revenue,Ammonia sales,0.08392186607853055
+40,Operating Revenue,Ammonia sales,0.08392186607853053

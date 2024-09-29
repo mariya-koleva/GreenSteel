@@ -43,7 +43,7 @@ scenario['Wind PTC'] = 0.0
 SMR_LCOH_dic = {'Year':[], 'Location':[], 'Policy': [], 'NG price case': [], 'LCOH':[], 'LCOA':[], 'LCOS':[]}
 
 atb_years = [
-            #2020,
+            2022,
             2025,
             2030,
             2035

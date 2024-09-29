@@ -8,15 +8,15 @@ Hydrogen production total CAPEX ($),823501462.6224719
 Hydrogen transmission total CAPEX ($),0.0
 Steel Plant Total CAPEX ($),372424316.09681773
 Ammonia Plant Total CAPEX ($),96338579.30899039
-LCOH: Hydrogen Storage ($/kg),0.001893714753273879
-LCOH: Compression ($/kg),0.031165414258725394
-LCOH: SMR plant CAPEX ($/kg),1.3050056248745814
+LCOH: Hydrogen Storage ($/kg),0.001893714753273878
+LCOH: Compression ($/kg),0.03116541425872538
+LCOH: SMR plant CAPEX ($/kg),1.305005624874581
 LCOH: CO2 transportation and storage ($/kg),0.411192500771553
 LCOH: SMR plant FOM ($/kg),0.48705723860543826
 LCOH: SMR plant VOM ($/kg),0.044823062730627306
 LCOH: Natural gas charges ($/kg),1.1337171373
 LCOH: Electricity charges ($/kg),0.20919238273305002
-LCOH: Taxes ($/kg),0.15574194392547608
+LCOH: Taxes ($/kg),0.15574194392547586
 LCOH: Water charges ($/kg),0.05162752767527676
 LCOH: Financial ($/kg),5.984795992119984e-17
 Steel annual production (tonne steel/year),899997.8646149181
@@ -62,7 +62,7 @@ Ammonia price: Electricity ($/kg),0.012561950545213502
 Ammonia price: Cooling water ($/kg),6.803051972079998e-06
 Ammonia price: Iron based catalyst ($/kg),0.002581878260701437
 Ammonia price: Oxygen byproduct ($/kg),-0.0
-Ammonia price: Taxes ($/kg),0.01006341465099175
-Ammonia price: Equipment Financing ($/kg),0.03549727174924637
+Ammonia price: Taxes ($/kg),0.010063414650991802
+Ammonia price: Equipment Financing ($/kg),0.03549727174924651
 Ammonia price: Remaining Financial ($/kg),0.006403255912597562
-Ammonia price: Total ($/kg),0.8593675114696454
+Ammonia price: Total ($/kg),0.8593675114696457

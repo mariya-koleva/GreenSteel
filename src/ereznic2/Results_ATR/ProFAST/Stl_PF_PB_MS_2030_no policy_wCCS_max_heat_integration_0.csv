@@ -19,7 +19,7 @@
 17,Financing cash outflow,Piping,1.393822827447565
 18,Financing cash outflow,"Buildings, Storage, Water Service",2.0572996862080872
 19,Operating Expenses,Lime,2.2519535999999993
-20,Operating Expenses,Cash on hand reserve,2.8062578999216092
+20,Operating Expenses,Cash on hand reserve,2.8062578999216083
 21,Financing cash outflow,Shaft Furnace,3.070009570469014
 22,Operating Expenses,Maintenance Labor Cost,4.23340125527393
 23,Operating Expenses,Natural Gas,4.71931760944037
@@ -32,11 +32,11 @@
 30,Operating Expenses,Carbon,11.211919999999996
 31,Financing cash outflow,Interest expense,14.239505373506905
 32,Operating Expenses,Administrative & Support Labor Cost,24.89926683919674
-33,Financing cash outflow,Income taxes payable,34.45308644940451
+33,Financing cash outflow,Income taxes payable,34.45308644940446
 34,Operating Expenses,Electricity,53.56569536398619
 35,Operating Expenses,Annual Operating Labor Cost,87.97980425784283
-36,Financing cash outflow,Dividends paid,99.97769436811379
-37,Operating Expenses,Hydrogen,234.1505511327137
+36,Financing cash outflow,Dividends paid,99.97769436811363
+37,Operating Expenses,Hydrogen,234.15055113271356
 38,Operating Expenses,Iron Ore,431.08854929999995
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
@@ -44,8 +44,8 @@
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.0315040650406504
-45,Operating Revenue,Cash on hand recovery,2.8062578999216092
-46,Financing cash inflow,Monetized tax losses,3.9224551484889396
+45,Operating Revenue,Cash on hand recovery,2.806257899921608
+46,Financing cash inflow,Monetized tax losses,3.922455148488941
 47,Financing cash inflow,Inflow of debt,8.621554133619904
-48,Financing cash inflow,Inflow of equity,19.146686051824314
-49,Operating Revenue,Steel sales,1027.1125000792467
+48,Financing cash inflow,Inflow of equity,19.146686051824325
+49,Operating Revenue,Steel sales,1027.1125000792463

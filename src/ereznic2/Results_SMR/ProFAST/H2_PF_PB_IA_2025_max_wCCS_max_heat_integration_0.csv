@@ -12,25 +12,25 @@
 10,Operating Expenses,Road tax,0.0
 11,Operating Expenses,Non-depreciable assets,4.53579673524283e-06
 12,Financing cash outflow,Hydrogen Storage,0.0005889805254827907
-13,Operating Expenses,Cash on hand reserve,0.006498613831666256
+13,Operating Expenses,Cash on hand reserve,0.0064986138316662535
 14,Financing cash outflow,Compression,0.009693023743549103
 15,Operating Expenses,Water Charges,0.03143014760147601
 16,Operating Expenses,SMR VOM Cost,0.044823062730627306
-17,Financing cash outflow,Income taxes payable,0.10166086888115364
+17,Financing cash outflow,Income taxes payable,0.10166086888115314
 18,Financing cash outflow,Repayment of debt,0.16003103489365342
 19,Operating Expenses,SMR Electricity Cost,0.19383261140627994
 20,Financing cash outflow,Interest expense,0.26430997775795123
 21,Financing cash outflow,SMR Plant Cost,0.40588103217119853
 22,Operating Expenses,SMR FOM Cost,0.48705723860543826
-23,Financing cash outflow,Dividends paid,0.858179045325595
+23,Financing cash outflow,Dividends paid,0.8581790453255926
 24,Operating Expenses,SMR NG Cost,1.1212601664
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
 27,Financing cash inflow,One time capital incentive,0.0
 28,Financing cash inflow,Annual operating incentives,0.0
 29,Operating Revenue,Sale of non-depreciable assets,4.535796735182587e-06
-30,Operating Revenue,Cash on hand recovery,0.006498613831666256
+30,Operating Revenue,Cash on hand recovery,0.006498613831666253
 31,Financing cash inflow,Inflow of debt,0.16003103489365342
-32,Financing cash inflow,Monetized tax losses,0.3079598590323463
-33,Financing cash inflow,Inflow of equity,0.41196395889568954
-34,Operating Revenue,Hydrogen sales,2.798792337220716
+32,Financing cash inflow,Monetized tax losses,0.30795985903234663
+33,Financing cash inflow,Inflow of equity,0.4119639588956896
+34,Operating Revenue,Hydrogen sales,2.798792337220713

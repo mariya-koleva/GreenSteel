@@ -57,7 +57,7 @@ locations = [
         'IN',
         'TX',
         'IA',
-        'MS',
+        #'MS',
         'MN'
         ]
 
@@ -65,12 +65,12 @@ location_strings = [
         'Indiana',
         'Texas',
         'Iowa',
-        'Mississippi',
+        #'Mississippi',
         'Minnesota'
 ]
 
 # True if you want to plot quad of four locations. Must select four locations above
-plot_quad = False
+plot_quad = True
 
 for electrolysis_case in electrolysis_cases:
     for grid_case in grid_cases:
@@ -106,7 +106,7 @@ for electrolysis_case in electrolysis_cases:
             
             labels  = pd.unique(fin_sum_usecase['ATB Year']).astype(int).astype(str).tolist()    
 
-            if 2020 in labels:
+            if '2022' in labels:
                 plot_xaxis = [0,1,2,3]
             else:
                 plot_xaxis = [0,1,2]

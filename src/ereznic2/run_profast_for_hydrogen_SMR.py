@@ -119,16 +119,16 @@ def run_profast_for_hydrogen_SMR(atb_year,site_name,site_location,policy_case,NG
     h2prod_life_sum = hydrogen_production_kgpy * plant_life
                 
     if atb_year == 2022:
-        grid_year = 2030
+        cambium_year = 2030
         operational_year = 2030
     elif atb_year == 2025:
-        grid_year = 2030
+        cambium_year = 2030
         operational_year = 2030
     elif atb_year == 2030:
-        grid_year = 2035
+        cambium_year = 2035
         operational_year = 2035
     elif atb_year == 2035:
-        grid_year = 2040
+        cambium_year = 2040
         operational_year = 2040
     
     # Read in csv for grid prices

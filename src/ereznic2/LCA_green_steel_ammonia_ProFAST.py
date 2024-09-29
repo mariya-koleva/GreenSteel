@@ -223,8 +223,8 @@ for i0 in range(len(files2load_results)):
     grid_case = filecase[6]
     # The arguments below are just starting points
     
-    if year == 2020:
-        cambium_year = 2025
+    if year == 2022:
+        cambium_year = 2030
     elif year == 2025:
         cambium_year = 2030
     elif year == 2030:

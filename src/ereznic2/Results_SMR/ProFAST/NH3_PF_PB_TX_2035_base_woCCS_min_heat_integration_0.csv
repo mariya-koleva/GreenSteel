@@ -13,7 +13,7 @@
 11,Operating Expenses,Non-depreciable assets,0.0002279996550330838
 12,Financing cash outflow,Cooling Tower,0.0006593171206636713
 13,Operating Expenses,Maintenance Cost,0.0008994527646492345
-14,Operating Expenses,Cash on hand reserve,0.0009538953294764528
+14,Operating Expenses,Cash on hand reserve,0.000953895329476453
 15,Financing cash outflow,Boiler and Steam Turbine,0.0009711574132529504
 16,Operating Expenses,Installation cost,0.001256302046185137
 17,Financing cash outflow,Haber Bosch,0.0025611596134998945
@@ -25,18 +25,18 @@
 23,Operating Expenses,Property tax and insurance,0.006403255912597562
 24,Operating Expenses,Electricity,0.007682783931649766
 25,Financing cash outflow,Interest expense,0.007720583430915295
-26,Financing cash outflow,Income taxes payable,0.009410257723485095
+26,Financing cash outflow,Income taxes payable,0.009410257723485048
 27,Operating Expenses,Labor Cost,0.019621969214428995
-28,Financing cash outflow,Dividends paid,0.03418328032423899
-29,Operating Expenses,Hydrogen,0.2834095777485355
+28,Financing cash outflow,Dividends paid,0.03418328032423885
+29,Operating Expenses,Hydrogen,0.28340957774853565
 30,Operating Revenue,Take or pay revenue,0.0
 31,Operating Revenue,Incidental revenue,0.0
 32,Operating Revenue,Oxygen byproduct,0.0
 33,Financing cash inflow,One time capital incentive,0.0
 34,Financing cash inflow,Annual operating incentives,0.0
 35,Operating Revenue,Sale of non-depreciable assets,0.00022799965503308213
-36,Financing cash inflow,Monetized tax losses,0.0007294526369722716
-37,Operating Revenue,Cash on hand recovery,0.0009538953294764528
+36,Financing cash inflow,Monetized tax losses,0.0007294526369722766
+37,Operating Revenue,Cash on hand recovery,0.000953895329476453
 38,Financing cash inflow,Inflow of debt,0.0046745604040859924
-39,Financing cash inflow,Inflow of equity,0.010395425970873147
-40,Operating Revenue,Ammonia sales,0.3766477528320622
+39,Financing cash inflow,Inflow of equity,0.010395425970873153
+40,Operating Revenue,Ammonia sales,0.3766477528320621

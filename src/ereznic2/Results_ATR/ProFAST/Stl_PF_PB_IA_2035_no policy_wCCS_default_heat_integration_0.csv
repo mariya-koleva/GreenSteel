@@ -19,7 +19,7 @@
 17,Financing cash outflow,Piping,1.393822827447565
 18,Financing cash outflow,"Buildings, Storage, Water Service",2.0572996862080872
 19,Operating Expenses,Lime,2.096121599999999
-20,Operating Expenses,Cash on hand reserve,2.5372752520259922
+20,Operating Expenses,Cash on hand reserve,2.537275252025991
 21,Operating Expenses,Natural Gas,2.9394393768077105
 22,Financing cash outflow,Shaft Furnace,3.070009570469014
 23,Operating Expenses,Maintenance Labor Cost,4.23340125527393
@@ -32,11 +32,11 @@
 30,Operating Expenses,Carbon,11.228597999999998
 31,Financing cash outflow,Interest expense,13.963371429891158
 32,Operating Expenses,Administrative & Support Labor Cost,24.89926683919674
-33,Financing cash outflow,Income taxes payable,33.268035304092
+33,Financing cash outflow,Income taxes payable,33.268035304091896
 34,Operating Expenses,Electricity,52.52004090682554
 35,Operating Expenses,Annual Operating Labor Cost,87.97980425784283
-36,Financing cash outflow,Dividends paid,96.87664863569705
-37,Operating Expenses,Hydrogen,217.91856111103527
+36,Financing cash outflow,Dividends paid,96.87664863569672
+37,Operating Expenses,Hydrogen,217.91856111103525
 38,Operating Expenses,Iron Ore,366.16213979999986
 39,Operating Revenue,Take or pay revenue,0.0
 40,Operating Revenue,Incidental revenue,0.0
@@ -44,8 +44,8 @@
 42,Financing cash inflow,One time capital incentive,0.0
 43,Financing cash inflow,Annual operating incentives,0.0
 44,Operating Revenue,Sale of non-depreciable assets,0.0315040650406504
-45,Operating Revenue,Cash on hand recovery,2.5372752520259922
-46,Financing cash inflow,Monetized tax losses,3.931799199397003
+45,Operating Revenue,Cash on hand recovery,2.537275252025991
+46,Financing cash inflow,Monetized tax losses,3.931799199397013
 47,Financing cash inflow,Inflow of debt,8.454364074656022
-48,Financing cash inflow,Inflow of equity,19.05669017925044
-49,Operating Revenue,Steel sales,938.0730499466125
+48,Financing cash inflow,Inflow of equity,19.05669017925046
+49,Operating Revenue,Steel sales,938.073049946612

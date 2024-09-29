@@ -14,7 +14,7 @@
 12,Financing cash outflow,Cooling Tower,0.0006593171206636713
 13,Operating Expenses,Maintenance Cost,0.0008994527646492345
 14,Financing cash outflow,Boiler and Steam Turbine,0.0009711574132529504
-15,Operating Expenses,Cash on hand reserve,0.0009818247516003317
+15,Operating Expenses,Cash on hand reserve,0.000981824751600332
 16,Operating Expenses,Installation cost,0.001256302046185137
 17,Financing cash outflow,Haber Bosch,0.0025611596134998945
 18,Operating Expenses,Iron based catalyst,0.002581878260701437
@@ -25,9 +25,9 @@
 23,Operating Expenses,Property tax and insurance,0.006403255912597562
 24,Operating Expenses,Electricity,0.0075291068373759
 25,Financing cash outflow,Interest expense,0.007720583430915295
-26,Financing cash outflow,Income taxes payable,0.00938189909755847
+26,Financing cash outflow,Income taxes payable,0.009381899097558495
 27,Operating Expenses,Labor Cost,0.019621969214428995
-28,Financing cash outflow,Dividends paid,0.03417514637634617
+28,Financing cash outflow,Dividends paid,0.03417514637634624
 29,Operating Expenses,Hydrogen,0.29272654500743284
 30,Operating Revenue,Take or pay revenue,0.0
 31,Operating Revenue,Incidental revenue,0.0
@@ -35,8 +35,8 @@
 33,Financing cash inflow,One time capital incentive,0.0
 34,Financing cash inflow,Annual operating incentives,0.0
 35,Operating Revenue,Sale of non-depreciable assets,0.00022799965503308213
-36,Financing cash inflow,Monetized tax losses,0.0006939750475982445
+36,Financing cash inflow,Monetized tax losses,0.0006939750475982419
 37,Operating Revenue,Cash on hand recovery,0.0009818247516003317
 38,Financing cash inflow,Inflow of debt,0.0046745604040859924
-39,Financing cash inflow,Inflow of equity,0.010366753785777373
-40,Operating Revenue,Ammonia sales,0.38583870019733596
+39,Financing cash inflow,Inflow of equity,0.01036675378577737
+40,Operating Revenue,Ammonia sales,0.385838700197336

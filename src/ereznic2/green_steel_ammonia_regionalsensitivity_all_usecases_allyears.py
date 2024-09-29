@@ -166,7 +166,8 @@ for axi1,policy in enumerate(policy_cases):
             ax[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='IA','LCOH ($/kg)'],label='Iowa',marker='^',ms = marker_size,color='goldenrod',linestyle='')
             ax[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MS','LCOH ($/kg)'],label='Mississippi',marker='s',ms = marker_size,color='forestgreen',linestyle='')
             ax[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MN','LCOH ($/kg)'],label='Minnesota',marker='p',ms = marker_size,color='deepskyblue',linestyle='')
-        
+            h2_handles,h2_labels = ax[axi1,axi2].get_legend_handles_labels()
+
         if axi1==0:
             ax[axi1,axi2].set_title(str(atb_year),fontsize=title_size)
         ax[axi1,axi2].spines[['left','top','right','bottom']].set_linewidth(1.5)
@@ -177,7 +178,7 @@ for axi1,policy in enumerate(policy_cases):
         ax[axi1,axi2].tick_params(axis = 'y',labelsize = tickfontsize,direction = 'in',width=1.5)
         ax[axi1,axi2].tick_params(axis = 'x',labelsize = tickfontsize,direction = 'in',width=1.5,rotation=90)
         ax[axi1,axi2].axhline(y=0, color='k', linestyle='-',linewidth=1.5)
-        h2_handles,h2_labels = ax[axi1,axi2].get_legend_handles_labels()
+        #h2_handles,h2_labels = ax[axi1,axi2].get_legend_handles_labels()
 
         if atb_year != '2035' or (atb_year == '2035' and policy == 'no-policy'):
             ax1[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='IN','Steel price: Total ($/tonne)'],label='Indiana',marker='o',ms = marker_size,color='purple',linestyle='')
@@ -185,7 +186,8 @@ for axi1,policy in enumerate(policy_cases):
             ax1[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='IA','Steel price: Total ($/tonne)'],label='Iowa',marker='^',ms = marker_size,color='goldenrod',linestyle='')
             ax1[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MS','Steel price: Total ($/tonne)'],label='Mississippi',marker='s',ms = marker_size,color='forestgreen',linestyle='')
             ax1[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MN','Steel price: Total ($/tonne)'],label='Minnesota',marker='p',ms = marker_size,color='deepskyblue',linestyle='')
-        
+            steel_handles,steel_labels = ax1[axi1,axi2].get_legend_handles_labels()
+
         if axi1==0:
             ax1[axi1,axi2].set_title(str(atb_year),fontsize=title_size)
         ax1[axi1,axi2].spines[['left','top','right','bottom']].set_linewidth(1.25)
@@ -195,7 +197,7 @@ for axi1,policy in enumerate(policy_cases):
         ax1[axi1,axi2].set_ylim([600,1800])
         ax1[axi1,axi2].tick_params(axis = 'y',labelsize = tickfontsize,direction = 'in',width=1.5)
         ax1[axi1,axi2].tick_params(axis = 'x',labelsize = tickfontsize,direction = 'in',width=1.5,rotation=90)
-        steel_handles,steel_labels = ax1[axi1,axi2].get_legend_handles_labels()
+        #steel_handles,steel_labels = ax1[axi1,axi2].get_legend_handles_labels()
 
         if atb_year != '2035' or (atb_year == '2035' and policy == 'no-policy'):
             ax2[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='IN','Ammonia price: Total ($/kg)'],label='Indiana',marker='o',ms = marker_size,color='purple',linestyle='')
@@ -203,7 +205,8 @@ for axi1,policy in enumerate(policy_cases):
             ax2[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='IA','Ammonia price: Total ($/kg)'],label='Iowa',marker='^',ms = marker_size,color='goldenrod',linestyle='')
             ax2[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MS','Ammonia price: Total ($/kg)'],label='Mississippi',marker='s',ms = marker_size,color='forestgreen',linestyle='')
             ax2[axi1,axi2].plot(labels,policy_year_combined.loc[policy_year_combined['Site']=='MN','Ammonia price: Total ($/kg)'],label='Minnesota',marker='p',ms = marker_size,color='deepskyblue',linestyle='')
-        
+            ammonia_handles,ammonia_labels = ax2[axi1,axi2].get_legend_handles_labels()
+
         if axi1==0:
             ax2[axi1,axi2].set_title(str(atb_year),fontsize=title_size)
         ax2[axi1,axi2].spines[['left','top','right','bottom']].set_linewidth(1.5)
@@ -214,7 +217,7 @@ for axi1,policy in enumerate(policy_cases):
         ax2[axi1,axi2].tick_params(axis = 'y',labelsize = tickfontsize,direction = 'in',width=1.5)
         ax2[axi1,axi2].tick_params(axis = 'x',labelsize = tickfontsize,direction = 'in',width=1.5,rotation=90)
         ax2[axi1,axi2].axhline(y=0, color='k', linestyle='-',linewidth=1.25)
-        ammonia_handles,ammonia_labels = ax2[axi1,axi2].get_legend_handles_labels()
+        #ammonia_handles,ammonia_labels = ax2[axi1,axi2].get_legend_handles_labels()
 
 
 fig.legend(h2_handles,h2_labels,fontsize = legend_size, ncol = 5, prop = {'family':'Arial','size':legend_size},loc='upper center',bbox_to_anchor=(0.5,0))

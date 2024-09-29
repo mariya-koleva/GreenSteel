@@ -15,14 +15,14 @@
 13,Operating Expenses,Cash on hand reserve,0.0059669601432006504
 14,Financing cash outflow,Compression,0.009693023743549103
 15,Operating Expenses,Water Charges,0.03944645535055349
-16,Financing cash outflow,Income taxes payable,0.05116334275649246
+16,Financing cash outflow,Income taxes payable,0.05116334275649239
 17,Financing cash outflow,Repayment of debt,0.12596080544248667
 18,Financing cash outflow,Interest expense,0.2080390076025035
 19,Operating Expenses,atr VOM Cost,0.2786590405904059
 20,Operating Expenses,atr FOM Cost,0.3040705114100225
 21,Financing cash outflow,atr Plant Cost,0.3167401160521067
 22,Operating Expenses,atr Electricity Cost,0.4687080694930501
-23,Financing cash outflow,Dividends paid,0.6160484338753178
+23,Financing cash outflow,Dividends paid,0.6160484338753174
 24,Operating Expenses,atr NG Cost,0.7336222102333333
 25,Operating Revenue,Take or pay revenue,0.0
 26,Operating Revenue,Incidental revenue,0.0
@@ -32,5 +32,5 @@
 30,Operating Revenue,Cash on hand recovery,0.0059669601432006504
 31,Financing cash inflow,Inflow of debt,0.12596080544248667
 32,Financing cash inflow,Inflow of equity,0.3279121295469215
-33,Financing cash inflow,Monetized tax losses,0.3573667056246191
-34,Operating Revenue,Hydrogen sales,2.342040854868276
+33,Financing cash inflow,Monetized tax losses,0.35736670562461914
+34,Operating Revenue,Hydrogen sales,2.3420408548682756
