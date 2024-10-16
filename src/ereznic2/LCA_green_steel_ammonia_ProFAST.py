@@ -107,11 +107,11 @@ smr_El_woCCS_consume = 0.16 # kWh/kg H2
 #------------------------------------------------------------------------------
 
 smr_NG_combust = NG_combust_EI # Natural gas combustion (g CO2e/MJ)
-smr_NG_consume = 161  # Natural gas consumption for combustion and CO2 balance (MJ/kg H2)
-smr_NG_consume_CCS = 171 # Natural gas consumption for combustion and CO2 balance (MJ-LHV/kg-H2) for SMR+CCS
+smr_NG_consume = 167  # Natural gas consumption for combustion and CO2 balance (MJ/kg H2)
+smr_NG_consume_CCS = 178 # Natural gas consumption for combustion and CO2 balance (MJ-LHV/kg-H2) for SMR+CCS
 smr_PO_consume = smr_El_woCCS_consume    # Power consumption in SMR plant (kWh/kg H2)
 smr_ccs_PO_consume = smr_El_wCCS_consume # Power consumption in SMR CCS plant (kWh/kg H2)
-smr_steam_prod = 30.18 # Steam production on SMR site (MJ/kg H2)
+smr_steam_prod = 25.67 # Steam production on SMR site (MJ/kg H2)
 smr_HEX_eff    = 0.9  # Heat exchanger efficiency (-)
 smr_NG_supply  = NG_supply_EI    # Natural gas extraction and supply to SMR plant assuming 2% CH4 leakage rate (g CO2e/MJ)
 ccs_perc_capture = 0.95 # Carbon capture rate (-)
@@ -123,11 +123,11 @@ ccs_perc_capture = 0.95 # Carbon capture rate (-)
 
 atr_NG_combust   = 56.2 # Natural gas combustion (g CO2e/MJ)
 atr_NG_supply    = NG_supply_EI      # Natural gas extraction and supply to SMR plant assuming 2% CH4 leakage rate (g CO2e/MJ)
-atr_PO_consume   = 15.08   # Electricity consumption in the ATR plant (MJ/kg H2)
-atr_NG_consume   = 256.7  # Includes natural gas consumption for CO2 balance and the fired heater (assuming it is using natural gas) (MJ/kg H2)
+atr_PO_consume   = 3.56   # Electricity consumption in the ATR plant (kWh/kg H2)
+atr_NG_consume   = 170  # Includes natural gas consumption for CO2 balance and the fired heater (assuming it is using natural gas) (MJ/kg H2)
 atr_H2O_consume  = 0.012 # metric ton per 1 kg H2
 atr_perc_capture = 0.94496 # Carbon capture rate (-)
-atr_CO2_reduction = 0.17 # kg CO2 per kg H2
+atr_CO2_reduction = 0 # kg CO2 per kg H2
 
 #------------------------------------------------------------------------------
 # Hydrogen production via water electrolysis
