@@ -393,69 +393,69 @@ for i0 in range(len(files2load_results)):
             electrolysis_total_EI_policy_grid = electrolysis_total_EI
             electrolysis_total_EI_policy_offgrid = 0 
             # Calculate ammonia emissions via hybrid grid electrolysis
-            NH3_electrolysis_Scope3_EI = NH3_H2_consume * electrolysis_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
-            NH3_electrolysis_Scope2_EI = NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv
+            NH3_electrolysis_Scope3_EI = NH3_H2_consume * electrolysis_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
+            NH3_electrolysis_Scope2_EI = NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv
             NH3_electrolysis_Scope1_EI = NH3_boiler_EI
             NH3_electrolysis_total_EI  = NH3_electrolysis_Scope1_EI + NH3_electrolysis_Scope2_EI + NH3_electrolysis_Scope3_EI
             # Calculate steel emissions via hybrid grid electrolysis
-            steel_electrolysis_Scope3_EI = (steel_H2_consume * electrolysis_total_EI * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv)  # kg CO2e/metric tonne steel
-            steel_electrolysis_Scope2_EI = steel_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean()  
+            steel_electrolysis_Scope3_EI = (steel_H2_consume * electrolysis_total_EI * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv)  # kg CO2e/metric tonne steel
+            steel_electrolysis_Scope2_EI = steel_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean()  
             steel_electrolysis_Scope1_EI = steel_CH4_prod + steel_CO2_prod
             steel_electrolysis_total_EI  = steel_electrolysis_Scope1_EI + steel_electrolysis_Scope2_EI + steel_electrolysis_Scope3_EI
         if 'grid-only' in grid_case:
             # Calculate SMR emissions. SMR and SMR + CCS are always grid-connected
-            smr_Scope3_EI = smr_NG_supply * smr_NG_consume * g_to_kg_conv + smr_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + smr_PO_consume * grid_imbedded_EI * g_to_kg_conv # kg CO2e/kg H2
-            smr_Scope2_EI = smr_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+            smr_Scope3_EI = smr_NG_supply * smr_NG_consume * g_to_kg_conv + smr_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + smr_PO_consume * grid_imbedded_EI * g_to_kg_conv # kg CO2e/kg H2
+            smr_Scope2_EI = smr_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
             smr_Scope1_EI = smr_NG_combust * (smr_NG_consume - smr_steam_prod/smr_HEX_eff) * g_to_kg_conv # kg CO2e/kg H2
             smr_total_EI  = smr_Scope1_EI + smr_Scope2_EI + smr_Scope3_EI
             electrolysis_total_EI_policy_grid = electrolysis_total_EI
             electrolysis_total_EI_policy_offgrid = 0 
             
             # Calculate ammonia emissions via SMR process
-            NH3_smr_Scope3_EI = NH3_H2_consume * smr_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
-            NH3_smr_Scope2_EI = NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv
+            NH3_smr_Scope3_EI = NH3_H2_consume * smr_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
+            NH3_smr_Scope2_EI = NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv
             NH3_smr_Scope1_EI = NH3_boiler_EI
             NH3_smr_total_EI = NH3_smr_Scope1_EI + NH3_smr_Scope2_EI + NH3_smr_Scope3_EI   
             
             # Calculate steel emissions via SMR process
-            steel_smr_Scope3_EI = (smr_total_EI * steel_H2_consume * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv) + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv # kg CO2e/metric tonne steel
-            steel_smr_Scope2_EI = cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * steel_PO_consume 
+            steel_smr_Scope3_EI = (smr_total_EI * steel_H2_consume * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv) + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv # kg CO2e/metric tonne steel
+            steel_smr_Scope2_EI = cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * steel_PO_consume 
             steel_smr_Scope1_EI = steel_CH4_prod + steel_CO2_prod
             steel_smr_total_EI  = steel_smr_Scope1_EI + steel_smr_Scope2_EI + steel_smr_Scope3_EI
             
             # Calculate SMR + CCS emissions
-            smr_ccs_Scope3_EI = smr_NG_supply * smr_NG_consume_CCS * g_to_kg_conv + smr_ccs_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + smr_ccs_PO_consume * grid_imbedded_EI * g_to_kg_conv # kg CO2e/kg H2
-            smr_ccs_Scope2_EI = smr_ccs_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+            smr_ccs_Scope3_EI = smr_NG_supply * smr_NG_consume_CCS * g_to_kg_conv + smr_ccs_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + smr_ccs_PO_consume * grid_imbedded_EI * g_to_kg_conv # kg CO2e/kg H2
+            smr_ccs_Scope2_EI = smr_ccs_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
             smr_ccs_Scope1_EI = (1-ccs_perc_capture)* smr_NG_combust * smr_NG_consume_CCS * g_to_kg_conv # kg CO2e/kg H2
             smr_ccs_total_EI  = smr_ccs_Scope1_EI + smr_ccs_Scope2_EI + smr_ccs_Scope3_EI    
             
             # Calculate ammonia emissions via SMR with CCS process
-            NH3_smr_ccs_Scope3_EI = NH3_H2_consume * smr_ccs_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
+            NH3_smr_ccs_Scope3_EI = NH3_H2_consume * smr_ccs_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
             NH3_smr_ccs_Scope2_EI = NH3_smr_Scope2_EI
             NH3_smr_ccs_Scope1_EI = NH3_smr_Scope1_EI
             NH3_smr_ccs_total_EI = NH3_smr_ccs_Scope1_EI + NH3_smr_ccs_Scope2_EI + NH3_smr_ccs_Scope3_EI   
             
             # Calculate steel emissions via SMR with CCS process
-            steel_smr_ccs_Scope3_EI = (smr_ccs_total_EI * steel_H2_consume * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv) + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv # kg CO2e/metric tonne steel
+            steel_smr_ccs_Scope3_EI = (smr_ccs_total_EI * steel_H2_consume * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv) + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv # kg CO2e/metric tonne steel
             steel_smr_ccs_Scope2_EI = steel_smr_Scope2_EI 
             steel_smr_ccs_Scope1_EI = steel_smr_Scope1_EI 
             steel_smr_ccs_total_EI  = steel_smr_Scope1_EI + steel_smr_Scope2_EI + steel_smr_ccs_Scope3_EI  
             
             # Calculate ATR + CCS emissions
-            atr_ccs_Scope3_EI = atr_NG_supply * atr_NG_consume * g_to_kg_conv + atr_PO_consume  * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + atr_PO_consume * grid_imbedded_EI * g_to_kg_conv# kg CO2e/kg H2
-            atr_ccs_Scope2_EI = atr_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
+            atr_ccs_Scope3_EI = atr_NG_supply * atr_NG_consume * g_to_kg_conv + atr_PO_consume  * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + atr_PO_consume * grid_imbedded_EI * g_to_kg_conv# kg CO2e/kg H2
+            atr_ccs_Scope2_EI = atr_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv # kg CO2e/kg H2
             atr_ccs_Scope1_EI = (1-atr_perc_capture)* atr_NG_combust * atr_NG_consume * g_to_kg_conv # kg CO2e/kg H2
             atr_ccs_total_EI  = atr_ccs_Scope1_EI + atr_ccs_Scope2_EI + atr_ccs_Scope3_EI - atr_CO2_reduction
             
             # Calculate ammonia emissions via ATR with CCS process
-            NH3_atr_ccs_Scope3_EI = NH3_H2_consume * atr_ccs_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
+            NH3_atr_ccs_Scope3_EI = NH3_H2_consume * atr_ccs_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
             NH3_atr_ccs_Scope2_EI = NH3_smr_Scope2_EI
             NH3_atr_ccs_Scope1_EI = NH3_smr_Scope1_EI
             NH3_atr_ccs_total_EI = NH3_atr_ccs_Scope1_EI + NH3_atr_ccs_Scope2_EI + NH3_atr_ccs_Scope3_EI   
             
             # Calculate steel emissions via ATR with CCS process
 
-            steel_atr_ccs_Scope3_EI = (atr_ccs_total_EI * steel_H2_consume * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv)  + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv # kg CO2e/metric tonne steel
+            steel_atr_ccs_Scope3_EI = (atr_ccs_total_EI * steel_H2_consume * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume  * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv)  + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv # kg CO2e/metric tonne steel
             steel_atr_ccs_Scope2_EI = steel_smr_Scope2_EI 
             steel_atr_ccs_Scope1_EI = steel_smr_Scope1_EI 
             steel_atr_ccs_total_EI  = steel_atr_ccs_Scope1_EI + steel_atr_ccs_Scope2_EI + steel_atr_ccs_Scope3_EI  
@@ -466,13 +466,13 @@ for i0 in range(len(files2load_results)):
             electrolysis_Scope1_EI = 0
             electrolysis_total_EI = electrolysis_Scope1_EI + electrolysis_Scope2_EI + electrolysis_Scope3_EI
             # Calculate ammonia emissions via grid only electrolysis
-            NH3_electrolysis_Scope3_EI = NH3_H2_consume * electrolysis_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
-            NH3_electrolysis_Scope2_EI = NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv
+            NH3_electrolysis_Scope3_EI = NH3_H2_consume * electrolysis_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
+            NH3_electrolysis_Scope2_EI = NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv
             NH3_electrolysis_Scope1_EI = NH3_boiler_EI
             NH3_electrolysis_total_EI  = NH3_electrolysis_Scope1_EI + NH3_electrolysis_Scope2_EI + NH3_electrolysis_Scope3_EI
             # Calculate steel emissions via grid only electrolysis
-            steel_electrolysis_Scope3_EI = (steel_H2_consume * electrolysis_total_EI * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv) + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv  # kg CO2e/metric tonne steel
-            steel_electrolysis_Scope2_EI = steel_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean()  
+            steel_electrolysis_Scope3_EI = (steel_H2_consume * electrolysis_total_EI * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv) + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv  # kg CO2e/metric tonne steel
+            steel_electrolysis_Scope2_EI = steel_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean()  
             steel_electrolysis_Scope1_EI = steel_CH4_prod + steel_CO2_prod
             steel_electrolysis_total_EI  = steel_electrolysis_Scope1_EI + steel_electrolysis_Scope2_EI + steel_electrolysis_Scope3_EI
         if 'off-grid' in grid_case:
@@ -484,13 +484,13 @@ for i0 in range(len(files2load_results)):
             electrolysis_total_EI_policy_offgrid = electrolysis_total_EI
             electrolysis_total_EI_policy_grid = 0
             # Calculate ammonia emissions via renewable electrolysis
-            NH3_electrolysis_Scope3_EI = NH3_H2_consume * electrolysis_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
-            NH3_electrolysis_Scope2_EI = NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv
+            NH3_electrolysis_Scope3_EI = NH3_H2_consume * electrolysis_total_EI + NH3_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv + NH3_PO_consume * grid_imbedded_EI * g_to_kg_conv
+            NH3_electrolysis_Scope2_EI = NH3_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * kWh_to_MWh_conv
             NH3_electrolysis_Scope1_EI = NH3_boiler_EI
             NH3_electrolysis_total_EI = NH3_electrolysis_Scope1_EI + NH3_electrolysis_Scope2_EI + NH3_electrolysis_Scope3_EI
             # Calculate steel emissions via renewable electrolysis
-            steel_electrolysis_Scope3_EI = (steel_H2_consume * electrolysis_total_EI * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv) + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv  # kg CO2e/metric tonne steel
-            steel_electrolysis_Scope2_EI = steel_PO_consume * cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() 
+            steel_electrolysis_Scope3_EI = (steel_H2_consume * electrolysis_total_EI * MT_to_kg_conv + steel_lime_EI * steel_lime_consume * MT_to_kg_conv + steel_iron_ore_EI  * steel_iron_ore_consume * MT_to_kg_conv + steel_NG_supply_EI * steel_NG_consume  + cambium_data['LRMER CO2 equiv. production (kg-CO2e/MWh)'].mean() * steel_PO_consume + steel_H2O_EI * steel_H2O_consume * gal_to_ton_conv) + steel_PO_consume  * grid_imbedded_EI * g_to_kg_conv  # kg CO2e/metric tonne steel
+            steel_electrolysis_Scope2_EI = steel_PO_consume * cambium_data['LRMER CO2 equiv. combustion (kg-CO2e/MWh)'].mean() 
             steel_electrolysis_Scope1_EI = steel_CH4_prod + steel_CO2_prod
             steel_electrolysis_total_EI  = steel_electrolysis_Scope1_EI + steel_electrolysis_Scope2_EI + steel_electrolysis_Scope3_EI
 
